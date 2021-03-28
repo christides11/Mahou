@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Core.Fighter.Mic
+  m_EditorClassIdentifier: 
+  m_GroupName: Core.Fighter.Mic
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 1e7b57e9ca274be4b9f2ce47e65c1f30
+  m_SerializeEntries:
+  - m_GUID: b9110db6b096f2549b05c24b4df7b73f
+    m_Address: Core/Fighters/BrawlerDefinition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 11400000, guid: b9110db6b096f2549b05c24b4df7b73f, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: b9110db6b096f2549b05c24b4df7b73f, type: 2}
+  - m_GUID: f0013c4f5f2ba1441bbd6a3e6ce81c25
+    m_Address: Core/Fighters/Brawler
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 886669924077431813, guid: f0013c4f5f2ba1441bbd6a3e6ce81c25,
+      type: 3}
+    m_TargetAsset: {fileID: 886669924077431813, guid: f0013c4f5f2ba1441bbd6a3e6ce81c25,
+      type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f19033ff650faf4438fedfedb426e295, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1d77a3bf86f330045b384fb7e4fbbd2a, type: 2}
+    - {fileID: 11400000, guid: 861bd0deb2ab27044ac8bc7869cdb019, type: 2}

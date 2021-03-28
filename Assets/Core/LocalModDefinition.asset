@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845f1350bc0c7d5498c527b05d56e9ac, type: 3}
+  m_Name: LocalModDefinition
+  m_EditorClassIdentifier: 
+  fighterRefs:
+  - m_AssetGUID: b9110db6b096f2549b05c24b4df7b73f
+    m_SubObjectName: 
+    m_SubObjectType: 
+  gamemodeRefs:
+  - m_AssetGUID: ff8c74f26f020db47a982dcb2c9bc147
+    m_SubObjectName: 
+    m_SubObjectType: 
+  mapRefs:
+  - m_AssetGUID: b14fdc83d2928354dbe47df62750d6e0
+    m_SubObjectName: 
+    m_SubObjectType: 

@@ -1,0 +1,18 @@
+{
+    "name": "Mahou.Core_CSharp",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f00d25796ce4a844da98b41d4cdcea4b",
+        "GUID:60e386f2aae2e3745835ad13422e215a",
+        "GUID:129790fa69fd03d4da0db18100839fe5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
