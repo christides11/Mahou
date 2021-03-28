@@ -16,5 +16,11 @@ If you want to edit the project itself, there's a few paid third party assets be
   * [Kinematic Character Controller](https://assetstore.unity.com/packages/tools/physics/kinematic-character-controller-99131) - Used for character movement handling.
   * [Third Persona Camera With Lock On](https://assetstore.unity.com/packages/tools/camera/third-person-camera-with-lock-on-151550) - DMC styled camera control.
 
+## Resources
+* Netcode
+    * [It IS Rocket Science! The Physics of Rocket League Detailed](https://www.youtube.com/watch?v=ueEmiDM94IE&t=3096s)
+    * [fps-netcode](https://github.com/minism/fps-netcode)
+    * [Overwatch Gameplay Architecture and Netcode](https://www.youtube.com/watch?v=W3aieHjyNvw)
+
 ## Licensing/Attribution
 Mahou is under a [MIT license](https://github.com/christides11/touhou-unlimited-fantasies/blob/master/LICENSE).
