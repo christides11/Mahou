@@ -15,6 +15,8 @@ namespace Mahou.Content.Fighters
 
         public int baseFrame = 0;
 
+        public PlayerInput currentInput;
+
         public override void SetControllerID(int controllerID)
         {
             base.SetControllerID(controllerID);
@@ -33,6 +35,12 @@ namespace Mahou.Content.Fighters
             return pinput;
         }
 
+        public void SetInput(PlayerInput input)
+        {
+            currentInput = input;
+        }
+
+        /*
         public void AddInput(PlayerInput pInput)
         {
             InputRecordItem recordItem = new InputRecordItem();
@@ -43,13 +51,20 @@ namespace Mahou.Content.Fighters
 
         public void ReplaceInput(int offset, PlayerInput pInput)
         {
-
+            if(InputRecord.Count <= offset)
+            {
+                return;
+            }
+            InputRecordItem recordItem = new InputRecordItem();
+            recordItem.AddInput(0,
+                new InputRecordAxis2D(pInput.movement));
+            InputRecord[InputRecord.Count - 1 - offset] = recordItem;
         }
 
         public void SetBaseFrame(int offset)
         {
             baseFrame = offset;
-        }
+        }*/
 
         public override Vector2 GetAxis2D(int axis2DID, int frameOffset = 0)
         {

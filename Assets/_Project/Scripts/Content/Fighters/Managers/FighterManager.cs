@@ -4,6 +4,7 @@ using UnityEngine;
 using CAF.Fighters;
 using Mahou.Simulation;
 using Mirror;
+using KinematicCharacterController;
 
 namespace Mahou.Content.Fighters
 {
@@ -16,6 +17,8 @@ namespace Mahou.Content.Fighters
         public virtual void Awake()
         {
             SetupStates();
+            KinematicCharacterSystem.Settings.AutoSimulation = false;
+            KinematicCharacterSystem.Settings.Interpolate = false;
         }
 
         public virtual void SetupStates()
@@ -25,12 +28,14 @@ namespace Mahou.Content.Fighters
 
         public void SimUpdate()
         {
-            Tick();
+            Vector2 mov = (InputManager as FighterInputManager).currentInput.movement;
+            cc.Motor.SetPosition(cc.Motor.InitialSimulationPosition + (new Vector3(mov.x, 0, mov.y) * 0.3f));
+            //Tick();
         }
 
         public void SimLateUpdate()
         {
-            LateTick();
+            //LateTick();
         }
 
         public ISimState GetSimState()

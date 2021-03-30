@@ -13,7 +13,7 @@ namespace Mahou.Simulation
     public class ClientSimulationManager : SimulationManagerBase
     {
         // Delegate for adjusting the simulation speed based on incoming state data.
-        private ClientSimulationAdjuster clientSimulationAdjuster;
+        public ClientSimulationAdjuster clientSimulationAdjuster;
 
         // Queue for incoming world states.
         private Queue<ServerWorldStateMessage> worldStateQueue = new Queue<ServerWorldStateMessage>();
@@ -40,6 +40,8 @@ namespace Mahou.Simulation
 
         [SerializeField] private Dictionary<int, ClientInput[]> clientInputSnapshots = new Dictionary<int, ClientInput[]>();
 
+        public float moveFalloff = 0.1f;
+
         public ClientSimulationManager(ClientManager localClient, LobbyManager lobbyManager, uint gottenServerTick) : base(lobbyManager)
         {
             this.localClient = localClient;
@@ -49,7 +51,7 @@ namespace Mahou.Simulation
             // simulation whenever we are too far ahead or behind the server simulation.
             simulationAdjuster = clientSimulationAdjuster = new ClientSimulationAdjuster(gameManager.GameSettings.serverTickRate, 5);
 
-            localClientWorldTickSnapshots = new uint[1024];
+            localClientWorldTickSnapshots = new uint[circularBufferSize];
             OnClientJoin(localClient);
 
             // Set the last-acknowledged server tick.
@@ -59,17 +61,39 @@ namespace Mahou.Simulation
             currentTick = clientSimulationAdjuster.DetermineStartTick(gottenServerTick, (float)Mirror.NetworkTime.rtt, 1 / gameManager.GameSettings.simulationRate);
 
             NetworkClient.RegisterHandler<ServerWorldStateMessage>(EnqueueWorldState);
-            NetworkClient.RegisterHandler<ServerStateInputMessage>(ApplyServerInputs);
+            NetworkClient.RegisterHandler<ServerStateInputMessage>(QueueServerInputs);
         }
 
         protected override void Tick(float dt)
         {
+            // UPDATE INPUTS FROM SERVER //
+            while (serverInputMessageQueue.Count > 0)
+            {
+                ServerStateInputMessage ssim = serverInputMessageQueue.Dequeue();
+                ApplyServerInput(ssim);
+                // Assume input was held.
+                if(serverInputMessageQueue.Count == 0)
+                {
+                    for(uint i = ssim.serverTick; i < currentTick; i++)
+                    {
+                        for(int w = 0; w < ssim.clientInputs.Count; w++)
+                        {
+                            ClientManager cm = ssim.clientInputs[w].client.GetComponent<ClientManager>();
+                            // Skip this client.
+                            if (cm.isLocalPlayer)
+                            {
+                                continue;
+                            }
+                            clientInputSnapshots[cm.clientID][i % circularBufferSize] = ClientInput.Falloff(ssim.clientInputs[w].input, (int)(i-ssim.serverTick), moveFalloff);
+                            cm.SetInput(clientInputSnapshots[cm.clientID][i % circularBufferSize]);
+                        }
+                    }
+                }
+            }
+
             uint bufidx = (uint)(currentTick % circularBufferSize);
 
-            // GRAB LOCAL CLIENT INPUTS //
-            ClientInput sampled = localClient.GetInputs();
-
-            // SNAPSHOT CLIENTS //
+            // SNAPSHOT WORLD STATE //
             localClientWorldTickSnapshots[bufidx] = lastAckedServerTick;
             foreach (var c in ClientManager.clientManagers.Values)
             {
@@ -77,21 +101,21 @@ namespace Mahou.Simulation
                 // Local client.
                 if(c.isLocalPlayer)
                 {
-                    clientInputSnapshots[c.clientID][bufidx] = sampled;
+                    clientInputSnapshots[c.clientID][bufidx] = localClient.GetInputs();
+                    localClient.SetInput(clientInputSnapshots[c.clientID][bufidx]);
                 }
                 else
                 {
                     // Remote clients repeat their last input.
                     clientInputSnapshots[c.clientID][bufidx] = clientInputSnapshots[c.clientID][(bufidx-1)%circularBufferSize];
-                    c.AddInputs(clientInputSnapshots[c.clientID][bufidx]);
+                    c.SetInput(clientInputSnapshots[c.clientID][bufidx]);
                 }
             }
 
             // SEND ALL UNACKED INPUTS //
             var unackedInputs = new List<ClientInput>();
             var clientWorldTickDeltas = new List<short>();
-            // TODO: lastServerWorldTick is technically not the same as lastAckedInputTick, fix this.
-            // Currently the server inits last acked input to 0, instead it should init as the frame the client joins.
+
             uint inputStartTick = (currentTick - lastAckedServerTick) > 20 ? currentTick - 20 : lastAckedServerTick;
             for (uint tick = inputStartTick; tick <= currentTick; ++tick)
             {
@@ -108,7 +132,6 @@ namespace Mahou.Simulation
             NetworkClient.Send(cim);
 
             // SIMULATE WORLD //
-            localClient.AddInputs(sampled);
             SimulateWorld(dt);
             ++currentTick;
 
@@ -130,21 +153,26 @@ namespace Mahou.Simulation
         {
             clientInputSnapshots.Add(cm.clientID, new ClientInput[1024]);
             clientStateSnapshots.Add(cm.clientID, new ClientSimState[1024]);
-            Debug.Log($"Client added. {cm.clientID}");
         }
 
+        public Queue<ServerStateInputMessage> serverInputMessageQueue = new Queue<ServerStateInputMessage>();
+
         #region Inputs
-        private void ApplyServerInputs(NetworkConnection arg1, ServerStateInputMessage arg2)
+        private void QueueServerInputs(NetworkConnection arg1, ServerStateInputMessage arg2)
         {
-            for(int i = 0; i < arg2.clientInputs.Count; i++)
+            serverInputMessageQueue.Enqueue(arg2);
+        }
+
+        private void ApplyServerInput(ServerStateInputMessage msg)
+        {
+            for(int i = 0; i < msg.clientInputs.Count; i++)
             {
-                ClientManager cm = arg2.clientInputs[i].client.GetComponent<ClientManager>();
+                ClientManager cm = msg.clientInputs[i].client.GetComponent<ClientManager>();
                 if (!clientInputSnapshots.ContainsKey(cm.clientID))
                 {
                     OnClientJoin(cm);
                 }
-                clientInputSnapshots[cm.clientID][arg2.serverTick%1024] = arg2.clientInputs[i].input;
-                cm.AddInputs(arg2.clientInputs[i].input);
+                clientInputSnapshots[cm.clientID][msg.serverTick % circularBufferSize] = msg.clientInputs[i].input;
             }
         }
         #endregion
@@ -162,8 +190,8 @@ namespace Mahou.Simulation
         #endregion
 
         #region Rollback
-        public uint localWorldTickLead = 0;
-        public int actualTickLead = 0;
+        public int serverTickLead = 0;
+        public int localTickLead = 0;
         /// <summary>
         /// In this method we compare a world state received from the server to what we 
         /// calculated for that tick. If it's too far off, we'll rollback and replay up
@@ -186,51 +214,47 @@ namespace Mahou.Simulation
             // processed.
             if (incomingState.latestAckedInput > 0)
             {
-                actualTickLead = (int)incomingState.latestAckedInput - (int)lastAckedServerTick + 1;
-                clientSimulationAdjuster.NotifyActualTickLead(actualTickLead);
+                serverTickLead = (int)incomingState.latestAckedInput - (int)lastAckedServerTick + 1;
+                clientSimulationAdjuster.NotifyActualTickLead(serverTickLead);
             }
 
             // Get our current lead on the server.
-            localWorldTickLead = currentTick - lastAckedServerTick;
+            localTickLead = ((int)currentTick) - ((int)lastAckedServerTick);
 
-            bool headState = false;
-            if (incomingState.worldSnapshot.currentTick >= currentTick)
-            {
-                headState = true;
-            }
+            bool serverAhead = false;
+            // Check if we are behind the server. If so, we need to speed up our simulation.
             if (incomingState.worldSnapshot.currentTick > currentTick)
             {
                 Debug.Log("Received tick from the server that is in the future, simulation is behind.");
+                serverAhead = true;
             }
 
-            CheckSimulationState(incomingState);
+            CheckSimulationState(incomingState, serverAhead);
         }
 
         /// <summary>
         /// Check for large differences in the received simulation state and our current view of that state.
         /// </summary>
         /// <param name="worldState"></param>
-        private void CheckSimulationState(ServerWorldStateMessage worldState)
+        private void CheckSimulationState(ServerWorldStateMessage worldState, bool serverAhead)
         {
-            // Check if we need to do a rollback.
             bool correctSimulation = false;
-            uint bufidx = worldState.worldSnapshot.currentTick % 1024;
-            for (int i = 0; i < worldState.worldSnapshot.clientStates.Count; i++)
+            if (!serverAhead)
             {
-                ClientSimState c = worldState.worldSnapshot.clientStates[i];
-                ClientManager cm = c.networkIdentity.GetComponent<ClientManager>();
-                // CHECK FOR ERROR //
-                /*if(ClientInput.IsDifferent(worldState.worldSnapshot.clientInputs[i], clientInputSnapshots[cm.clientID][bufidx]))
+                // Check if we need to do a rollback.
+                uint bufidx = worldState.worldSnapshot.currentTick % circularBufferSize;
+                for (int i = 0; i < worldState.worldSnapshot.clientStates.Count; i++)
                 {
-                    correctSimulation = true;
-                    break;
-                }*/
-                bool correctPositions = cm.SimComparePositions(c, clientStateSnapshots[cm.clientID][bufidx],
-                            out Vector3 err);
-                if (correctPositions)
-                {
-                    correctSimulation = true;
-                    break;
+                    ClientSimState c = worldState.worldSnapshot.clientStates[i];
+                    ClientManager cm = c.networkIdentity.GetComponent<ClientManager>();
+                    // CHECK FOR ERROR //
+                    bool correctPositions = cm.SimComparePositions(c, clientStateSnapshots[cm.clientID][bufidx],
+                                out Vector3 err);
+                    if (correctPositions)
+                    {
+                        correctSimulation = true;
+                        break;
+                    }
                 }
             }
 
@@ -242,12 +266,14 @@ namespace Mahou.Simulation
             {
                 Rollback(worldState.worldSnapshot.currentTick);
             }
+            
         }
 
         private void ApplyClientSimulationStates(ServerWorldStateMessage incomingState)
         {
-            uint bufidx = incomingState.worldSnapshot.currentTick % 1024;
-            // Apply the server's client states.
+            uint bufidx = incomingState.worldSnapshot.currentTick % circularBufferSize;
+
+            // Apply the client states on the rollback frame.
             for (int i = 0; i < incomingState.worldSnapshot.clientStates.Count; i++)
             {
                 var c = incomingState.worldSnapshot.clientStates[i];
@@ -260,10 +286,9 @@ namespace Mahou.Simulation
             }
         }
 
-        public int rollbacks = 0;
-        private void Rollback(uint rollbackFrame)
+        private void Rollback(uint startFrame)
         {
-            uint bufidx = rollbackFrame % 1024;
+            uint bufidx = startFrame % circularBufferSize;
 
             // APPLY HISTORICAL STATE //
             foreach (var cm in ClientManager.clientManagers)
@@ -272,25 +297,24 @@ namespace Mahou.Simulation
             }
 
             // ADVANCE FORWARD //
-            while (rollbackFrame < currentTick)
+            while (startFrame < currentTick)
             {
-                
+                bufidx = startFrame % circularBufferSize;
+
                 // APPLY STATE & INPUT //
-                foreach(var cm in ClientManager.clientManagers)
+                foreach (var cm in ClientManager.clientManagers)
                 {
+                    // Apply inputs to the client.
+                    cm.Value.SetInput(clientInputSnapshots[cm.Value.clientID][bufidx]);
+
                     // Rewrite the historical state snapshot.
                     clientStateSnapshots[cm.Value.clientID][bufidx] = cm.Value.GetClientSimState();
-
-                    // Apply inputs to the client.
-                    cm.Value.SetInputs((int)(currentTick - rollbackFrame));
-                    //ClientManager.local.SetInputs((int)(currentTick - replayTick));
                 }
 
                 // SIMULATE //
                 SimulateWorld(simulationTickInterval);
-                ++rollbackFrame;
+                startFrame++;
             }
-            rollbacks++;
         }
         #endregion
     }

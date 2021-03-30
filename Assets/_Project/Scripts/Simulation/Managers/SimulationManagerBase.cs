@@ -21,7 +21,7 @@ namespace Mahou.Simulation
         [SerializeField] protected uint currentTick = 0;
 
         protected float simulationTickInterval = 1.0f / 60.0f;
-        protected int circularBufferSize = 1024;
+        protected uint circularBufferSize = 1024;
 
         /// <summary>
         /// A list of all objects in the simulation.

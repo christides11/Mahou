@@ -78,9 +78,8 @@ namespace Mahou.Simulation
             foreach (var tickInput in tickInputs)
             {
                 ClientManager player = tickInput.client.GetComponent<ClientManager>();
-                player.AddInputs(tickInput.input);
-                //player.SetInputs(tickInput.input);
                 currentClientInput[player.connectionToClient.connectionId] = tickInput;
+                player.SetInput(tickInput.input);
                 unprocessedPlayerIds.Remove(player.netId);
 
                 // Mark the player as synchronized.
@@ -104,7 +103,8 @@ namespace Mahou.Simulation
                 TickInput latestInput;
                 if (clientInputProcessor.TryGetLatestInput(clientID, out latestInput))
                 {
-                    //cManager.SetInputs((int)(currentTick - latestInput.currentServerTick));
+                    currentClientInput[cManager.connectionToClient.connectionId] = latestInput;
+                    cManager.SetInput(latestInput.input);
                 }
                 else
                 {

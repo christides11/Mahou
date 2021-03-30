@@ -212,24 +212,7 @@ namespace Mahou.Networking
             return new ClientInput(iri);
         }
 
-        public void SetInputs(int currentFrameOffset)
-        {
-
-            for(int i = 0; i < players.Count; i++)
-            {
-                players[i].GetComponent<FighterInputManager>().SetBaseFrame(currentFrameOffset);
-            }
-        }
-
-        public void ReplaceInput(int frameOffset, ClientInput cInputs)
-        {
-            for(int i = 0; i < players.Count; i++)
-            {
-                players[i].GetComponent<FighterInputManager>().ReplaceInput(frameOffset, cInputs.playerInputs[i]);
-            }
-        }
-
-        public void AddInputs(ClientInput cInputs)
+        public void SetInput(ClientInput cInputs)
         {
             if (cInputs.playerInputs == null)
             {
@@ -237,7 +220,7 @@ namespace Mahou.Networking
             }
             for (int i = 0; i < cInputs.playerInputs.Count; i++)
             {
-                players[i].GetComponent<FighterInputManager>().AddInput(cInputs.playerInputs[i]);
+                players[i].GetComponent<FighterInputManager>().SetInput(cInputs.playerInputs[i]);
             }
         }
         #endregion
@@ -256,6 +239,10 @@ namespace Mahou.Networking
 
         public void ApplyClientSimState(ClientSimState clientSimState)
         {
+            if(clientSimState.playersStates == null)
+            {
+                return;
+            }
             for (int i = 0; i < clientSimState.playersStates.Count; i++)
             {
                 players[i].GetComponent<ISimObject>().ApplySimState(clientSimState.playersStates[i]);
@@ -283,6 +270,8 @@ namespace Mahou.Networking
         #endregion
 
         #region Error Checking
+        [Header("Error Checking")]
+        public bool showPositions = false;
         public float positionDivergence = 0.001f;
         public bool SimComparePositions(ClientSimState serverSimState, ClientSimState localSimState, out Vector3 err)
         {
@@ -292,15 +281,19 @@ namespace Mahou.Networking
                 err = Vector3.zero;
                 return false;
             }
+
             for (int i = 0; i < localSimState.playersStates.Count; i++)
             {
                 Vector3 error = serverSimState.playersStates[i].motorState.Position - localSimState.playersStates[i].motorState.Position;
                 if (error.sqrMagnitude > positionDivergence)
                 {
-                    ExtDebug.DrawBox(serverSimState.playersStates[i].motorState.Position + Vector3.up,
-                        new Vector3(0.5f, 1, 0.5f), serverSimState.playersStates[i].motorState.Rotation, Color.blue, 1.0f);
-                    ExtDebug.DrawBox(localSimState.playersStates[i].motorState.Position + Vector3.up,
-                        new Vector3(0.5f, 1, 0.5f), localSimState.playersStates[i].motorState.Rotation, Color.green, 1.0f);
+                    if (showPositions)
+                    {
+                        ExtDebug.DrawBox(serverSimState.playersStates[i].motorState.Position + Vector3.up,
+                            new Vector3(0.5f, 1, 0.5f), serverSimState.playersStates[i].motorState.Rotation, Color.blue, 1.0f);
+                        ExtDebug.DrawBox(localSimState.playersStates[i].motorState.Position + Vector3.up,
+                            new Vector3(0.5f, 1, 0.5f), localSimState.playersStates[i].motorState.Rotation, Color.green, 1.0f);
+                    }
                     err = error;
                     return true;
                 }

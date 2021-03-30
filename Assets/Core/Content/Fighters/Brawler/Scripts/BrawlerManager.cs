@@ -13,7 +13,7 @@ namespace Mahou.Core
             stateManager.AddState(new BIdle(), (ushort)BrawlerState.IDLE);
             stateManager.AddState(new BWalk(), (ushort)BrawlerState.WALK);
 
-            stateManager.ChangeState((ushort)BrawlerState.IDLE);
+            //stateManager.ChangeState((ushort)BrawlerState.IDLE);
         }
     }
 }

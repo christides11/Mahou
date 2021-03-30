@@ -13,6 +13,27 @@ namespace Mahou.Input
             this.playerInputs = playerInputs;
         }
 
+        public static ClientInput Falloff(ClientInput input, int times, float falloff)
+        {
+            ClientInput cInput = new ClientInput(new List<PlayerInput>(input.playerInputs));
+
+            for(int i = 0; i < times; i++)
+            {
+                for (int w = 0; w < cInput.playerInputs.Count; w++){
+                    cInput.playerInputs[w] = new PlayerInput()
+                    {
+                        attack = cInput.playerInputs[w].attack,
+                        jump = cInput.playerInputs[w].jump,
+                        lockon = cInput.playerInputs[w].lockon,
+                        movement = cInput.playerInputs[w].movement * falloff,
+                        shoot = cInput.playerInputs[w].shoot
+                    };
+                }
+            }
+
+            return cInput;
+        }
+
         public static bool IsDifferent(ClientInput source, ClientInput other)
         {
             if(source.playerInputs == null || other.playerInputs == null)
