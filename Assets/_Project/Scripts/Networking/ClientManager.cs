@@ -24,6 +24,7 @@ namespace Mahou.Networking
 
         public NetworkIdentity networkIdentity;
 
+        private static List<uint> clientIDs = new List<uint>();
         public static Dictionary<uint, ClientManager> clientManagers = new Dictionary<uint, ClientManager>();
 
         private CharacterSelectMenu characterSelect;
@@ -180,25 +181,25 @@ namespace Mahou.Networking
 
         #region Clients
         public static List<uint> GetClientIDs()
-    {
-        List<uint> cIDs = new List<uint>();
-        foreach (uint cID in clientManagers.Keys)
         {
-            cIDs.Add(cID);
+            List<uint> cIDs = new List<uint>();
+            foreach (uint cID in clientManagers.Keys)
+            {
+                cIDs.Add(cID);
+            }
+            return cIDs;
         }
-        return cIDs;
-    }
 
-    public static List<ClientManager> GetClients()
-    {
-        List<ClientManager> cManagers = new List<ClientManager>();
-        foreach (ClientManager cm in clientManagers.Values)
+        public static List<ClientManager> GetClients()
         {
-            cManagers.Add(cm);
+            List<ClientManager> cManagers = new List<ClientManager>();
+            foreach (ClientManager cm in clientManagers.Values)
+            {
+                cManagers.Add(cm);
+            }
+            return cManagers;
         }
-        return cManagers;
-    }
-    #endregion
+        #endregion
 
         #region Input
         public ClientInput GetInputs()

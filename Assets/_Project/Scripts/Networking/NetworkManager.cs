@@ -56,8 +56,8 @@ namespace Mahou.Networking
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
-            base.OnServerDisconnect(conn);
             OnServerClientDisconnected?.Invoke(conn);
+            base.OnServerDisconnect(conn);
         }
         #endregion
 

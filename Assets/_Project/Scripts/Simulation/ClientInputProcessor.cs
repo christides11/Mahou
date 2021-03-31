@@ -68,7 +68,7 @@ namespace Mahou.Simulation
         public void EnqueueInput(ClientInputMessage cimsg, NetworkConnection clientConn, uint serverCurrentTick)
         {
             // Calculate the last tick in the incoming command.
-            uint maxTick = cimsg.StartWorldTick + (uint)cimsg.Inputs.Length - 1;
+            uint maxTick = (uint)(cimsg.StartWorldTick + cimsg.Inputs.Length - 1);
 
             // If the message has inputs we haven't received yet, then we want to enqueue them.
             if (maxTick >= serverCurrentTick)

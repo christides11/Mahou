@@ -1,9 +1,6 @@
-using CAF.Simulation;
 using Mahou.Managers;
 using Mahou.Networking;
 using Mirror;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,6 +14,9 @@ namespace Mahou.Simulation
         // Handles storing inputs received by clients.
         private ClientInputProcessor clientInputProcessor;
 
+        // Reusable hash set for players whose input we've checked each frame.
+        private HashSet<uint> unprocessedPlayerIds = new HashSet<uint>();
+
         /// <summary>
         /// This timer handles when the server should send the world state to the clients.
         /// This is independent of the simulation rate, so it needs it's own timer.
@@ -26,13 +26,12 @@ namespace Mahou.Simulation
         /// <summary>
         /// Snapshots of player states. Used when rolling back the simulation. Index is each player's connection ID.
         /// </summary>
-        [SerializeField] private Dictionary<int, ClientSimState[]> playerStateSnapshots = new Dictionary<int, ClientSimState[]>();
+        private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
 
-        // Reusable hash set for players whose input we've checked each frame.
-        private HashSet<uint> unprocessedPlayerIds = new HashSet<uint>();
-
-        // Current input struct for each player.
-        private Dictionary<int, TickInput> currentClientInput = new Dictionary<int, TickInput>();
+        /// <summary>
+        /// Current input struct for each player.
+        /// </summary>
+        private Dictionary<int, TickInput> clientCurrentInput = new Dictionary<int, TickInput>();
 
         public ServerSimulationManager(LobbyManager lobbyManager) : base(lobbyManager)
         {
@@ -40,11 +39,17 @@ namespace Mahou.Simulation
             clientInputProcessor = new ClientInputProcessor();
 
             Mahou.Networking.NetworkManager.OnServerClientReady += InitializePlayerState;
+            Mahou.Networking.NetworkManager.OnServerClientDisconnected += HandleClientDisconnect;
             NetworkServer.RegisterHandler<ClientInputMessage>(EnqueuePlayerInput);
 
             // Initialize timers.
             worldStateBroadcastTimer = new FixedTimer((float)gameManager.GameSettings.serverTickRate, BroadcastWorldState);
             worldStateBroadcastTimer.Start();
+        }
+
+        private void HandleClientDisconnect(NetworkConnection clientConnection)
+        {
+
         }
 
         private void EnqueuePlayerInput(NetworkConnection arg1, ClientInputMessage arg2)
@@ -59,16 +64,7 @@ namespace Mahou.Simulation
 
         protected override void Tick(float dt)
         {
-            // HOST INPUT HANDLING //
-            if (NetworkServer.localClientActive
-                && NetworkServer.localConnection.identity)
-            {
-                ClientInputMessage cim = new ClientInputMessage();
-                cim.ClientWorldTickDeltas = new short[1] { 0 };
-                cim.StartWorldTick = currentTick;
-                cim.Inputs = new Input.ClientInput[] { ClientManager.local ? ClientManager.local.GetInputs() : new Input.ClientInput() };
-                clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentTick);
-            }
+            HandleHostInput();
 
             // GET CLIENTS TICK INPUT //
             unprocessedPlayerIds.Clear();
@@ -78,8 +74,9 @@ namespace Mahou.Simulation
             foreach (var tickInput in tickInputs)
             {
                 ClientManager player = tickInput.client.GetComponent<ClientManager>();
-                currentClientInput[player.connectionToClient.connectionId] = tickInput;
+                clientCurrentInput[player.connectionToClient.connectionId] = tickInput;
                 player.SetInput(tickInput.input);
+
                 unprocessedPlayerIds.Remove(player.netId);
 
                 // Mark the player as synchronized.
@@ -103,7 +100,7 @@ namespace Mahou.Simulation
                 TickInput latestInput;
                 if (clientInputProcessor.TryGetLatestInput(clientID, out latestInput))
                 {
-                    currentClientInput[cManager.connectionToClient.connectionId] = latestInput;
+                    clientCurrentInput[cManager.connectionToClient.connectionId] = latestInput;
                     cManager.SetInput(latestInput.input);
                 }
                 else
@@ -121,32 +118,48 @@ namespace Mahou.Simulation
 
 
             // SNAPSHOT WORLD STATE //
-            var bufidx = CurrentTick % circularBufferSize;
-            ClientManager.GetClients().ForEach(p => {
-                playerStateSnapshots[p.networkIdentity.connectionToClient.connectionId][bufidx] = p.GetClientSimState();
-            });
+            uint bufidx = CurrentTick % circularBufferSize;
+            foreach(ClientManager cm in ClientManager.GetClients())
+            {
+                clientStateSnapshots[cm.networkIdentity.connectionToClient.connectionId][bufidx] = cm.GetClientSimState();
+            }
 
             // BROADCAST WORLD STATE //
             worldStateBroadcastTimer.Update(dt);
+        }
+
+        #region Input
+        private void HandleHostInput()
+        {
+            if (NetworkServer.localClientActive
+                && NetworkServer.localConnection.identity)
+            {
+                ClientInputMessage cim = new ClientInputMessage();
+                cim.ClientWorldTickDeltas = new short[1] { 0 };
+                cim.StartWorldTick = currentTick;
+                cim.Inputs = new Input.ClientInput[] { ClientManager.local ? ClientManager.local.GetInputs() : new Input.ClientInput() };
+                clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentTick);
+            }
         }
 
         private void BroadcastInputs()
         {
             List<TickInput> tInputs = new List<TickInput>();
 
-            foreach (var k in currentClientInput.Keys)
+            foreach (var k in clientCurrentInput.Keys)
             {
-                tInputs.Add(currentClientInput[k]);
+                tInputs.Add(clientCurrentInput[k]);
             }
 
             ServerStateInputMessage serverInputMsg = new ServerStateInputMessage(currentTick, tInputs);
             NetworkServer.SendToAll(serverInputMsg, 0, true);
         }
+        #endregion
 
         #region Player State
         private void InitializePlayerState(NetworkConnection clientConnection, ClientManager clientManager)
         {
-            playerStateSnapshots.Add(clientConnection.connectionId, new ClientSimState[1024]);
+            clientStateSnapshots.Add(clientConnection.connectionId, new ClientSimState[1024]);
         }
 
         public void ResetPlayerState(ClientManager player)
@@ -162,13 +175,19 @@ namespace Mahou.Simulation
         /// <param name="dt"></param>
         private void BroadcastWorldState(float dt)
         {
+            // Build Message
             ServerWorldStateMessage serverStateMsg = new ServerWorldStateMessage();
-
             WorldSnapshot snapshot = new WorldSnapshot();
             snapshot.currentTick = currentTick;
-            snapshot.clientStates = ClientManager.clientManagers.Select(c => c.Value.GetClientSimState()).ToList();
+            List<ClientSimState> clientStates = new List<ClientSimState>();
+            foreach(ClientManager cm in ClientManager.clientManagers.Values)
+            {
+                clientStates.Add(cm.GetClientSimState());
+            }
+            snapshot.clientStates = clientStates;
             serverStateMsg.worldSnapshot = snapshot;
 
+            // Send Message
             foreach(var v in lobbyManager.MatchManager.clientConnectionInfo)
             {
                 // Ignore the host.

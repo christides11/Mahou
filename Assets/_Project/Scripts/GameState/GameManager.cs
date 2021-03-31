@@ -35,6 +35,14 @@ namespace Mahou.Managers
             lobbyManager.Initialize();
         }
 
+        private void Update()
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F5))
+            {
+                QualitySettings.vSyncCount = QualitySettings.vSyncCount == 0 ? 1 : 0;
+            }
+        }
+
         public virtual async UniTask<bool> LoadGamemode(ModObjectReference gamemode)
         {
             await modManager.LoadGamemodeDefinitions(gamemode.modIdentifier);
