@@ -6,18 +6,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-namespace Mahou
+namespace Mahou.Debugging
 {
+    public enum ConsoleMessageType
+    {
+        Debug = 0,
+        Error = 1,
+        Warning = 2,
+        Print = 3
+    }
     public class ConsoleWindow : MonoBehaviour
     {
+        public static ConsoleWindow current;
+
         public GameObject canvasGO;
 
         public LobbyManager lobbyManager;
 
+        [Header("MP Info")]
         public TextMeshProUGUI frameText;
         public TextMeshProUGUI leadServerText;
         public TextMeshProUGUI leadLocalText;
         public TextMeshProUGUI adjText;
+
+        [Header("Console")]
+        [SerializeField] private ConsoleReader consoleReader;
+        [SerializeField] private TextMeshProUGUI consoleText;
+        [SerializeField] private TMP_InputField inputField;
+        [SerializeField] private List<Color> messageColors = new List<Color>(4);
+
+        private void Awake()
+        {
+            current = this;
+        }
 
         // Update is called once per frame
         void Update()
@@ -30,6 +51,14 @@ namespace Mahou
             if (canvasGO.activeInHierarchy == false)
             {
                 return;
+            }
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Return) && !String.IsNullOrEmpty(inputField.text))
+            {
+                string input = inputField.text;
+                inputField.text = "";
+                WriteLine($"> {input}", ConsoleMessageType.Print);
+                _ = consoleReader.Convert(input);
             }
 
             if (lobbyManager.MatchManager != null)
@@ -56,5 +85,17 @@ namespace Mahou
             frameText.text = (currentTick%1024).ToString();
             adjText.text = lobbyManager.MatchManager.SimulationManager.AdjustedInterval.ToString();
         }
+
+        public void Write(string text)
+        {
+            consoleText.text += text;
+        }
+
+        public void WriteLine(string text, ConsoleMessageType msgType = ConsoleMessageType.Debug)
+        {
+            Write($"<#{ColorUtility.ToHtmlStringRGBA(messageColors[(int)msgType])}>" + text + "</color>");
+            Write("\n");
+        }
+
     }
 }

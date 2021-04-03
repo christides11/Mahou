@@ -22,16 +22,18 @@ namespace Mahou.Networking
 
         public static ClientManager local;
 
+        public uint InputDelay { get; protected set; } = 0;
+
         public NetworkIdentity networkIdentity;
 
-        private static List<uint> clientIDs = new List<uint>();
         public static Dictionary<uint, ClientManager> clientManagers = new Dictionary<uint, ClientManager>();
+        public static List<uint> clientIDs = new List<uint>();
 
         private CharacterSelectMenu characterSelect;
 
         public SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
 
-        [SyncVar] public int clientID;
+        [SyncVar] public uint clientID;
 
         public void Awake()
         {
@@ -41,13 +43,18 @@ namespace Mahou.Networking
 
         private void Start()
         {
+            // Local player is handled in OnStartClient.
             if (networkIdentity.isLocalPlayer)
             {
                 return;
             }
-            if (!clientManagers.ContainsKey(networkIdentity.netId))
+            if (!clientManagers.ContainsKey(clientID))
             {
-                clientManagers.Add(networkIdentity.netId, this);
+                clientManagers.Add(clientID, this);
+            }
+            if (!clientIDs.Contains(clientID))
+            {
+                clientIDs.Add(clientID);
             }
         }
 
@@ -55,7 +62,8 @@ namespace Mahou.Networking
         {
             base.OnStartClient();
             OnClientManagerAdded?.Invoke(this);
-            clientManagers.Add(networkIdentity.netId, this);
+            clientManagers.Add(clientID, this);
+            clientIDs.Add(clientID);
         }
 
         public override void OnStartAuthority()
@@ -65,6 +73,12 @@ namespace Mahou.Networking
             characterSelect = g.GetComponent<CharacterSelectMenu>();
             characterSelect.OpenMenu();
             characterSelect.OnCharacterSubmit += OnCharacterSelected;
+        }
+
+        [Client]
+        public void SetInputDelay(int inputDelay)
+        {
+
         }
 
         [Client]
@@ -180,6 +194,7 @@ namespace Mahou.Networking
         #endregion
 
         #region Clients
+        /*
         public static List<uint> GetClientIDs()
         {
             List<uint> cIDs = new List<uint>();
@@ -188,7 +203,7 @@ namespace Mahou.Networking
                 cIDs.Add(cID);
             }
             return cIDs;
-        }
+        }*/
 
         public static List<ClientManager> GetClients()
         {

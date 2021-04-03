@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Mahou.Debugging
+{
+    [System.Serializable]
+    public class ConsoleInput
+    {
+        public string[] input;
+
+        public ConsoleInput(string[] input)
+        {
+            this.input = input;
+            for (int i = 0; i < input.Length; i++)
+            {
+                input[i] = input[i].ToLower();
+            }
+        }
+    }
+}

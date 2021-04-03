@@ -84,7 +84,7 @@ namespace Mahou.Networking
         {
             // Create the client's player.
             GameObject cManager = GameObject.Instantiate(playerPrefab);
-            cManager.GetComponent<ClientManager>().clientID = conn.connectionId;
+            cManager.GetComponent<ClientManager>().clientID = (uint)conn.connectionId;
             NetworkServer.AddPlayerForConnection(conn, cManager);
 
             base.OnServerReady(conn);

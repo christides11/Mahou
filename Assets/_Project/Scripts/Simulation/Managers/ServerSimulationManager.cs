@@ -26,12 +26,12 @@ namespace Mahou.Simulation
         /// <summary>
         /// Snapshots of player states. Used when rolling back the simulation. Index is each player's connection ID.
         /// </summary>
-        private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
+        private Dictionary<uint, ClientSimState[]> clientStateSnapshots = new Dictionary<uint, ClientSimState[]>();
 
         /// <summary>
         /// Current input struct for each player.
         /// </summary>
-        private Dictionary<int, TickInput> clientCurrentInput = new Dictionary<int, TickInput>();
+        private Dictionary<uint, TickInput> clientCurrentInput = new Dictionary<uint, TickInput>();
 
         public ServerSimulationManager(LobbyManager lobbyManager) : base(lobbyManager)
         {
@@ -68,13 +68,13 @@ namespace Mahou.Simulation
 
             // GET CLIENTS TICK INPUT //
             unprocessedPlayerIds.Clear();
-            unprocessedPlayerIds.UnionWith(ClientManager.GetClientIDs());
+            unprocessedPlayerIds.UnionWith(ClientManager.clientIDs);
             var tickInputs = clientInputProcessor.DequeueInputsForTick(currentTick);
             // Apply the inputs we got for this frame for all clients.
             foreach (var tickInput in tickInputs)
             {
                 ClientManager player = tickInput.client.GetComponent<ClientManager>();
-                clientCurrentInput[player.connectionToClient.connectionId] = tickInput;
+                clientCurrentInput[player.clientID] = tickInput;
                 player.SetInput(tickInput.input);
 
                 unprocessedPlayerIds.Remove(player.netId);
@@ -85,7 +85,7 @@ namespace Mahou.Simulation
 
             // Any remaining players without inputs have their latest input command repeated,
             // but we notify them that they need to fast-forward their simulation to improve buffering.
-            foreach (var clientID in unprocessedPlayerIds)
+            foreach (uint clientID in unprocessedPlayerIds)
             {
                 // If the player is not yet synchronized, this means that they haven't sent any
                 // inputs yet. Ignore them for now.
@@ -100,7 +100,7 @@ namespace Mahou.Simulation
                 TickInput latestInput;
                 if (clientInputProcessor.TryGetLatestInput(clientID, out latestInput))
                 {
-                    clientCurrentInput[cManager.connectionToClient.connectionId] = latestInput;
+                    clientCurrentInput[clientID] = latestInput;
                     cManager.SetInput(latestInput.input);
                 }
                 else
@@ -121,7 +121,7 @@ namespace Mahou.Simulation
             uint bufidx = CurrentTick % circularBufferSize;
             foreach(ClientManager cm in ClientManager.GetClients())
             {
-                clientStateSnapshots[cm.networkIdentity.connectionToClient.connectionId][bufidx] = cm.GetClientSimState();
+                clientStateSnapshots[cm.clientID][bufidx] = cm.GetClientSimState();
             }
 
             // BROADCAST WORLD STATE //
@@ -134,9 +134,10 @@ namespace Mahou.Simulation
             if (NetworkServer.localClientActive
                 && NetworkServer.localConnection.identity)
             {
+                uint inputDelay = ClientManager.local ? ClientManager.local.InputDelay : 0;
                 ClientInputMessage cim = new ClientInputMessage();
                 cim.ClientWorldTickDeltas = new short[1] { 0 };
-                cim.StartWorldTick = currentTick;
+                cim.StartWorldTick = currentTick + inputDelay;
                 cim.Inputs = new Input.ClientInput[] { ClientManager.local ? ClientManager.local.GetInputs() : new Input.ClientInput() };
                 clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentTick);
             }
@@ -159,7 +160,7 @@ namespace Mahou.Simulation
         #region Player State
         private void InitializePlayerState(NetworkConnection clientConnection, ClientManager clientManager)
         {
-            clientStateSnapshots.Add(clientConnection.connectionId, new ClientSimState[1024]);
+            clientStateSnapshots.Add(clientManager.clientID, new ClientSimState[1024]);
         }
 
         public void ResetPlayerState(ClientManager player)

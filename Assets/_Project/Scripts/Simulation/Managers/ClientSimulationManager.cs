@@ -36,11 +36,13 @@ namespace Mahou.Simulation
         /// <summary>
         /// Snapshots of player states. Index is each player's connection ID.
         /// </summary>
-        [SerializeField] private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
+        [SerializeField] private Dictionary<uint, ClientSimState[]> clientStateSnapshots = new Dictionary<uint, ClientSimState[]>();
 
-        [SerializeField] private Dictionary<int, ClientInput[]> clientInputSnapshots = new Dictionary<int, ClientInput[]>();
+        [SerializeField] private Dictionary<uint, ClientInput[]> clientInputSnapshots = new Dictionary<uint, ClientInput[]>();
 
         public float moveFalloff = 0.1f;
+
+        public int inputDelay = 0;
 
         public ClientSimulationManager(ClientManager localClient, LobbyManager lobbyManager, uint gottenServerTick) : base(lobbyManager)
         {
@@ -293,7 +295,7 @@ namespace Mahou.Simulation
             // APPLY HISTORICAL STATE //
             foreach (var cm in ClientManager.clientManagers)
             {
-                cm.Value.ApplyClientSimState(clientStateSnapshots[cm.Value.clientID][bufidx]);
+                cm.Value.ApplyClientSimState(clientStateSnapshots[cm.Key][bufidx]);
             }
 
             // ADVANCE FORWARD //
@@ -305,10 +307,10 @@ namespace Mahou.Simulation
                 foreach (var cm in ClientManager.clientManagers)
                 {
                     // Apply inputs to the client.
-                    cm.Value.SetInput(clientInputSnapshots[cm.Value.clientID][bufidx]);
+                    cm.Value.SetInput(clientInputSnapshots[cm.Key][bufidx]);
 
                     // Rewrite the historical state snapshot.
-                    clientStateSnapshots[cm.Value.clientID][bufidx] = cm.Value.GetClientSimState();
+                    clientStateSnapshots[cm.Key][bufidx] = cm.Value.GetClientSimState();
                 }
 
                 // SIMULATE //

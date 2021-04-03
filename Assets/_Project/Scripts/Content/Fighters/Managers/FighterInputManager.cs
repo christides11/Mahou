@@ -13,13 +13,12 @@ namespace Mahou.Content.Fighters
     {
         Player p = null;
 
-        public int baseFrame = 0;
+        public uint baseFrame = 0;
 
         public PlayerInput currentInput;
 
-        public override void SetControllerID(int controllerID)
+        public virtual void SetControllerID(int controllerID)
         {
-            base.SetControllerID(controllerID);
             p = ReInput.players.GetPlayer(controllerID);
         }
 
@@ -38,6 +37,31 @@ namespace Mahou.Content.Fighters
         public void SetInput(PlayerInput input)
         {
             currentInput = input;
+        }
+
+        public override Vector2 GetAxis2D(int axis2DID, uint frameOffset = 0)
+        {
+            return base.GetAxis2D(axis2DID, baseFrame + frameOffset);
+        }
+
+        public void AddInput(PlayerInput pInput)
+        {
+            InputRecordItem recordItem = new InputRecordItem();
+            recordItem.AddInput(0, new InputRecordAxis2D(pInput.movement));
+            InputRecord[inputTick % inputRecordSize] = recordItem;
+            inputTick++;
+        }
+
+        public void ReplaceInput(uint tick, PlayerInput pInput)
+        {
+            InputRecordItem recordItem = new InputRecordItem();
+            recordItem.AddInput(0, new InputRecordAxis2D(pInput.movement));
+            InputRecord[tick % inputRecordSize] = recordItem;
+        }
+
+        public void SetInputTick(uint tick)
+        {
+            inputTick = tick;
         }
 
         /*
@@ -65,10 +89,5 @@ namespace Mahou.Content.Fighters
         {
             baseFrame = offset;
         }*/
-
-        public override Vector2 GetAxis2D(int axis2DID, int frameOffset = 0)
-        {
-            return base.GetAxis2D(axis2DID, baseFrame + frameOffset);
-        }
     }
 }
