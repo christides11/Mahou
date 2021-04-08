@@ -28,14 +28,12 @@ namespace Mahou.Content.Fighters
 
         public void SimUpdate()
         {
-            Vector2 mov = (InputManager as FighterInputManager).currentInput.movement;
-            cc.Motor.SetPosition(cc.Motor.InitialSimulationPosition + (new Vector3(mov.x, 0, mov.y) * 0.3f));
-            //Tick();
+            Tick();
         }
 
         public void SimLateUpdate()
         {
-            //LateTick();
+            LateTick();
         }
 
         public ISimState GetSimState()

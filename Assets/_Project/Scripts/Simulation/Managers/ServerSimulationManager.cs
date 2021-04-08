@@ -75,7 +75,8 @@ namespace Mahou.Simulation
             {
                 ClientManager player = tickInput.client.GetComponent<ClientManager>();
                 clientCurrentInput[player.clientID] = tickInput;
-                player.SetInput(tickInput.input);
+                player.AddInput(tickInput.input);
+                //player.SetInput(tickInput.input);
 
                 unprocessedPlayerIds.Remove(player.netId);
 
@@ -101,7 +102,8 @@ namespace Mahou.Simulation
                 if (clientInputProcessor.TryGetLatestInput(clientID, out latestInput))
                 {
                     clientCurrentInput[clientID] = latestInput;
-                    cManager.SetInput(latestInput.input);
+                    cManager.AddInput(latestInput.input);
+                    //cManager.SetInput(latestInput.input);
                 }
                 else
                 {

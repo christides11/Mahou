@@ -12,6 +12,7 @@
 /[Aa]ssets/ThirdParty/KinematicCharacterController/
 /[Aa]ssets/ThirdParty/Rewired/
 /[Aa]ssets/ThirdParty/UMod/
+[Aassets]/ThirdParty/ThirdPersonCameraWithLockOn/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta

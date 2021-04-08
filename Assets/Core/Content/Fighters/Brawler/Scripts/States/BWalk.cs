@@ -9,8 +9,24 @@ namespace Mahou.Core
     {
         public override void OnUpdate()
         {
+            BrawlerManager bManager = Manager as BrawlerManager;
+            FighterPhysicsManager physicsManager = Manager.PhysicsManager as FighterPhysicsManager;
+
             Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(0, 0);
-            (Manager as FighterManager).cc.Motor.SetPosition(Manager.transform.position + (new Vector3(mov.x, 0, mov.y) * 0.5f));
+            Vector3 translatedMovement = Manager.GetMovementVector(mov.x, mov.y);
+            translatedMovement.y = 0;
+
+            Vector3 velo = (translatedMovement * bManager.stats.walkAcceleration)
+                + (translatedMovement.normalized * bManager.stats.walkBaseAccel);
+
+            physicsManager.forceMovement += velo;
+            //Limit movement velocity.
+            if (physicsManager.forceMovement.magnitude >
+                bManager.stats.maxWalkSpeed * translatedMovement.magnitude)
+            {
+                physicsManager.forceMovement = physicsManager.forceMovement.normalized
+                    * bManager.stats.maxWalkSpeed * translatedMovement.magnitude;
+            }
 
             CheckInterrupt();
         }

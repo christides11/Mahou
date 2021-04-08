@@ -87,7 +87,7 @@ namespace Mahou.Simulation
                                 continue;
                             }
                             clientInputSnapshots[cm.clientID][i % circularBufferSize] = ClientInput.Falloff(ssim.clientInputs[w].input, (int)(i-ssim.serverTick), moveFalloff);
-                            cm.SetInput(clientInputSnapshots[cm.clientID][i % circularBufferSize]);
+                            cm.ReplaceInput(clientInputSnapshots[cm.clientID][i % circularBufferSize], currentTick - i);
                         }
                     }
                 }
@@ -104,13 +104,13 @@ namespace Mahou.Simulation
                 if(c.isLocalPlayer)
                 {
                     clientInputSnapshots[c.clientID][bufidx] = localClient.GetInputs();
-                    localClient.SetInput(clientInputSnapshots[c.clientID][bufidx]);
+                    localClient.AddInput(clientInputSnapshots[c.clientID][bufidx]);
                 }
                 else
                 {
                     // Remote clients repeat their last input.
                     clientInputSnapshots[c.clientID][bufidx] = clientInputSnapshots[c.clientID][(bufidx-1)%circularBufferSize];
-                    c.SetInput(clientInputSnapshots[c.clientID][bufidx]);
+                    c.AddInput(clientInputSnapshots[c.clientID][bufidx]);
                 }
             }
 
@@ -175,6 +175,11 @@ namespace Mahou.Simulation
                     OnClientJoin(cm);
                 }
                 clientInputSnapshots[cm.clientID][msg.serverTick % circularBufferSize] = msg.clientInputs[i].input;
+                // Server is behind us of us.
+                if(msg.serverTick <= currentTick)
+                {
+                    cm.ReplaceInput(clientInputSnapshots[cm.clientID][msg.serverTick % circularBufferSize], currentTick - msg.serverTick);
+                }
             }
         }
         #endregion
@@ -307,7 +312,8 @@ namespace Mahou.Simulation
                 foreach (var cm in ClientManager.clientManagers)
                 {
                     // Apply inputs to the client.
-                    cm.Value.SetInput(clientInputSnapshots[cm.Key][bufidx]);
+                    cm.Value.SetInputFrame(currentTick - startFrame);
+                    //cm.Value.SetInput(clientInputSnapshots[cm.Key][bufidx]);
 
                     // Rewrite the historical state snapshot.
                     clientStateSnapshots[cm.Key][bufidx] = cm.Value.GetClientSimState();
@@ -316,6 +322,12 @@ namespace Mahou.Simulation
                 // SIMULATE //
                 SimulateWorld(simulationTickInterval);
                 startFrame++;
+            }
+
+            foreach (var cm in ClientManager.clientManagers)
+            {
+                // Apply inputs to the client.
+                cm.Value.SetInputFrame(0);
             }
         }
         #endregion

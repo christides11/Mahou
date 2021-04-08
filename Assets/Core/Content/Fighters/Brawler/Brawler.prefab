@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 4468851262550792971}
   - component: {fileID: 2320185776235978899}
   - component: {fileID: 1412428705586473507}
+  - component: {fileID: 9161192216790614098}
   m_Layer: 0
   m_Name: Brawler
   m_TagString: Untagged
@@ -139,6 +140,8 @@ MonoBehaviour:
   visual: {fileID: 3497842943104085858}
   netid: {fileID: 308169902951444416}
   cc: {fileID: 844805816179117161}
+  movSpeed: 0.5
+  stats: {fileID: 9161192216790614098}
 --- !u!114 &4195765052651656638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,6 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 5587520329024140789}
+  baseOffset: 0
 --- !u!114 &-2356063080773862610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,6 +228,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &9161192216790614098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886669924077431813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df79d86e86da124d9cc6d005b1a1185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &907226629947186377
 GameObject:
   m_ObjectHideFlags: 0

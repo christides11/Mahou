@@ -220,7 +220,7 @@ namespace Mahou.Networking
         public ClientInput GetInputs()
         {
             List<PlayerInput> iri = new List<PlayerInput>();
-            
+
             for (int i = 0; i < players.Count; i++)
             {
                 iri.Add(players[i].GetComponent<FighterInputManager>().SampleInputs());
@@ -228,15 +228,35 @@ namespace Mahou.Networking
             return new ClientInput(iri);
         }
 
-        public void SetInput(ClientInput cInputs)
+        public void AddInput(ClientInput cInputs)
+        {
+            if(cInputs.playerInputs == null)
+            {
+                return;
+            }
+            for(int i = 0; i < cInputs.playerInputs.Count; i++)
+            {
+                players[i].GetComponent<FighterInputManager>().AddInput(cInputs.playerInputs[i]);
+            }
+        }
+
+        public void ReplaceInput(ClientInput cInputs, uint offset)
         {
             if (cInputs.playerInputs == null)
             {
                 return;
             }
-            for (int i = 0; i < cInputs.playerInputs.Count; i++)
+            for(int i = 0; i < cInputs.playerInputs.Count; i++)
             {
-                players[i].GetComponent<FighterInputManager>().SetInput(cInputs.playerInputs[i]);
+                players[i].GetComponent<FighterInputManager>().ReplaceInput(offset, cInputs.playerInputs[i]);
+            }
+        }
+
+        public void SetInputFrame(uint offset)
+        {
+            for (int i = 0; i < players.Count; i++)
+            {
+                players[i].GetComponent<FighterInputManager>().baseOffset = offset;
             }
         }
         #endregion

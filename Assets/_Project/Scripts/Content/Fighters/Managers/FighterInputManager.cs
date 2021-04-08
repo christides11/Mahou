@@ -13,7 +13,7 @@ namespace Mahou.Content.Fighters
     {
         Player p = null;
 
-        public uint baseFrame = 0;
+        public uint baseOffset = 0;
 
         public PlayerInput currentInput;
 
@@ -41,7 +41,17 @@ namespace Mahou.Content.Fighters
 
         public override Vector2 GetAxis2D(int axis2DID, uint frameOffset = 0)
         {
-            return base.GetAxis2D(axis2DID, baseFrame + frameOffset);
+            return base.GetAxis2D(axis2DID, baseOffset + frameOffset);
+        }
+
+        public override InputRecordButton GetButton(int buttonID, out uint gotOffset, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
+        {
+            return base.GetButton(buttonID, out gotOffset, baseOffset + frameOffset, checkBuffer, bufferFrames);
+        }
+
+        public override InputRecordButton GetButton(int buttonID, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
+        {
+            return base.GetButton(buttonID, baseOffset + frameOffset, checkBuffer, bufferFrames);
         }
 
         public void AddInput(PlayerInput pInput)
@@ -63,31 +73,5 @@ namespace Mahou.Content.Fighters
         {
             inputTick = tick;
         }
-
-        /*
-        public void AddInput(PlayerInput pInput)
-        {
-            InputRecordItem recordItem = new InputRecordItem();
-            recordItem.AddInput(0,
-                new InputRecordAxis2D(pInput.movement));
-            InputRecord.Add(recordItem);
-        }
-
-        public void ReplaceInput(int offset, PlayerInput pInput)
-        {
-            if(InputRecord.Count <= offset)
-            {
-                return;
-            }
-            InputRecordItem recordItem = new InputRecordItem();
-            recordItem.AddInput(0,
-                new InputRecordAxis2D(pInput.movement));
-            InputRecord[InputRecord.Count - 1 - offset] = recordItem;
-        }
-
-        public void SetBaseFrame(int offset)
-        {
-            baseFrame = offset;
-        }*/
     }
 }

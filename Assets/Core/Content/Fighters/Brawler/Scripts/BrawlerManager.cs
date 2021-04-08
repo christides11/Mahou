@@ -7,13 +7,14 @@ namespace Mahou.Core
 {
     public class BrawlerManager : FighterManager
     {
+        public BrawlerStats stats;
 
         public override void SetupStates()
         {
             stateManager.AddState(new BIdle(), (ushort)BrawlerState.IDLE);
             stateManager.AddState(new BWalk(), (ushort)BrawlerState.WALK);
 
-            //stateManager.ChangeState((ushort)BrawlerState.IDLE);
+            stateManager.ChangeState((ushort)BrawlerState.IDLE);
         }
     }
 }
