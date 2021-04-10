@@ -7,6 +7,8 @@ namespace Mahou
     public class GameSettings : ScriptableObject
     {
         public CharacterSelectMenu characterSelectMenu;
+        public PlayerCamera playerCamera;
+        public DummyCamera dummyCamera;
         /// <summary>
         /// If the client should interpolate positions of remote entities.
         /// </summary>

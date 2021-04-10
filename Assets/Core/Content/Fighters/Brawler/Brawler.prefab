@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7651240286032661150}
   - component: {fileID: 844805816179117161}
   - component: {fileID: 308169902951444416}
+  - component: {fileID: 1507152290853497334}
   - component: {fileID: 5587520329024140789}
   - component: {fileID: 4195765052651656638}
   - component: {fileID: -2356063080773862610}
@@ -120,6 +121,21 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &1507152290853497334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886669924077431813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c00879164cd9cc4aa3d974d212788fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  fighterManager: {fileID: 5587520329024140789}
 --- !u!114 &5587520329024140789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +256,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df79d86e86da124d9cc6d005b1a1185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundFriction: 1.2
+  maxWalkSpeed: 8
+  walkBaseAccel: 1
+  walkAcceleration: 1
+  walkRotationSpeed: 0.35
 --- !u!1 &907226629947186377
 GameObject:
   m_ObjectHideFlags: 0

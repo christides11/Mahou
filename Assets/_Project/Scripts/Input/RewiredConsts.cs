@@ -7,7 +7,7 @@
 // need to regenerate this list.
 // </auto-generated>
 
-namespace RewiredConsts {
+namespace Mahou.Input {
     public static partial class Action {
         // Default
         // Player

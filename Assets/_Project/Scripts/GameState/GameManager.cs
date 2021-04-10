@@ -30,6 +30,7 @@ namespace Mahou.Managers
         public virtual void Initialize()
         {
             current = this;
+            CAF.Input.GlobalInputManager.instance = new Mahou.Input.GlobalInputManager();
             modManager.Initialize();
             modManager.mods.Add("core", coreMod);
             lobbyManager.Initialize();

@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterSelectMenu: {fileID: 3969542911321300253, guid: 82d8314760e93d049a63e85cb588dc6e,
     type: 3}
+  playerCamera: {fileID: 7098787419209501276, guid: 308bf601bf99b7f4780c26108ffd72bb,
+    type: 3}
+  dummyCamera: {fileID: 1792015874834612024, guid: 565b81ea977d0ad438b9f67ba7e1afdc,
+    type: 3}
   useClientInterpolation: 0
   clientTickRate: 60
   serverTickRate: 60

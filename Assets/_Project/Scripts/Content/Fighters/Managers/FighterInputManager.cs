@@ -3,7 +3,6 @@ using Rewired;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RewiredConsts;
 using Player = Rewired.Player;
 using CAF.Input;
 
@@ -29,6 +28,10 @@ namespace Mahou.Content.Fighters
             {
                 return pinput;
             }
+            if (manager.lookHandler != null)
+            {
+                pinput.cameraEuler = manager.lookHandler.LookTransform().eulerAngles;
+            }
             pinput.movement = p.GetAxis2D(Action.Movement_X, Action.Movement_Y);
             pinput.jump = p.GetButton(Action.Jump);
             return pinput;
@@ -36,6 +39,10 @@ namespace Mahou.Content.Fighters
 
         public void SetInput(PlayerInput input)
         {
+            if (manager.lookHandler != null)
+            {
+                manager.lookHandler.SetRotation(input.cameraEuler);
+            }
             currentInput = input;
         }
 

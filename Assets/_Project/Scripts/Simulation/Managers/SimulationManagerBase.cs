@@ -30,6 +30,9 @@ namespace Mahou.Simulation
         private float accumulator;
         protected LobbyManager lobbyManager;
 
+        public delegate void PostUpdateAction();
+        public static event PostUpdateAction OnPostUpdate;
+
         protected SimulationManagerBase(LobbyManager lobbyManager)
         {
             this.lobbyManager = lobbyManager;
@@ -45,20 +48,17 @@ namespace Mahou.Simulation
             {
                 accumulator -= adjustedTickInterval;
 
-                //interpController.ExplicitFixedUpdate(adjustedTickInterval);
-
                 // Although we can run the simulation at different speeds, the actual tick processing is
                 // *always* done with the original unmodified rate for physics accuracy.
                 // This has a time-warping effect.
                 Tick(simulationTickInterval);
             }
-            //interpController.ExplicitUpdate(dt);
             PostUpdate();
         }
 
         protected virtual void PostUpdate()
         {
-
+            OnPostUpdate?.Invoke();
         }
 
         protected abstract void Tick(float dt);

@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "6167c49015aea085935be5244ae1c9b3f80c49ed"
+      "hash": "5d4abb90e13a2a8fdc07246da33ef413840200c3"
     },
     "com.coffee.upm-git-extension": {
       "version": "https://github.com/mob-sakai/UpmGitExtension.git#1.3.4",
@@ -15,11 +15,11 @@
       "hash": "c5bd85b033ee9994cf7b4d711479e2602d42c639"
     },
     "com.cysharp.unitask": {
-      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.2.4",
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.2.5",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "18f2746f0d30a1b870d9835f2f16d15b56476a33"
+      "hash": "72e620d169841f32bc6110ad0e12ee9eae6f1aaf"
     },
     "com.github.siccity.xnode": {
       "version": "https://github.com/siccity/xNode.git#1.8.0",

@@ -16,11 +16,12 @@ namespace Mahou.Core
             Vector3 translatedMovement = Manager.GetMovementVector(mov.x, mov.y);
             translatedMovement.y = 0;
 
+            // Add velocity.
             Vector3 velo = (translatedMovement * bManager.stats.walkAcceleration)
                 + (translatedMovement.normalized * bManager.stats.walkBaseAccel);
-
             physicsManager.forceMovement += velo;
-            //Limit movement velocity.
+
+            //Clamp movement velocity.
             if (physicsManager.forceMovement.magnitude >
                 bManager.stats.maxWalkSpeed * translatedMovement.magnitude)
             {

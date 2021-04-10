@@ -5,6 +5,8 @@ using CAF.Fighters;
 using Mahou.Simulation;
 using Mirror;
 using KinematicCharacterController;
+using Mahou.Networking;
+using Mahou.Managers;
 
 namespace Mahou.Content.Fighters
 {
