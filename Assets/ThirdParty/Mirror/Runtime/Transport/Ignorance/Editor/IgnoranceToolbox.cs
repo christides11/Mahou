@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace Mirror
+namespace IgnoranceTransport
 {
     public class IgnoranceToolbox
     {
+#pragma warning disable IDE0051
         [MenuItem("Ignorance/RTFM/Github Repository")]
         private static void LaunchGithubRepo()
         {
@@ -29,6 +30,7 @@ namespace Mirror
         {
             EditorUtility.DisplayDialog("Enet Library Name", $"Use this for debugging.\nYour platform expects the native Enet library to be called: {ENet.Native.nativeLibraryName}", "Got it");
         }
+#pragma warning restore
     }
 }
 #endif

@@ -26,14 +26,14 @@ namespace Mahou.Networking
 
         public NetworkIdentity networkIdentity;
 
-        public static Dictionary<uint, ClientManager> clientManagers = new Dictionary<uint, ClientManager>();
-        public static List<uint> clientIDs = new List<uint>();
+        public static Dictionary<int, ClientManager> clientManagers = new Dictionary<int, ClientManager>();
+        public static List<int> clientIDs = new List<int>();
 
         private CharacterSelectMenu characterSelect;
 
         public SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
 
-        [SyncVar] public uint clientID;
+        [SyncVar] public int clientID;
 
         public void Awake()
         {
@@ -43,6 +43,7 @@ namespace Mahou.Networking
 
         private void Start()
         {
+            /*
             // Local player is handled in OnStartClient.
             if (networkIdentity.isLocalPlayer)
             {
@@ -55,7 +56,7 @@ namespace Mahou.Networking
             if (!clientIDs.Contains(clientID))
             {
                 clientIDs.Add(clientID);
-            }
+            }*/
         }
 
         public override void OnStartClient()
@@ -183,13 +184,6 @@ namespace Mahou.Networking
             GameObject fighter = GameObject.Instantiate(fighterGO, new Vector3(0, 1, 0), Quaternion.identity);
             NetworkServer.Spawn(fighter, gameObject);
             players.Add(fighter.GetComponent<NetworkIdentity>());
-            RpcReceivePlayer(fighter.GetComponent<NetworkIdentity>());
-        }
-
-        [ClientRpc]
-        public void RpcReceivePlayer(NetworkIdentity nid)
-        {
-            nid.GetComponent<FighterInputManager>().SetControllerID(0);
         }
         #endregion
 

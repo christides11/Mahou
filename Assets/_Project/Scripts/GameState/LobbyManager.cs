@@ -48,7 +48,7 @@ namespace Mahou.Managers
             clientConnection.Send(new MatchInitMessage(matchManager.SimulationManager.CurrentTick));
         }
 
-        private void OnReceivedMatchInitRequest(NetworkConnection arg1, MatchInitMessage arg2)
+        private void OnReceivedMatchInitRequest(MatchInitMessage arg2)
         {
             ClientSimulationManager csm = new ClientSimulationManager(NetworkClient.connection.identity.GetComponent<ClientManager>(), this, arg2.worldTick);
             matchManager = new MatchManager(gameManager, this, csm);
@@ -100,12 +100,12 @@ namespace Mahou.Managers
             clientConnection.Send(msg);
         }
 
-        private async void OnReceivedLobbySettings(NetworkConnection conn, LobbySettingsMessage msg)
+        private async void OnReceivedLobbySettings(LobbySettingsMessage msg)
         {
             settings = msg.lobbySettings;
 
             bool result = await ApplySettings();
-            networkManager.ClientReadyConnection(conn);
+            networkManager.ClientReadyConnection();
 
             OnLobbySettingsSet?.Invoke(this);
         }

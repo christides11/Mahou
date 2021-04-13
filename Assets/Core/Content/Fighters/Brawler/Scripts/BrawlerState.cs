@@ -3,6 +3,9 @@ namespace Mahou.Core
     public enum BrawlerState
     {
         IDLE,
-        WALK
+        WALK,
+        JUMP_SQUAT,
+        JUMP,
+        FALL
     }
 }

@@ -7,5 +7,6 @@ namespace Mahou.Content.Fighters
     public class FighterState : CAF.Fighters.FighterState
     {
         public FighterStateManager StateManager { get { return Manager.StateManager as FighterStateManager; } }
+        public FighterPhysicsManager PhysicsManager { get { return Manager.PhysicsManager as FighterPhysicsManager; } }
     }
 }

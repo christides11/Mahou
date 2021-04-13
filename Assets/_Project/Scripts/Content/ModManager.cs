@@ -39,9 +39,9 @@ namespace Mahou.Managers
             OnFighterRequestMsgResult?.Invoke(arg1, arg2);
         }
 
-        private async void ClientLoadFighterRequestHandler(NetworkConnection arg1, LoadFighterRequestMessage arg2)
+        private async void ClientLoadFighterRequestHandler(LoadFighterRequestMessage arg2)
         {
-            OnFighterRequestMsgResult?.Invoke(arg1, arg2);
+            OnFighterRequestMsgResult?.Invoke(NetworkClient.connection, arg2);
 
             await LoadFighterDefinitions(arg2.fighterReference.modIdentifier);
             IFighterDefinition fighter = GetFighterDefinition(arg2.fighterReference);
@@ -56,7 +56,7 @@ namespace Mahou.Managers
                 return;
             }
             await fighter.LoadFighter();
-            ClientScene.RegisterPrefab(fighter.GetFighter());
+            NetworkClient.RegisterPrefab(fighter.GetFighter());
             NetworkClient.Send(new LoadFighterRequestMessage()
             {
                 requestID = arg2.requestID,

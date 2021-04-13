@@ -36,9 +36,9 @@ namespace Mahou.Networking
             StartClient();
         }
 
-        public void ClientReadyConnection(NetworkConnection conn)
+        public void ClientReadyConnection()
         {
-            ClientScene.Ready(conn);
+            NetworkClient.Ready();
         }
 
         #region Server-Side Callbacks
@@ -84,7 +84,7 @@ namespace Mahou.Networking
         {
             // Create the client's player.
             GameObject cManager = GameObject.Instantiate(playerPrefab);
-            cManager.GetComponent<ClientManager>().clientID = (uint)conn.connectionId;
+            cManager.GetComponent<ClientManager>().clientID = conn.connectionId;
             NetworkServer.AddPlayerForConnection(conn, cManager);
 
             base.OnServerReady(conn);

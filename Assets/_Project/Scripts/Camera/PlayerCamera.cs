@@ -82,10 +82,10 @@ namespace Mahou
             thirdPersonaCamera.cameraX = stickInput.x;
             thirdPersonaCamera.cameraY = stickInput.y;
 
-            if (followTarget)
+            /*if (followTarget)
             {
                 transform.position = followTarget.position;
-            }
+            }*/
         }
 
         public void LookAt(Vector3 position)
@@ -121,12 +121,17 @@ namespace Mahou
 
         public void SetRotation(Quaternion rotation)
         {
-
+            transform.rotation = rotation;
         }
 
         public void SetRotation(Vector3 rotation)
         {
+            transform.eulerAngles = rotation;
+        }
 
+        public void SetPosition(Vector3 position)
+        {
+            transform.position = position;
         }
     }
 }

@@ -9,14 +9,20 @@ namespace Mahou.Core
     {
         public override void OnUpdate()
         {
-            base.OnUpdate();
-
+            PhysicsManager.ApplyMovementFriction();
             CheckInterrupt();
         }
 
         public override bool CheckInterrupt()
         {
-            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(0, 0);
+            Manager.PhysicsManager.CheckIfGrounded();
+
+            if ((Manager.InputManager as FighterInputManager).GetButton(Input.Action.Jump).firstPress)
+            {
+                StateManager.ChangeState((ushort)BrawlerState.JUMP_SQUAT);
+                return true;
+            }
+            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(Input.Action.Movement_X, 0);
             if (mov.magnitude > 0.2f)
             {
                 StateManager.ChangeState((ushort)BrawlerState.WALK);

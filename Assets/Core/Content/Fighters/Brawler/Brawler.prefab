@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4742129870160745856}
+  - component: {fileID: 308169902951444416}
   - component: {fileID: 7651240286032661150}
   - component: {fileID: 844805816179117161}
-  - component: {fileID: 308169902951444416}
-  - component: {fileID: 1507152290853497334}
   - component: {fileID: 5587520329024140789}
   - component: {fileID: 4195765052651656638}
   - component: {fileID: -2356063080773862610}
@@ -21,6 +20,7 @@ GameObject:
   - component: {fileID: 2320185776235978899}
   - component: {fileID: 1412428705586473507}
   - component: {fileID: 9161192216790614098}
+  - component: {fileID: 6809904219315617522}
   m_Layer: 0
   m_Name: Brawler
   m_TagString: Untagged
@@ -43,6 +43,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &308169902951444416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886669924077431813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!114 &7651240286032661150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +81,7 @@ MonoBehaviour:
   MaxStableSlopeAngle: 60
   StableGroundLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 64
   DiscreteCollisionEvents: 0
   StepHandling: 1
   MaxStepHeight: 0.5
@@ -104,38 +121,6 @@ MonoBehaviour:
   airMovementSharpness: 15
   MaxAirMoveSpeed: 15
   IgnoredColliders: []
---- !u!114 &308169902951444416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 886669924077431813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
---- !u!114 &1507152290853497334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 886669924077431813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c00879164cd9cc4aa3d974d212788fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  fighterManager: {fileID: 5587520329024140789}
 --- !u!114 &5587520329024140789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +142,7 @@ MonoBehaviour:
   netid: {fileID: 308169902951444416}
   cc: {fileID: 844805816179117161}
   movSpeed: 0.5
+  fullHop: 0
   stats: {fileID: 9161192216790614098}
 --- !u!114 &4195765052651656638
 MonoBehaviour:
@@ -256,11 +242,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df79d86e86da124d9cc6d005b1a1185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpSquat: 5
+  gravity: 0.5
+  maxFallSpeed: 5
+  airAcceleration: 0.3
+  airDeceleration: 0.05
+  maxAirSpeed: 5
+  shortHopVelocity: 10
+  fullHopVelocity: 12
+  jumpConversedMomentum: 1
   groundFriction: 1.2
   maxWalkSpeed: 8
   walkBaseAccel: 1
   walkAcceleration: 1
   walkRotationSpeed: 0.35
+--- !u!114 &6809904219315617522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886669924077431813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c00879164cd9cc4aa3d974d212788fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  fighterManager: {fileID: 5587520329024140789}
+  fighterInputManager: {fileID: 4195765052651656638}
 --- !u!1 &907226629947186377
 GameObject:
   m_ObjectHideFlags: 0

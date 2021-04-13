@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "com.christides.character-action-framework": "https://github.com/christides11/Character-Action-Framework.git#upm",
     "com.coffee.upm-git-extension": "https://github.com/mob-sakai/UpmGitExtension.git#1.3.4",
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.2.5",
     "com.github.siccity.xnode": "https://github.com/siccity/xNode.git#1.8.0",
-    "com.malee.reorderablelist": "https://github.com/cfoulston/Unity-Reorderable-List.git#1.0.1",
+    "com.malee.reorderablelist": "https://github.com/cfoulston/Unity-Reorderable-List.git",
     "com.tayx.graphy": "https://github.com/Tayx94/graphy.git#v2.0.1",
     "com.unity.addressables": "1.16.16",
     "com.unity.collab-proxy": "1.3.9",
@@ -45,8 +47,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.christides.character-action-framework": "https://github.com/christides11/Character-Action-Framework.git#upm",
-    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.2.5"
+    "com.unity.modules.xr": "1.0.0"
   }
 }

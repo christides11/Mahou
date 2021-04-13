@@ -12,8 +12,8 @@ namespace Mahou.Core
             BrawlerManager bManager = Manager as BrawlerManager;
             FighterPhysicsManager physicsManager = Manager.PhysicsManager as FighterPhysicsManager;
 
-            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(0, 0);
-            Vector3 translatedMovement = Manager.GetMovementVector(mov.x, mov.y);
+            //Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(Input.Action.Movement_X, 0);
+            Vector3 translatedMovement = bManager.GetMovementVector();
             translatedMovement.y = 0;
 
             // Add velocity.
@@ -22,11 +22,12 @@ namespace Mahou.Core
             physicsManager.forceMovement += velo;
 
             //Clamp movement velocity.
-            if (physicsManager.forceMovement.magnitude >
-                bManager.stats.maxWalkSpeed * translatedMovement.magnitude)
+            if (physicsManager.forceMovement.magnitude > bManager.stats.maxWalkSpeed)
             {
-                physicsManager.forceMovement = physicsManager.forceMovement.normalized
-                    * bManager.stats.maxWalkSpeed * translatedMovement.magnitude;
+                physicsManager.forceMovement = physicsManager.forceMovement.normalized * bManager.stats.maxWalkSpeed;
+                //physicsManager.forceMovement = Vector3.ClampMagnitude(physicsManager.forceMovement, bManager.stats.MAX);
+                //physicsManager.forceMovement = physicsManager.forceMovement.normalized
+                //    * bManager.stats.maxWalkSpeed * translatedMovement.magnitude;
             }
 
             CheckInterrupt();
@@ -34,6 +35,12 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
+            Manager.PhysicsManager.CheckIfGrounded();
+            if (!Manager.IsGrounded)
+            {
+                StateManager.ChangeState((ushort)BrawlerState.FALL);
+                return true;
+            }
             Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(0, 0);
             if(mov.magnitude <= 0.2f)
             {

@@ -17,7 +17,7 @@ namespace Mahou.Simulation
         /// Keep the latest received input from each client ready to be checked.
         /// This is useful for when the server needs to reuse the latest input during rollback.
         /// </summary>
-        private Dictionary<uint, TickInput> latestPlayerInput = new Dictionary<uint, TickInput>();
+        private Dictionary<int, TickInput> latestPlayerInput = new Dictionary<int, TickInput>();
 
         /// <summary>
         /// Get the latest input for the given client, if they have sent any yet.
@@ -25,7 +25,7 @@ namespace Mahou.Simulation
         /// <param name="clientID"></param>
         /// <param name="ret"></param>
         /// <returns></returns>
-        public bool TryGetLatestInput(uint clientID, out TickInput ret)
+        public bool TryGetLatestInput(int clientID, out TickInput ret)
         {
             return latestPlayerInput.TryGetValue(clientID, out ret);
         }
@@ -92,7 +92,7 @@ namespace Mahou.Simulation
                     queue.Enqueue(tickInput, inputWorldTick);
 
                     // Store the latest input in case the simulation needs to repeat missed frames.
-                    latestPlayerInput[clientConn.identity.netId] = tickInput;
+                    latestPlayerInput[clientConn.connectionId] = tickInput;
                 }
             }
             else

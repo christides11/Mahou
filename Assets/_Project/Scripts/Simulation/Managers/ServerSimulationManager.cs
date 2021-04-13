@@ -15,7 +15,7 @@ namespace Mahou.Simulation
         private ClientInputProcessor clientInputProcessor;
 
         // Reusable hash set for players whose input we've checked each frame.
-        private HashSet<uint> unprocessedPlayerIds = new HashSet<uint>();
+        private HashSet<int> unprocessedPlayerIds = new HashSet<int>();
 
         /// <summary>
         /// This timer handles when the server should send the world state to the clients.
@@ -26,12 +26,12 @@ namespace Mahou.Simulation
         /// <summary>
         /// Snapshots of player states. Used when rolling back the simulation. Index is each player's connection ID.
         /// </summary>
-        private Dictionary<uint, ClientSimState[]> clientStateSnapshots = new Dictionary<uint, ClientSimState[]>();
+        private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
 
         /// <summary>
         /// Current input struct for each player.
         /// </summary>
-        private Dictionary<uint, TickInput> clientCurrentInput = new Dictionary<uint, TickInput>();
+        private Dictionary<int, TickInput> clientCurrentInput = new Dictionary<int, TickInput>();
 
         public ServerSimulationManager(LobbyManager lobbyManager) : base(lobbyManager)
         {
@@ -58,7 +58,7 @@ namespace Mahou.Simulation
             clientInputProcessor.EnqueueInput(arg2, arg1, currentTick);
 
             // Update the latest input tick that we have for that client.
-            lobbyManager.MatchManager.clientConnectionInfo[arg1.identity.netId].latestInputTick =
+            lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick =
                 arg2.StartWorldTick + (uint)arg2.Inputs.Length - 1;
         }
 
@@ -71,28 +71,34 @@ namespace Mahou.Simulation
             unprocessedPlayerIds.UnionWith(ClientManager.clientIDs);
             var tickInputs = clientInputProcessor.DequeueInputsForTick(currentTick);
             // Apply the inputs we got for this frame for all clients.
-            foreach (var tickInput in tickInputs)
+            foreach (TickInput tickInput in tickInputs)
             {
                 ClientManager player = tickInput.client.GetComponent<ClientManager>();
+                if (clientCurrentInput.ContainsKey(player.clientID) 
+                    && tickInput.currentServerTick <= clientCurrentInput[player.clientID].currentServerTick)
+                {
+                    Debug.Log($"Duplicate inputs in queue for client {player.clientID}");
+                    continue;
+                }
                 clientCurrentInput[player.clientID] = tickInput;
-                player.AddInput(tickInput.input);
-                //player.SetInput(tickInput.input);
+                player.AddInput(clientCurrentInput[player.clientID].input);
 
-                unprocessedPlayerIds.Remove(player.netId);
+                unprocessedPlayerIds.Remove(player.clientID);
 
                 // Mark the player as synchronized.
-                lobbyManager.MatchManager.clientConnectionInfo[player.netId].synced = true;
+                lobbyManager.MatchManager.clientConnectionInfo[player.clientID].synced = true;
             }
 
             // Any remaining players without inputs have their latest input command repeated,
             // but we notify them that they need to fast-forward their simulation to improve buffering.
-            foreach (uint clientID in unprocessedPlayerIds)
+            foreach (int clientID in unprocessedPlayerIds)
             {
                 // If the player is not yet synchronized, this means that they haven't sent any
                 // inputs yet. Ignore them for now.
                 if (!lobbyManager.MatchManager.clientConnectionInfo.ContainsKey(clientID) ||
                     !lobbyManager.MatchManager.clientConnectionInfo[clientID].synced)
                 {
+                    Debug.Log($"Unprocessed {clientID}.");
                     continue;
                 }
 
@@ -103,12 +109,12 @@ namespace Mahou.Simulation
                 {
                     clientCurrentInput[clientID] = latestInput;
                     cManager.AddInput(latestInput.input);
-                    //cManager.SetInput(latestInput.input);
                 }
                 else
                 {
-                    Debug.Log($"No inputs for player #{clientID} and no history to replay.");
+                    //Debug.Log($"No inputs for player #{clientID} and no history to replay.");
                 }
+                Debug.Log($"Repeating input for {clientID}");
             }
 
             // BROADCAST INPUTS //
@@ -202,7 +208,7 @@ namespace Mahou.Simulation
 
                 serverStateMsg.latestAckedInput = v.Value.latestInputTick;
 
-                NetworkServer.SendToClientOfPlayer(v.Value.clientManager.networkIdentity, serverStateMsg, 1);
+                v.Value.clientManager.networkIdentity.connectionToClient.Send(serverStateMsg, 1);
             }
         }
         #endregion

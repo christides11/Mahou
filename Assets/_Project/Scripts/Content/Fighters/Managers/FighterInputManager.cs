@@ -14,8 +14,6 @@ namespace Mahou.Content.Fighters
 
         public uint baseOffset = 0;
 
-        public PlayerInput currentInput;
-
         public virtual void SetControllerID(int controllerID)
         {
             p = ReInput.players.GetPlayer(controllerID);
@@ -28,22 +26,9 @@ namespace Mahou.Content.Fighters
             {
                 return pinput;
             }
-            if (manager.lookHandler != null)
-            {
-                pinput.cameraEuler = manager.lookHandler.LookTransform().eulerAngles;
-            }
             pinput.movement = p.GetAxis2D(Action.Movement_X, Action.Movement_Y);
             pinput.jump = p.GetButton(Action.Jump);
             return pinput;
-        }
-
-        public void SetInput(PlayerInput input)
-        {
-            if (manager.lookHandler != null)
-            {
-                manager.lookHandler.SetRotation(input.cameraEuler);
-            }
-            currentInput = input;
         }
 
         public override Vector2 GetAxis2D(int axis2DID, uint frameOffset = 0)
@@ -61,24 +46,48 @@ namespace Mahou.Content.Fighters
             return base.GetButton(buttonID, baseOffset + frameOffset, checkBuffer, bufferFrames);
         }
 
+        public virtual void ProcessInput(uint tick)
+        {
+            if(tick <= 1)
+            {
+                return;
+            }
+
+            if (InputRecord[(tick - 1) % inputRecordSize] == null)
+            {
+                return;
+            }
+            
+            if(InputRecord[(tick - 1) % inputRecordSize].inputs.Count == 0)
+            {
+                return;
+            }
+
+            foreach(var t in InputRecord[tick % inputRecordSize].inputs)
+            {
+                t.Value.Process(InputRecord[(tick - 1) % inputRecordSize].inputs[t.Key]);
+            }
+        }
+
         public void AddInput(PlayerInput pInput)
         {
-            InputRecordItem recordItem = new InputRecordItem();
-            recordItem.AddInput(0, new InputRecordAxis2D(pInput.movement));
-            InputRecord[inputTick % inputRecordSize] = recordItem;
+            InputRecord[inputTick % inputRecordSize] = BuildRecordItem(pInput);
+            ProcessInput(inputTick);
             inputTick++;
         }
 
-        public void ReplaceInput(uint tick, PlayerInput pInput)
+        public void ReplaceInput(uint offset, PlayerInput pInput)
         {
-            InputRecordItem recordItem = new InputRecordItem();
-            recordItem.AddInput(0, new InputRecordAxis2D(pInput.movement));
-            InputRecord[tick % inputRecordSize] = recordItem;
+            InputRecord[(inputTick-1-offset) % inputRecordSize] = BuildRecordItem(pInput);
+            ProcessInput((inputTick-1-offset));
         }
 
-        public void SetInputTick(uint tick)
+        private InputRecordItem BuildRecordItem(PlayerInput pInput)
         {
-            inputTick = tick;
+            InputRecordItem recordItem = new InputRecordItem();
+            recordItem.AddInput(Input.Action.Movement_X, new InputRecordAxis2D(pInput.movement));
+            recordItem.AddInput(Input.Action.Jump, new InputRecordButton(pInput.jump));
+            return recordItem;
         }
     }
 }

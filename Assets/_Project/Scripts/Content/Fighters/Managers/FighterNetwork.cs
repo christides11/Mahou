@@ -9,35 +9,16 @@ namespace Mahou.Content.Fighters
     public class FighterNetwork : NetworkBehaviour
     {
         [SerializeField] private FighterManager fighterManager;
+        [SerializeField] private FighterInputManager fighterInputManager;
 
-        public override void OnStartServer()
+        public override void OnStartAuthority()
         {
-            base.OnStartServer();
-            if (hasAuthority)
-            {
-                return;
-            }
-            fighterManager.lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.dummyCamera.gameObject, transform.position, Quaternion.identity)
+            base.OnStartAuthority();
+            CAF.Camera.LookHandler lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.playerCamera.gameObject, transform.position, Quaternion.identity)
                 .GetComponent<CAF.Camera.LookHandler>();
-            fighterManager.lookHandler.SetLookAtTarget(transform);
-        }
-
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-
-            // Local player.
-            if (hasAuthority)
-            {
-                fighterManager.lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.playerCamera.gameObject, transform.position, Quaternion.identity)
-                    .GetComponent<CAF.Camera.LookHandler>();
-            }
-            else
-            {
-                fighterManager.lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.dummyCamera.gameObject, transform.position, Quaternion.identity)
-                    .GetComponent<CAF.Camera.LookHandler>();
-            }
-            fighterManager.lookHandler.SetLookAtTarget(transform);
+            GetComponent<FighterManager>().lookHandler = lookHandler;
+            lookHandler.SetLookAtTarget(transform);
+            GetComponent<FighterInputManager>().SetControllerID(0);
         }
     }
 }

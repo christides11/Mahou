@@ -1,10 +1,7 @@
-using CAF.Simulation;
 using Mahou.Input;
 using Mahou.Managers;
 using Mahou.Networking;
 using Mirror;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,9 +33,9 @@ namespace Mahou.Simulation
         /// <summary>
         /// Snapshots of player states. Index is each player's connection ID.
         /// </summary>
-        [SerializeField] private Dictionary<uint, ClientSimState[]> clientStateSnapshots = new Dictionary<uint, ClientSimState[]>();
+        [SerializeField] private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
 
-        [SerializeField] private Dictionary<uint, ClientInput[]> clientInputSnapshots = new Dictionary<uint, ClientInput[]>();
+        [SerializeField] private Dictionary<int, ClientInput[]> clientInputSnapshots = new Dictionary<int, ClientInput[]>();
 
         public float moveFalloff = 0.1f;
 
@@ -119,7 +116,7 @@ namespace Mahou.Simulation
             var clientWorldTickDeltas = new List<short>();
 
             uint inputStartTick = (currentTick - lastAckedServerTick) > 20 ? currentTick - 20 : lastAckedServerTick;
-            for (uint tick = inputStartTick; tick <= currentTick; ++tick)
+            for (uint tick = inputStartTick; tick <= currentTick; tick++)
             {
                 unackedInputs.Add(clientInputSnapshots[localClient.clientID][tick % circularBufferSize]);
                 clientWorldTickDeltas.Add((short)(tick - localClientWorldTickSnapshots[tick % circularBufferSize]));
@@ -138,16 +135,23 @@ namespace Mahou.Simulation
             ++currentTick;
 
             // COMPARE SIMULATION //
-            UpdateWorldState();
+            if (disableUpdateState == false)
+            {
+                UpdateWorldState();
+            }
         }
 
+        public bool disableUpdateState = false;
         protected override void PostUpdate()
         {
             // Process the remaining world states if there are any, though we expect this to be empty?
             excessWorldStateAvg.ComputeAverage(worldStateQueue.Count);
             while (worldStateQueue.Count > 0)
             {
-                UpdateWorldState();
+                if (disableUpdateState == false)
+                {
+                    UpdateWorldState();
+                }
             }
         }
 
@@ -160,7 +164,7 @@ namespace Mahou.Simulation
         public Queue<ServerStateInputMessage> serverInputMessageQueue = new Queue<ServerStateInputMessage>();
 
         #region Inputs
-        private void QueueServerInputs(NetworkConnection arg1, ServerStateInputMessage arg2)
+        private void QueueServerInputs(ServerStateInputMessage arg2)
         {
             serverInputMessageQueue.Enqueue(arg2);
         }
@@ -190,7 +194,7 @@ namespace Mahou.Simulation
         /// </summary>
         /// <param name="connectionToServer"></param>
         /// <param name="serverWorldState"></param>
-        private void EnqueueWorldState(NetworkConnection connectionToServer, ServerWorldStateMessage serverWorldState)
+        private void EnqueueWorldState(ServerWorldStateMessage serverWorldState)
         {
             worldStateQueue.Enqueue(serverWorldState);
         }
@@ -313,7 +317,6 @@ namespace Mahou.Simulation
                 {
                     // Apply inputs to the client.
                     cm.Value.SetInputFrame(currentTick - startFrame);
-                    //cm.Value.SetInput(clientInputSnapshots[cm.Key][bufidx]);
 
                     // Rewrite the historical state snapshot.
                     clientStateSnapshots[cm.Key][bufidx] = cm.Value.GetClientSimState();

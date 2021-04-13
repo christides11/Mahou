@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "5d4abb90e13a2a8fdc07246da33ef413840200c3"
+      "hash": "6daf530447b170a7618449ff4f8369090add4f5f"
     },
     "com.coffee.upm-git-extension": {
       "version": "https://github.com/mob-sakai/UpmGitExtension.git#1.3.4",
@@ -29,11 +29,11 @@
       "hash": "8ef01722c4f8297866f98ed82a69a3f8aed218a9"
     },
     "com.malee.reorderablelist": {
-      "version": "https://github.com/cfoulston/Unity-Reorderable-List.git#1.0.1",
+      "version": "https://github.com/cfoulston/Unity-Reorderable-List.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "0cd6a9c7c3f80aa2c818a721dc4a062d62d51621"
+      "hash": "ac1f508240fb752b1f9d7c222c231d7f2a33df87"
     },
     "com.tayx.graphy": {
       "version": "https://github.com/Tayx94/graphy.git#v2.0.1",

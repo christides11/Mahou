@@ -6,7 +6,8 @@ namespace Mahou.Input
 {
     public struct PlayerInput
     {
-        public Vector3 cameraEuler;
+        //public Vector3 cameraForward;
+        //public Vector3 cameraRight;
         public Vector2 movement;
         public bool lockon;
         public bool jump;

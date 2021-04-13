@@ -21,8 +21,8 @@ namespace Mahou.Managers
         /// Simulation info for each player, indexed by connectionID.
         /// Used by the server to keep track of each client.
         /// </summary>
-        public Dictionary<uint, ClientConnectionInfo> clientConnectionInfo
-            = new Dictionary<uint, ClientConnectionInfo>();
+        public Dictionary<int, ClientConnectionInfo> clientConnectionInfo
+            = new Dictionary<int, ClientConnectionInfo>();
 
         public MatchManager(GameManager gameManager, LobbyManager lobbyManager, SimulationManagerBase simManager)
         {
@@ -36,7 +36,7 @@ namespace Mahou.Managers
 
         private void OnClientConnectToServer(Mirror.NetworkConnection clientConnection, ClientManager clientManager)
         {
-            clientConnectionInfo.Add(clientManager.netId,
+            clientConnectionInfo.Add(clientManager.connectionToClient.connectionId,
                 new ClientConnectionInfo()
                 {
                     connectionID = clientConnection.connectionId,
