@@ -82,6 +82,13 @@ namespace Mahou.Simulation
                 for (int i = (int)start; i < cimsg.Inputs.Length; ++i)
                 {
                     uint inputWorldTick = cimsg.StartWorldTick + (uint)i;
+                    // If we've already received an input for this tick, ignore the duplicate.
+                    if(latestPlayerInput.ContainsKey(clientConn.connectionId)
+                        && latestPlayerInput[clientConn.connectionId].currentServerTick >= inputWorldTick)
+                    {
+                        continue;
+                    }
+
                     TickInput tickInput = new TickInput()
                     {
                         currentServerTick = inputWorldTick,

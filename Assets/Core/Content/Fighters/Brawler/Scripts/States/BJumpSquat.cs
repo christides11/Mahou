@@ -10,9 +10,8 @@ namespace Mahou.Core
         public override void Initialize()
         {
             base.Initialize();
-            Debug.Log("Jump Started.");
-            //(Manager as FighterManager).fullHop = true;
-            //PhysicsManager.ApplyMovementFriction();
+            (Manager as FighterManager).fullHop = true;
+            PhysicsManager.ApplyMovementFriction();
             /*if (controller.LockedOn)
             {
                 controller.SetVisualRotation(controller.LockonForward);
@@ -28,11 +27,10 @@ namespace Mahou.Core
 
         public override void OnUpdate()
         {
-            /*
             if (Manager.InputManager.GetButton((int)Mahou.Input.Action.Jump).released)
             {
                 (Manager as FighterManager).fullHop = false;
-            }*/
+            }
             CheckInterrupt();
             Manager.StateManager.IncrementFrame();
         }

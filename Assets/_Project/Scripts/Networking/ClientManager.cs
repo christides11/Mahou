@@ -41,24 +41,6 @@ namespace Mahou.Networking
             DontDestroyOnLoad(gameObject);
         }
 
-        private void Start()
-        {
-            /*
-            // Local player is handled in OnStartClient.
-            if (networkIdentity.isLocalPlayer)
-            {
-                return;
-            }
-            if (!clientManagers.ContainsKey(clientID))
-            {
-                clientManagers.Add(clientID, this);
-            }
-            if (!clientIDs.Contains(clientID))
-            {
-                clientIDs.Add(clientID);
-            }*/
-        }
-
         public override void OnStartClient()
         {
             base.OnStartClient();
@@ -188,17 +170,6 @@ namespace Mahou.Networking
         #endregion
 
         #region Clients
-        /*
-        public static List<uint> GetClientIDs()
-        {
-            List<uint> cIDs = new List<uint>();
-            foreach (uint cID in clientManagers.Keys)
-            {
-                cIDs.Add(cID);
-            }
-            return cIDs;
-        }*/
-
         public static List<ClientManager> GetClients()
         {
             List<ClientManager> cManagers = new List<ClientManager>();

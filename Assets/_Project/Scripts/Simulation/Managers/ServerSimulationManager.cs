@@ -74,12 +74,11 @@ namespace Mahou.Simulation
             foreach (TickInput tickInput in tickInputs)
             {
                 ClientManager player = tickInput.client.GetComponent<ClientManager>();
-                if (clientCurrentInput.ContainsKey(player.clientID) 
+                /*if (clientCurrentInput.ContainsKey(player.clientID) 
                     && tickInput.currentServerTick <= clientCurrentInput[player.clientID].currentServerTick)
                 {
-                    Debug.Log($"Duplicate inputs in queue for client {player.clientID}");
                     continue;
-                }
+                }*/
                 clientCurrentInput[player.clientID] = tickInput;
                 player.AddInput(clientCurrentInput[player.clientID].input);
 
@@ -98,7 +97,6 @@ namespace Mahou.Simulation
                 if (!lobbyManager.MatchManager.clientConnectionInfo.ContainsKey(clientID) ||
                     !lobbyManager.MatchManager.clientConnectionInfo[clientID].synced)
                 {
-                    Debug.Log($"Unprocessed {clientID}.");
                     continue;
                 }
 
@@ -112,9 +110,8 @@ namespace Mahou.Simulation
                 }
                 else
                 {
-                    //Debug.Log($"No inputs for player #{clientID} and no history to replay.");
+                    Debug.Log($"No inputs for player #{clientID} and no history to replay.");
                 }
-                Debug.Log($"Repeating input for {clientID}");
             }
 
             // BROADCAST INPUTS //

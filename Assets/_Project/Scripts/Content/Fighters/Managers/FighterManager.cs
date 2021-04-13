@@ -64,7 +64,7 @@ namespace Mahou.Content.Fighters
             simState.mainStateFrame = (StateManager as FighterStateManager).CurrentStateFrame;
 
             simState.isGrounded = IsGrounded;
-            //simState.fullHop = fullHop;
+            simState.fullHop = fullHop;
             return simState;
         }
 
@@ -72,7 +72,7 @@ namespace Mahou.Content.Fighters
         {
             PlayerSimState pState = (PlayerSimState)state;
             cc.Motor.ApplyState(pState.motorState);
-            //fullHop = pState.fullHop;
+            fullHop = pState.fullHop;
             IsGrounded = pState.isGrounded;
 
             (physicsManager as FighterPhysicsManager3D).forceMovement = pState.forceMovement;
