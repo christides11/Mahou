@@ -17,5 +17,19 @@ namespace Mahou.Debugging
                 input[i] = input[i].ToLower();
             }
         }
+
+        public override string ToString()
+        {
+            string output = "";
+            for(int i = 0; i < input.Length; i++)
+            {
+                output += input[i];
+                if(i < (input.Length - 1))
+                {
+                    output += ", ";
+                }
+            }
+            return output;
+        }
     }
 }

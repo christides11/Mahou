@@ -16,6 +16,9 @@ namespace Mahou.Debugging
         public ConsoleWindow consoleWindow;
 
         List<MethodInfo> staticCommandMembers = new List<MethodInfo>();
+        List<MethodInfo> nonstaticCommandMembers = new List<MethodInfo>();
+
+        List<ICParser> parsers = new List<ICParser>();
 
         private void Start()
         {
@@ -27,10 +30,11 @@ namespace Mahou.Debugging
 
                 foreach(Type type in types)
                 {
-                    BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
-                    MethodInfo[] methods = type.GetMethods(flags);
+                    BindingFlags publicStaticFlags = BindingFlags.Public | BindingFlags.Static;
+                    MethodInfo[] publicStaticMethods = type.GetMethods(publicStaticFlags);
 
-                    foreach(MethodInfo method in methods)
+                    #region Statics
+                    foreach (MethodInfo method in publicStaticMethods)
                     {
                         if(method.CustomAttributes.ToArray().Length > 0)
                         {
@@ -41,8 +45,15 @@ namespace Mahou.Debugging
                             }
                         }
                     }
+                    #endregion
+
+                    if(type.GetInterface("ICParser") == typeof(ICParser))
+                    {
+                        parsers.Add((ICParser)Activator.CreateInstance(type, null));
+                    }
                 }
             }
+
         }
 
         public async virtual Task Process(List<ConsoleInput> inputs)
@@ -63,9 +74,10 @@ namespace Mahou.Debugging
 
                     string callFormat = "";
                     callFormat += attribute.commandId + " ";
-                    foreach(var para in m.GetParameters())
+                    ParameterInfo[] pi = m.GetParameters();
+                    for (int i = 0; i < pi.Length; i++)
                     {
-                        callFormat += para.ParameterType.ToString() + " " + para.Name + ", ";
+                        callFormat += pi[i].Name + " ";
                     }
                     callFormat += "- " + attribute.commandDescrition;
 
@@ -105,12 +117,21 @@ namespace Mahou.Debugging
             // Conversion.
             for (int i = 0; i < pInfo.Count(); i++)
             {
-                if(pInfo[i].ParameterType == typeof(int))
-                {
-                    parameters.Add(int.Parse(input.input[i+1]));
-                }
+                parameters.Add(FindParser(pInfo[i], input.input[i+1]));
             }
             m.Invoke(null, parameters.ToArray());
+        }
+
+        private object FindParser(ParameterInfo parameterInfo, string input)
+        {
+            foreach(var parser in parsers)
+            {
+                if (parser.CanParse(parameterInfo.ParameterType))
+                {
+                    return parser.Parse(input, parameterInfo.ParameterType, null);
+                }
+            }
+            return null;
         }
     }
 }

@@ -23,12 +23,14 @@ namespace Mahou.Debugging
         public static void SetTargetFramerate(int framerate)
         {
             Application.targetFrameRate = framerate;
+            ConsoleWindow.current.WriteLine($"Set target framerate to {framerate}.");
         }
 
         [Command("vsync", "Turn vsync on or off.")]
         public static void EnableVSync(int vSyncCount)
         {
             QualitySettings.vSyncCount = vSyncCount;
+            ConsoleWindow.current.WriteLine($"VSync Count set to {vSyncCount}.");
         }
     }
 }

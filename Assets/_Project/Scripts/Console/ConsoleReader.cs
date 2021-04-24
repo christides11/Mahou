@@ -22,10 +22,63 @@ namespace Mahou.Debugging
             string[] inputLines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             for (int i = 0; i < inputLines.Length; i++)
             {
-                inputs.Add(new ConsoleInput(inputLines[i].Split(' ')));
+                inputs.Add(SplitInputLine(inputLines[i]));
             }
 
             await inputProcessor.Process(inputs);
+        }
+
+        private static ConsoleInput SplitInputLine(string inputLine)
+        {
+            List<string> splitInputs = new List<string>();
+
+            bool insideParenth = false;
+            string builtInput = "";
+            for(int i = 0; i < inputLine.Length; i++)
+            {
+                if (insideParenth)
+                {
+                    switch (inputLine[i])
+                    {
+                        case '\"':
+                            insideParenth = false;
+                            splitInputs.Add(builtInput);
+                            builtInput = "";
+                            break;
+                        default:
+                            builtInput += inputLine[i];
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (inputLine[i])
+                    {
+                        case ' ':
+                            // No input yet, just continue.
+                            if (String.IsNullOrEmpty(builtInput))
+                            {
+                                continue;
+                            }
+                            // Space means we put the input into the list.
+                            splitInputs.Add(builtInput);
+                            builtInput = "";
+                            break;
+                        case '\"':
+                            insideParenth = true;
+                            break;
+                        default:
+                            builtInput += inputLine[i];
+                            break;
+                    }
+                }
+            }
+            if (!String.IsNullOrEmpty(builtInput))
+            {
+                splitInputs.Add(builtInput);
+                builtInput = null;
+            }
+            return new ConsoleInput(splitInputs.ToArray());
         }
     }
 }

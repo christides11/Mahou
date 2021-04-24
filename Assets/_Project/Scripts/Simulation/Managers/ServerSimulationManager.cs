@@ -3,6 +3,7 @@ using Mahou.Networking;
 using Mirror;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace Mahou.Simulation
@@ -33,6 +34,7 @@ namespace Mahou.Simulation
         /// </summary>
         private Dictionary<int, TickInput> clientCurrentInput = new Dictionary<int, TickInput>();
 
+        StringBuilder sb = new StringBuilder();
         public ServerSimulationManager(LobbyManager lobbyManager) : base(lobbyManager)
         {
             gameManager = GameManager.current;
@@ -51,6 +53,10 @@ namespace Mahou.Simulation
         {
             foreach (ClientManager cm in ClientManager.GetClients())
             {
+                if (clientStateSnapshots[cm.clientID][(CurrentTick - 1) % circularBufferSize].Equals(default(ClientSimState)))
+                {
+                    continue;
+                }
                 cm.Interpolate(clientStateSnapshots[cm.clientID][(CurrentTick - 1) % circularBufferSize],
                     clientStateSnapshots[cm.clientID][CurrentTick % circularBufferSize], accumulator / simulationTickInterval);
             }
@@ -79,15 +85,11 @@ namespace Mahou.Simulation
             unprocessedPlayerIds.Clear();
             unprocessedPlayerIds.UnionWith(ClientManager.clientIDs);
             var tickInputs = clientInputProcessor.DequeueInputsForTick(currentTick);
+
             // Apply the inputs we got for this frame for all clients.
             foreach (TickInput tickInput in tickInputs)
             {
                 ClientManager player = tickInput.client.GetComponent<ClientManager>();
-                /*if (clientCurrentInput.ContainsKey(player.clientID) 
-                    && tickInput.currentServerTick <= clientCurrentInput[player.clientID].currentServerTick)
-                {
-                    continue;
-                }*/
                 clientCurrentInput[player.clientID] = tickInput;
                 player.AddInput(clientCurrentInput[player.clientID].input);
 
@@ -119,7 +121,9 @@ namespace Mahou.Simulation
                 }
                 else
                 {
-                    Debug.Log($"No inputs for player #{clientID} and no history to replay.");
+                    sb.Clear();
+                    sb.Append($"No inputs for player #{clientID} and no history to replay.");
+                    Debug.Log(sb);
                 }
             }
 

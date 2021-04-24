@@ -63,6 +63,20 @@ namespace Mahou.Simulation
             NetworkClient.RegisterHandler<ServerStateInputMessage>(QueueServerInputs);
         }
 
+        protected override void InterpolateClients()
+        {
+            foreach (ClientManager cm in ClientManager.GetClients())
+            {
+                if (!clientStateSnapshots.ContainsKey(cm.clientID) || 
+                    clientStateSnapshots[cm.clientID][(CurrentTick - 2) % circularBufferSize].Equals(default(ClientSimState)))
+                {
+                    continue;
+                }
+                cm.Interpolate(clientStateSnapshots[cm.clientID][(CurrentTick - 2) % circularBufferSize],
+                    clientStateSnapshots[cm.clientID][(CurrentTick - 1) % circularBufferSize], accumulator / simulationTickInterval);
+            }
+        }
+
         protected override void Tick(float dt)
         {
             // UPDATE INPUTS FROM SERVER //
@@ -144,6 +158,7 @@ namespace Mahou.Simulation
         public bool disableUpdateState = false;
         protected override void PostUpdate()
         {
+            base.PostUpdate();
             // Process the remaining world states if there are any, though we expect this to be empty?
             excessWorldStateAvg.ComputeAverage(worldStateQueue.Count);
             while (worldStateQueue.Count > 0)
