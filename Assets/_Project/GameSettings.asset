@@ -16,9 +16,7 @@ MonoBehaviour:
     type: 3}
   playerCamera: {fileID: 7098787419209501276, guid: 308bf601bf99b7f4780c26108ffd72bb,
     type: 3}
-  dummyCamera: {fileID: 1792015874834612024, guid: 565b81ea977d0ad438b9f67ba7e1afdc,
-    type: 3}
-  useClientInterpolation: 0
+  useClientInterpolation: 1
   clientTickRate: 60
   serverTickRate: 60
   simulationRate: 60

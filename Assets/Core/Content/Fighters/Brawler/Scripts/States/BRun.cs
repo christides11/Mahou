@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mahou.Core
 {
-    public class BWalk : FighterState
+    public class BRun : FighterState
     {
         public override void OnUpdate()
         {
@@ -16,14 +16,14 @@ namespace Mahou.Core
             translatedMovement.y = 0;
 
             // Add velocity.
-            Vector3 velo = (translatedMovement * bManager.stats.walkAcceleration)
-                + (translatedMovement.normalized * bManager.stats.walkBaseAccel);
+            Vector3 velo = (translatedMovement * bManager.stats.runAcceleration)
+                + (translatedMovement.normalized * bManager.stats.runBaseAccel);
             physicsManager.forceMovement += velo;
 
             //Clamp movement velocity.
-            if (physicsManager.forceMovement.magnitude > bManager.stats.maxWalkSpeed)
+            if (physicsManager.forceMovement.magnitude > Stats.maxRunSpeed)
             {
-                physicsManager.forceMovement = physicsManager.forceMovement.normalized * bManager.stats.maxWalkSpeed;
+                physicsManager.forceMovement = physicsManager.forceMovement.normalized * Stats.maxRunSpeed;
             }
 
             CheckInterrupt();
@@ -37,18 +37,16 @@ namespace Mahou.Core
                 StateManager.ChangeState((ushort)BrawlerState.FALL);
                 return true;
             }
-            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(Input.Action.Movement_X, 0);
-            if(mov.magnitude < InputConstants.movementThreshold)
+            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(0, 0);
+            if (mov.magnitude <= 0.2f)
             {
                 StateManager.ChangeState((ushort)BrawlerState.IDLE);
                 return true;
             }
-            if(InputManager.GetButton(Input.Action.Dash, 0).firstPress)
-            {
-                StateManager.ChangeState((ushort)BrawlerState.DASH);
-                return true;
-            }
             return false;
         }
+
+        public override string GetName() => "Run";
     }
 }
+ 

@@ -4,6 +4,8 @@ namespace Mahou.Core
     {
         IDLE,
         WALK,
+        DASH,
+        RUN,
         JUMP_SQUAT,
         JUMP,
         FALL

@@ -17,7 +17,7 @@ namespace Mahou.Content.Fighters
             CAF.Camera.LookHandler lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.playerCamera.gameObject, transform.position, Quaternion.identity)
                 .GetComponent<CAF.Camera.LookHandler>();
             GetComponent<FighterManager>().lookHandler = lookHandler;
-            lookHandler.SetLookAtTarget(transform);
+            lookHandler.SetLookAtTarget(GetComponent<FighterManager>().visual.transform);
             GetComponent<FighterInputManager>().SetControllerID(0);
         }
     }

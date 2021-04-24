@@ -22,9 +22,16 @@ namespace Mahou.Content.Fighters
 
         public virtual void Awake()
         {
+            (InputManager as FighterInputManager).Initialize();
             SetupStates();
             KinematicCharacterSystem.Settings.AutoSimulation = false;
             KinematicCharacterSystem.Settings.Interpolate = false;
+        }
+         
+        public virtual void Interpolate(PlayerSimState lastState, PlayerSimState currentState, float alpha)
+        {
+            visual.transform.position = currentState.motorState.Position * alpha
+                + lastState.motorState.Position * (1.0f - alpha);
         }
 
         public virtual void SetupStates()
@@ -50,7 +57,8 @@ namespace Mahou.Content.Fighters
         public virtual Vector3 GetMovementVector(uint frame = 0)
         {
             Vector2 movement = InputManager.GetAxis2D(Mahou.Input.Action.Movement_X, frame);
-            return Vector3.forward * movement.y + Vector3.right * movement.x;
+            return (InputManager as FighterInputManager).GetCameraForward() * movement.y 
+                + (InputManager as FighterInputManager).GetCameraRight() * movement.x;
         }
 
         public ISimState GetSimState()

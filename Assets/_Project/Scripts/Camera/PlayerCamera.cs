@@ -37,8 +37,7 @@ namespace Mahou
         public virtual void Update()
         {
             Mahou.Input.GlobalInputManager inputManager = (Mahou.Input.GlobalInputManager)GlobalInputManager.instance;
-            Vector2 stickInput = new Vector2(inputManager.GetAxis(0, Input.Action.Camera_X),
-                inputManager.GetAxis(0, Input.Action.Camera_Y));
+            Vector2 stickInput = inputManager.GetAxis2D(0, Input.Action.Camera_X, Input.Action.Camera_Y);
 
             switch (inputManager.GetCurrentInputMethod(0))
             {
@@ -81,11 +80,6 @@ namespace Mahou
 
             thirdPersonaCamera.cameraX = stickInput.x;
             thirdPersonaCamera.cameraY = stickInput.y;
-
-            /*if (followTarget)
-            {
-                transform.position = followTarget.position;
-            }*/
         }
 
         public void LookAt(Vector3 position)

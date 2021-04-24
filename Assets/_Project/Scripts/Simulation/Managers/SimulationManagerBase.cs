@@ -27,11 +27,14 @@ namespace Mahou.Simulation
         /// A list of all objects in the simulation.
         /// </summary>
         protected List<ISimObject> simObjects = new List<ISimObject>();
-        private float accumulator;
+        protected float accumulator;
         protected LobbyManager lobbyManager;
 
         public delegate void PostUpdateAction();
         public static event PostUpdateAction OnPostUpdate;
+        public static event PostUpdateAction OnPostTick;
+
+        public bool interpolate = true;
 
         protected SimulationManagerBase(LobbyManager lobbyManager)
         {
@@ -40,20 +43,36 @@ namespace Mahou.Simulation
             this.circularBufferSize = 1024;
         }
 
-        public void Update(float dt)
+        public virtual void Update(float dt)
         {
+            if(dt >= 0.25f)
+            {
+                dt = 0.25f;
+            }
+
             accumulator += dt;
             var adjustedTickInterval = simulationTickInterval * simulationAdjuster.AdjustedInterval;
             while (accumulator >= adjustedTickInterval)
             {
-                accumulator -= adjustedTickInterval;
-
                 // Although we can run the simulation at different speeds, the actual tick processing is
                 // *always* done with the original unmodified rate for physics accuracy.
                 // This has a time-warping effect.
                 Tick(simulationTickInterval);
+                accumulator -= adjustedTickInterval;
+                OnPostTick?.Invoke();
             }
+
+            if (interpolate)
+            {
+                InterpolateClients();
+            }
+
             PostUpdate();
+        }
+
+        protected virtual void InterpolateClients()
+        {
+
         }
 
         protected virtual void PostUpdate()

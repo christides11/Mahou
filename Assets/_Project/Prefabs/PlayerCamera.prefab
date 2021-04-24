@@ -124,8 +124,8 @@ MonoBehaviour:
   cam: {fileID: 7322151463941799124}
   thirdPersonaCamera: {fileID: 3487642761283720183}
   mouseDeadzone: 0.05
-  mouseXAxisSpeed: 1
-  mouseYAxisSpeed: 1
+  mouseXAxisSpeed: 0.15
+  mouseYAxisSpeed: 0.15
   stickDeadzone: 0.2
   stickAxialDeadZone: 0.15
   stickXAxisSpeed: 1
@@ -147,7 +147,7 @@ MonoBehaviour:
   enableCamReset: 1
   enableChangeTarget: 1
   useInputManagerInsteadOfKeyCode: 0
-  changeTargetKeyCodes: 3201000066010000
+  changeTargetKeyCodes: 
   lockOnButton: LockOn
   usingController: 0
   usingMouse: 1
@@ -191,7 +191,7 @@ MonoBehaviour:
   lockOnScreenBottomMargin: 0.6
   lockOnRotationRangePercent: 40
   stopCameraFollowingYWhenPlayerIsJumping: 1
-  cameraFadeObjects: 1
+  cameraFadeObjects: 0
   cameraFadeLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -214,5 +214,6 @@ MonoBehaviour:
   debugCameraLookingUpDown: 0
   cameraX: 0
   cameraY: 0
-  camUpdateType: 2
+  camUpdateType: 3
   targetPositionOffset: {x: 0, y: 0, z: 0}
+  lastPosition: {x: 0, y: 0, z: 0}

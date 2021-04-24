@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Player = Rewired.Player;
 using CAF.Input;
+using InputRecordItem = Mahou.Input.InputRecordItem;
 
 namespace Mahou.Content.Fighters
 {
@@ -13,6 +14,12 @@ namespace Mahou.Content.Fighters
         Player p = null;
 
         public uint baseOffset = 0;
+
+        public virtual void Initialize()
+        {
+            inputRecordSize = 1024;
+            InputRecord = new Mahou.Input.InputRecordItem[inputRecordSize];
+        }
 
         public virtual void SetControllerID(int controllerID)
         {
@@ -26,8 +33,14 @@ namespace Mahou.Content.Fighters
             {
                 return pinput;
             }
+            if (manager.lookHandler != null)
+            {
+                pinput.cameraForward = manager.lookHandler.LookTransform().transform.forward;
+                pinput.cameraRight = manager.lookHandler.LookTransform().transform.right;
+            }
             pinput.movement = p.GetAxis2D(Action.Movement_X, Action.Movement_Y);
             pinput.jump = p.GetButton(Action.Jump);
+            pinput.dash = p.GetButton(Action.Dash);
             return pinput;
         }
 
@@ -44,6 +57,24 @@ namespace Mahou.Content.Fighters
         public override InputRecordButton GetButton(int buttonID, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
         {
             return base.GetButton(buttonID, baseOffset + frameOffset, checkBuffer, bufferFrames);
+        }
+
+        public virtual Vector3 GetCameraForward(uint frameOffset = 0)
+        {
+            if(inputTick < frameOffset)
+            {
+                return Vector3.forward;
+            }
+            return (InputRecord[(inputTick - 1 - frameOffset) % inputRecordSize] as InputRecordItem).cameraForward;
+        }
+
+        public virtual Vector3 GetCameraRight(uint frameOffset = 0)
+        {
+            if (inputTick < frameOffset)
+            {
+                return Vector3.right;
+            }
+            return (InputRecord[(inputTick - 1 - frameOffset) % inputRecordSize] as InputRecordItem).cameraRight;
         }
 
         public virtual void ProcessInput(uint tick)
@@ -85,8 +116,11 @@ namespace Mahou.Content.Fighters
         private InputRecordItem BuildRecordItem(PlayerInput pInput)
         {
             InputRecordItem recordItem = new InputRecordItem();
+            recordItem.cameraForward = pInput.cameraForward;
+            recordItem.cameraRight = pInput.cameraRight;
             recordItem.AddInput(Input.Action.Movement_X, new InputRecordAxis2D(pInput.movement));
             recordItem.AddInput(Input.Action.Jump, new InputRecordButton(pInput.jump));
+            recordItem.AddInput(Input.Action.Dash, new InputRecordButton(pInput.dash));
             return recordItem;
         }
     }

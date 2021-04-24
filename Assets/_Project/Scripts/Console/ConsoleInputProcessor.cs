@@ -15,23 +15,6 @@ namespace Mahou.Debugging
         public GameManager gameManager;
         public ConsoleWindow consoleWindow;
 
-        //ConsoleCommand unityVersionCommand;
-        //public List<object> commandList;
-
-        public void Awake()
-        {
-            /*
-            unityVersionCommand = new ConsoleCommand("uv", "Prints the version of the Unity Engine the game is using.", "uv", () =>
-            {
-                ConsoleWindow.current.WriteLine(Application.unityVersion);
-            });
-
-            commandList = new List<object>()
-            {
-                unityVersionCommand
-            };*/
-        }
-
         List<MethodInfo> staticCommandMembers = new List<MethodInfo>();
 
         private void Start()
@@ -82,7 +65,7 @@ namespace Mahou.Debugging
                     callFormat += attribute.commandId + " ";
                     foreach(var para in m.GetParameters())
                     {
-                        callFormat += para.ParameterType.ToString() + " ";
+                        callFormat += para.ParameterType.ToString() + " " + para.Name + ", ";
                     }
                     callFormat += "- " + attribute.commandDescrition;
 
@@ -105,12 +88,29 @@ namespace Mahou.Debugging
                     return;
                 }
                 // Check if input has the same parameter count.
-                if(input.input.Count()-1 < m.GetParameters().Count())
+                if(input.input.Count()-1 != m.GetParameters().Count())
                 {
                     continue;
                 }
 
+                InvokeMethod(m, input);
+                return;
             }
+        }
+
+        private void InvokeMethod(MethodInfo m, ConsoleInput input)
+        {
+            List<object> parameters = new List<object>();
+            var pInfo = m.GetParameters();
+            // Conversion.
+            for (int i = 0; i < pInfo.Count(); i++)
+            {
+                if(pInfo[i].ParameterType == typeof(int))
+                {
+                    parameters.Add(int.Parse(input.input[i+1]));
+                }
+            }
+            m.Invoke(null, parameters.ToArray());
         }
     }
 }

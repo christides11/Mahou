@@ -302,5 +302,14 @@ namespace Mahou.Networking
             return false;
         }
         #endregion
+
+        public void Interpolate(ISimState lastTick, ISimState currentTick, float alpha)
+        {
+            for(int i = 0; i < players.Count; i++)
+            {
+                players[i].GetComponent<FighterManager>().Interpolate(((ClientSimState)lastTick).playersStates[i],
+                    ((ClientSimState)currentTick).playersStates[i], alpha);
+            }
+        }
     }
 }

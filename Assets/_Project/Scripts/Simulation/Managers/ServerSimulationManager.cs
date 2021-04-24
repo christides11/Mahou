@@ -24,7 +24,7 @@ namespace Mahou.Simulation
         [SerializeField] private FixedTimer worldStateBroadcastTimer;
 
         /// <summary>
-        /// Snapshots of player states. Used when rolling back the simulation. Index is each player's connection ID.
+        /// Snapshots of player states. Index is each player's connection ID.
         /// </summary>
         private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
 
@@ -45,6 +45,15 @@ namespace Mahou.Simulation
             // Initialize timers.
             worldStateBroadcastTimer = new FixedTimer((float)gameManager.GameSettings.serverTickRate, BroadcastWorldState);
             worldStateBroadcastTimer.Start();
+        }
+
+        protected override void InterpolateClients()
+        {
+            foreach (ClientManager cm in ClientManager.GetClients())
+            {
+                cm.Interpolate(clientStateSnapshots[cm.clientID][(CurrentTick - 1) % circularBufferSize],
+                    clientStateSnapshots[cm.clientID][CurrentTick % circularBufferSize], accumulator / simulationTickInterval);
+            }
         }
 
         private void HandleClientDisconnect(NetworkConnection clientConnection)

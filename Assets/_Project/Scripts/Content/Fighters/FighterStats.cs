@@ -8,6 +8,26 @@ namespace Mahou.Content.Fighters
     {
         public int jumpSquat = 5;
 
+        [Header("Ground Movement")]
+        public float groundFriction = 0.1f;
+        public float maxWalkSpeed = 8.0f;
+        public float walkBaseAccel = 1.0f;
+        public float walkAcceleration = 1.0f;
+        public float walkRotationSpeed = 0.35f;
+        public float maxRunSpeed = 20;
+        public float runBaseAccel = 2.0f;
+        public float runAcceleration = 2.5f;
+        public float runRotationSpeed = 0.97f;
+        public float maxDashSpeed = 20;
+        public float dashAcceleration = 1;
+        public int dashTime = 20;
+
+        [Header("Jump")]
+        public int jumpsquat = 5;
+        public float shortHopVelocity = 13;
+        public float fullHopVelocity = 16;
+        public float jumpConversedMomentum = 1;
+
         [Header("Gravity")]
         public float gravity = 0;
         public float maxFallSpeed = 0;
@@ -17,12 +37,11 @@ namespace Mahou.Content.Fighters
         public float airDeceleration = 0;
         public float maxAirSpeed = 0;
 
-        [Header("Jump")]
-        public float shortHopVelocity = 0;
-        public float fullHopVelocity = 0;
-        public float jumpConversedMomentum = 1;
-
-        [Header("Ground")]
-        public float groundFriction = 0.1f;
+        [Header("Hitstun")]
+        public float hitstunGravity; //Gravity while in hitstun.
+        public float hitstunMaxFallSpeed;
+        public float hitstunFrictionXZ;
+        public float inertiaFriction;
+        public float weight = 1;
     }
 }
