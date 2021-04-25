@@ -129,33 +129,32 @@ namespace Mahou.Simulation
             var unackedInputs = new List<ClientInput>();
             var clientWorldTickDeltas = new List<short>();
 
-            uint inputStartTick = (currentTick - lastAckedServerTick) > 20 ? currentTick - 20 : lastAckedServerTick;
+            uint inputStartTick = (((int)currentTick) - ((int)lastAckedServerTick)) > 20 ? currentTick - 20 : lastAckedServerTick;
             for (uint tick = inputStartTick; tick <= currentTick; tick++)
             {
                 unackedInputs.Add(clientInputSnapshots[localClient.clientID][tick % circularBufferSize]);
                 clientWorldTickDeltas.Add((short)(tick - localClientWorldTickSnapshots[tick % circularBufferSize]));
             }
 
-            ClientInputMessage cim = new ClientInputMessage()
+            if (unackedInputs.Count > 0)
             {
-                StartWorldTick = lastAckedServerTick,
-                Inputs = unackedInputs.ToArray(),
-                ClientWorldTickDeltas = clientWorldTickDeltas.ToArray()
-            };
-            NetworkClient.Send(cim);
+                ClientInputMessage cim = new ClientInputMessage()
+                {
+                    StartWorldTick = lastAckedServerTick,
+                    Inputs = unackedInputs.ToArray(),
+                    ClientWorldTickDeltas = clientWorldTickDeltas.ToArray()
+                };
+                NetworkClient.Send(cim);
+            }
 
             // SIMULATE WORLD //
             SimulateWorld(dt);
             ++currentTick;
 
             // COMPARE SIMULATION //
-            if (disableUpdateState == false)
-            {
-                UpdateWorldState();
-            }
+            UpdateWorldState();
         }
 
-        public bool disableUpdateState = false;
         protected override void PostUpdate()
         {
             base.PostUpdate();
@@ -163,10 +162,7 @@ namespace Mahou.Simulation
             excessWorldStateAvg.ComputeAverage(worldStateQueue.Count);
             while (worldStateQueue.Count > 0)
             {
-                if (disableUpdateState == false)
-                {
-                    UpdateWorldState();
-                }
+                UpdateWorldState();
             }
         }
 
@@ -240,7 +236,7 @@ namespace Mahou.Simulation
             // processed.
             if (incomingState.latestAckedInput > 0)
             {
-                serverTickLead = (int)incomingState.latestAckedInput - (int)lastAckedServerTick + 1;
+                serverTickLead = ((int)incomingState.latestAckedInput) - ((int)lastAckedServerTick) + 1;
                 clientSimulationAdjuster.NotifyActualTickLead(serverTickLead);
             }
 
@@ -251,7 +247,6 @@ namespace Mahou.Simulation
             // Check if we are behind the server. If so, we need to speed up our simulation.
             if (incomingState.worldSnapshot.currentTick > currentTick)
             {
-                Debug.Log("Received tick from the server that is in the future, simulation is behind.");
                 serverAhead = true;
             }
 

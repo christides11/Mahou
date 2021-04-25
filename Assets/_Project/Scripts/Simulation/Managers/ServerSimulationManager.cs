@@ -34,7 +34,8 @@ namespace Mahou.Simulation
         /// </summary>
         private Dictionary<int, TickInput> clientCurrentInput = new Dictionary<int, TickInput>();
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
+
         public ServerSimulationManager(LobbyManager lobbyManager) : base(lobbyManager)
         {
             gameManager = GameManager.current;
@@ -121,9 +122,9 @@ namespace Mahou.Simulation
                 }
                 else
                 {
-                    sb.Clear();
-                    sb.Append($"No inputs for player #{clientID} and no history to replay.");
-                    Debug.Log(sb);
+                    stringBuilder.Clear();
+                    stringBuilder.Append($"No inputs for player #{clientID} and no history to replay.");
+                    Debug.Log(stringBuilder);
                 }
             }
 

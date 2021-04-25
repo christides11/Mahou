@@ -20,6 +20,7 @@ namespace Mahou.Simulation
 
         [SerializeField] protected uint currentTick = 0;
 
+        protected float maximumAllowedTimestep = 0.25f;
         protected float simulationTickInterval = 1.0f / 60.0f;
         protected uint circularBufferSize = 1024;
 
@@ -43,14 +44,14 @@ namespace Mahou.Simulation
             this.circularBufferSize = 1024;
         }
 
-        public virtual void Update(float dt)
+        public virtual void Update(float deltaTime)
         {
-            if(dt >= 0.25f)
+            if(deltaTime >= maximumAllowedTimestep)
             {
-                dt = 0.25f;
+                deltaTime = maximumAllowedTimestep;
             }
 
-            accumulator += dt;
+            accumulator += deltaTime;
             var adjustedTickInterval = simulationTickInterval * simulationAdjuster.AdjustedInterval;
             while (accumulator >= adjustedTickInterval)
             {

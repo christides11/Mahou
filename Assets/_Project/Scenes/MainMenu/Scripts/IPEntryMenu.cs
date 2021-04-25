@@ -16,6 +16,7 @@ namespace Mahou.Menus
 
         public void OpenMenu()
         {
+            ipInputField.text = "";
             gameObject.SetActive(true);
         }
 
