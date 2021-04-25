@@ -35,7 +35,7 @@ namespace Mahou.Simulation
         /// </summary>
         /// <param name="worldTick"></param>
         /// <returns></returns>
-        public List<TickInput> DequeueInputsForTick(uint worldTick)
+        public List<TickInput> DequeueInputsForTick(int worldTick)
         {
             var ret = new List<TickInput>();
             TickInput entry;
@@ -65,23 +65,22 @@ namespace Mahou.Simulation
         /// <param name="cimsg">The input message the client sent to the server.</param>
         /// <param name="clientConn">The client's network connection.</param>
         /// <param name="serverCurrentTick">The current tick of the server simulation.</param>
-        public void EnqueueInput(ClientInputMessage cimsg, NetworkConnection clientConn, uint serverCurrentTick)
+        public void EnqueueInput(ClientInputMessage cimsg, NetworkConnection clientConn, int serverCurrentTick)
         {
             // Calculate the last tick in the incoming command.
-            uint maxTick = (uint)(cimsg.StartWorldTick + cimsg.Inputs.Length - 1);
+            int maxTick = cimsg.StartWorldTick + (cimsg.Inputs.Length - 1);
 
             // If the message has inputs we haven't received yet, then we want to enqueue them.
             if (maxTick >= serverCurrentTick)
             {
-                // If the server has already received inputs that are in this packet,
-                // we want to ignore them.
-                uint start = serverCurrentTick > cimsg.StartWorldTick
-                    ? serverCurrentTick - cimsg.StartWorldTick : 0;
+                // Ignore any inputs in the array that have already been ACKed.
+                int start = serverCurrentTick > cimsg.StartWorldTick
+                    ? (int)(serverCurrentTick - cimsg.StartWorldTick) : 0;
 
                 // Apply those inputs.
-                for (int i = (int)start; i < cimsg.Inputs.Length; ++i)
+                for (int i = start; i < cimsg.Inputs.Length; ++i)
                 {
-                    uint inputWorldTick = cimsg.StartWorldTick + (uint)i;
+                    int inputWorldTick = cimsg.StartWorldTick + i;
                     // If we've already received an input for this tick, ignore the duplicate.
                     if(latestPlayerInput.ContainsKey(clientConn.connectionId)
                         && latestPlayerInput[clientConn.connectionId].currentServerTick >= inputWorldTick)
@@ -92,7 +91,7 @@ namespace Mahou.Simulation
                     TickInput tickInput = new TickInput()
                     {
                         currentServerTick = inputWorldTick,
-                        remoteViewTick = (uint)(inputWorldTick - cimsg.ClientWorldTickDeltas[i]),
+                        remoteViewTick = inputWorldTick - cimsg.ClientWorldTickDeltas[i],
                         client = clientConn.identity,
                         input = cimsg.Inputs[i]
                     };
@@ -102,10 +101,7 @@ namespace Mahou.Simulation
                     latestPlayerInput[clientConn.connectionId] = tickInput;
                 }
             }
-            else
-            {
-                // ?
-            }
+            // Otherwise we ignore the message.
         }
     }
 }

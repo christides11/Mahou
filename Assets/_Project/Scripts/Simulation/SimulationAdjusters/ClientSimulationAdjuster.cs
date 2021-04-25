@@ -24,11 +24,11 @@ namespace Mahou.Simulation
 
         private Stopwatch droppedInputTimer = new Stopwatch();
 
-        private uint buffer;
+        private int buffer = 0;
 
-        public ClientSimulationAdjuster(int serverSendRate, uint buffer)
+        public ClientSimulationAdjuster(int serverSendRate, int buffer)
         {
-            actualTickLeadAvg = new MovingAverage((int)serverSendRate * 2);
+            actualTickLeadAvg = new MovingAverage(serverSendRate * 2);
             this.buffer = buffer;
         }
 
@@ -40,15 +40,16 @@ namespace Mahou.Simulation
         /// <param name="rtt">The round trip time in seconds.</param>
         /// <param name="tickTime">The time that each tick takes.</param>
         /// <returns></returns>
-        public uint DetermineStartTick(uint receivedServerTick, float rtt, float tickTime)
+        public int DetermineStartTick(int receivedServerTick, float rtt, float tickTime)
         {
             // By the time we send our inputs to the server, it will already be rtt/2 seconds out of date.
             // We account for this by having the client run ahead of the server by rtt/2 ticks, plus some buffer.
-            uint estimatedTickLead = (uint)((rtt / 2.0f) / tickTime) + buffer;
-            //uint estimatedTickLead = (uint)(rtt * 1.5 / tickTime) + buffer;
-            Console.WriteLine($"Tick lead of {estimatedTickLead}, starting at {receivedServerTick + estimatedTickLead} ping of {rtt}. " +
+            //int estimatedTickLead = (int)(((rtt / 2.0f) / tickTime) + buffer);
+            int estimatedTickLead = (int)(rtt * 1.5 / tickTime) + 4;
+            //float estimatedTickLead = (((rtt / 2.0f) / tickTime) + buffer);
+            UnityEngine.Debug.Log($"Tick lead of {estimatedTickLead}, starting at {(int)(receivedServerTick + estimatedTickLead)} ping of {rtt}. " +
                 $"Server tick was {receivedServerTick}");
-            return receivedServerTick + estimatedTickLead;
+            return (int)(receivedServerTick + estimatedTickLead);
         }
 
         public void NotifyActualTickLead(int actualTickLead)
@@ -56,46 +57,54 @@ namespace Mahou.Simulation
             actualTickLeadAvg.ComputeAverage((decimal)actualTickLead);
             decimal avg = actualTickLeadAvg.Average;
 
-            if(actualTickLead < 0)
+            // We have fallen behind the server, we need to catch up immediately.
+            if (actualTickLead < 0)
             {
                 droppedInputTimer.Restart();
                 estimatedMissedInputs++;
             }
 
-            float simRate = 1.0f / 60.0f;
+            //float simRate = 1.0f / 60.0f;
             if (droppedInputTimer.IsRunning && droppedInputTimer.ElapsedMilliseconds < 1000)
             {
                 // We are behind the server. Use larger values here as dropped inputs is worse than buffering.
                 if (avg <= -16)
                 {
-                    AdjustedInterval = (simRate - (0.10f / 60.0f)) / simRate;
+                    AdjustedInterval = 0.875f;
+                    //AdjustedInterval = (simRate - (0.14f / 60.0f)) / simRate;
                 }
                 else if (avg <= -8)
                 {
-                    AdjustedInterval = (simRate - (0.04f / 60.0f)) / simRate;
+                    AdjustedInterval = 0.9375f;
+                    //AdjustedInterval = (simRate - (0.06f / 60.0f)) / simRate;
                 }
                 else
                 {
-                    AdjustedInterval = (simRate - (0.01f / 60.0f)) / simRate;
+                    AdjustedInterval = 0.96875f;
+                    //AdjustedInterval = (simRate - (0.03f / 60.0f)) / simRate;
                 }
-            } else if (avg > buffer)
+                return;
+            }
+
+
+            // We are too far ahead.
+            if(avg >= 16)
             {
-                // We are too far ahead.
-                if(avg >= (buffer+5))
-                {
-                    AdjustedInterval = (simRate + (0.06f / 60.0f)) / simRate;
-                }
-                else if(avg >= (buffer+3))
-                {
-                    AdjustedInterval = (simRate + (0.03f / 60.0f)) / simRate;
-                }
-                else
-                {
-                    AdjustedInterval = (simRate + (0.02f / 60.0f)) / simRate;
-                }
-            } else
+                AdjustedInterval = 1.125f;
+                //AdjustedInterval = (simRate + (0.12f / 60.0f)) / simRate;
+            }
+            else if(avg >= 8)
             {
-                // We are where we should be, do nothing.
+                AdjustedInterval = 1.0625f;
+                //AdjustedInterval = (simRate + (0.06f / 60.0f)) / simRate;
+            }
+            else if(avg >= 4)
+            {
+                AdjustedInterval = 1.03125f;
+                //AdjustedInterval = (simRate + (0.03f / 60.0f)) / simRate;
+            }
+            else
+            {
                 AdjustedInterval = 1f;
             }
         }

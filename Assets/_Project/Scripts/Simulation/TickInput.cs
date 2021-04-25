@@ -7,10 +7,10 @@ namespace Mahou.Simulation
     {
         public NetworkIdentity client;
         
-        public uint currentServerTick;
+        public int currentServerTick;
         // The remote world tick the player saw other entities at for this input.
         // (This is equivalent to lastServerWorldTick on the client).
-        public uint remoteViewTick;
+        public int remoteViewTick;
 
         public ClientInput input;
     }

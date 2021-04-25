@@ -13,7 +13,7 @@ namespace Mahou.Content.Fighters
     {
         Player p = null;
 
-        public uint baseOffset = 0;
+        public int baseOffset = 0;
 
         public virtual void Initialize()
         {
@@ -46,20 +46,20 @@ namespace Mahou.Content.Fighters
 
         public override Vector2 GetAxis2D(int axis2DID, uint frameOffset = 0)
         {
-            return base.GetAxis2D(axis2DID, baseOffset + frameOffset);
+            return base.GetAxis2D(axis2DID, (uint)(baseOffset + frameOffset));
         }
 
         public override InputRecordButton GetButton(int buttonID, out uint gotOffset, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
         {
-            return base.GetButton(buttonID, out gotOffset, baseOffset + frameOffset, checkBuffer, bufferFrames);
+            return base.GetButton(buttonID, out gotOffset, (uint)(baseOffset + frameOffset), checkBuffer, bufferFrames);
         }
 
         public override InputRecordButton GetButton(int buttonID, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
         {
-            return base.GetButton(buttonID, baseOffset + frameOffset, checkBuffer, bufferFrames);
+            return base.GetButton(buttonID, (uint)(baseOffset + frameOffset), checkBuffer, bufferFrames);
         }
 
-        public virtual Vector3 GetCameraForward(uint frameOffset = 0)
+        public virtual Vector3 GetCameraForward(int frameOffset = 0)
         {
             if(inputTick < frameOffset)
             {
@@ -68,7 +68,7 @@ namespace Mahou.Content.Fighters
             return (InputRecord[(inputTick - 1 - frameOffset) % inputRecordSize] as InputRecordItem).cameraForward;
         }
 
-        public virtual Vector3 GetCameraRight(uint frameOffset = 0)
+        public virtual Vector3 GetCameraRight(int frameOffset = 0)
         {
             if (inputTick < frameOffset)
             {
@@ -77,7 +77,7 @@ namespace Mahou.Content.Fighters
             return (InputRecord[(inputTick - 1 - frameOffset) % inputRecordSize] as InputRecordItem).cameraRight;
         }
 
-        public virtual void ProcessInput(uint tick)
+        public virtual void ProcessInput(int tick)
         {
             if(tick <= 1)
             {
@@ -103,14 +103,14 @@ namespace Mahou.Content.Fighters
         public void AddInput(PlayerInput pInput)
         {
             InputRecord[inputTick % inputRecordSize] = BuildRecordItem(pInput);
-            ProcessInput(inputTick);
+            ProcessInput((int)inputTick);
             inputTick++;
         }
 
-        public void ReplaceInput(uint offset, PlayerInput pInput)
+        public void ReplaceInput(int offset, PlayerInput pInput)
         {
             InputRecord[(inputTick-1-offset) % inputRecordSize] = BuildRecordItem(pInput);
-            ProcessInput((inputTick-1-offset));
+            ProcessInput((int)(inputTick-1-offset));
         }
 
         private InputRecordItem BuildRecordItem(PlayerInput pInput)

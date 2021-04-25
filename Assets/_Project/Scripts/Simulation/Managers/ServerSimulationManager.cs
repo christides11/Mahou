@@ -70,12 +70,18 @@ namespace Mahou.Simulation
 
         private void EnqueuePlayerInput(NetworkConnection arg1, ClientInputMessage arg2)
         {
-            // Enqueue input for player.
-            clientInputProcessor.EnqueueInput(arg2, arg1, currentTick);
+            if (arg2.Inputs.Count() > 0)
+            {
+                // Enqueue input for player.
+                clientInputProcessor.EnqueueInput(arg2, arg1, currentTick);
+            }
 
             // Update the latest input tick that we have for that client.
-            lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick =
-                arg2.StartWorldTick + (uint)arg2.Inputs.Length - 1;
+            if (lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick < arg2.StartWorldTick)
+            {
+                lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick =
+                    arg2.StartWorldTick + (arg2.Inputs.Length - 1);
+            }
         }
 
         protected override void Tick(float dt)
@@ -137,7 +143,7 @@ namespace Mahou.Simulation
 
 
             // SNAPSHOT WORLD STATE //
-            uint bufidx = CurrentTick % circularBufferSize;
+            int bufidx = CurrentTick % circularBufferSize;
             foreach(ClientManager cm in ClientManager.GetClients())
             {
                 clientStateSnapshots[cm.clientID][bufidx] = cm.GetClientSimState();
@@ -153,7 +159,7 @@ namespace Mahou.Simulation
             if (NetworkServer.localClientActive
                 && NetworkServer.localConnection.identity)
             {
-                uint inputDelay = ClientManager.local ? ClientManager.local.InputDelay : 0;
+                int inputDelay = ClientManager.local ? ClientManager.local.InputDelay : 0;
                 ClientInputMessage cim = new ClientInputMessage();
                 cim.ClientWorldTickDeltas = new short[1] { 0 };
                 cim.StartWorldTick = currentTick + inputDelay;
@@ -197,14 +203,18 @@ namespace Mahou.Simulation
         {
             // Build Message
             ServerWorldStateMessage serverStateMsg = new ServerWorldStateMessage();
-            WorldSnapshot snapshot = new WorldSnapshot();
-            snapshot.currentTick = currentTick;
+
             List<ClientSimState> clientStates = new List<ClientSimState>();
             foreach(ClientManager cm in ClientManager.clientManagers.Values)
             {
                 clientStates.Add(cm.GetClientSimState());
             }
-            snapshot.clientStates = clientStates;
+
+            WorldSnapshot snapshot = new WorldSnapshot()
+            {
+                clientStates = clientStates,
+                currentTick = currentTick
+            };
             serverStateMsg.worldSnapshot = snapshot;
 
             // Send Message

@@ -12,17 +12,17 @@ namespace Mahou.Simulation
         /// <summary>
         /// Current tick of the simulation.
         /// </summary>
-        public uint CurrentTick { get { return currentTick; } }
+        public int CurrentTick { get { return currentTick; } }
 
         public float AdjustedInterval { get { return simulationAdjuster.AdjustedInterval; } }
 
         protected ISimulationAdjuster simulationAdjuster = new NoopAdjuster();
 
-        [SerializeField] protected uint currentTick = 0;
+        [SerializeField] protected int currentTick = 0;
 
         protected float maximumAllowedTimestep = 0.25f;
         protected float simulationTickInterval = 1.0f / 60.0f;
-        protected uint circularBufferSize = 1024;
+        protected int circularBufferSize = 1024;
 
         /// <summary>
         /// A list of all objects in the simulation.

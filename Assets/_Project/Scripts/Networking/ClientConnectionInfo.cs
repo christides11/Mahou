@@ -13,7 +13,7 @@ namespace Mahou.Networking
         /// <summary>
         /// Latest input tick received from this client.
         /// </summary>
-        public uint latestInputTick = 0;
+        public int latestInputTick = 0;
 
         public ClientManager clientManager;
     }

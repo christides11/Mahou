@@ -6,10 +6,10 @@ namespace Mahou.Networking
 {
     public struct ServerStateInputMessage : NetworkMessage
     {
-        public uint serverTick;
+        public int serverTick;
         public List<TickInput> clientInputs;
 
-        public ServerStateInputMessage(uint serverTick, List<TickInput> clientInputs)
+        public ServerStateInputMessage(int serverTick, List<TickInput> clientInputs)
         {
             this.serverTick = serverTick;
             this.clientInputs = clientInputs;

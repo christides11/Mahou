@@ -6,7 +6,7 @@ namespace Mahou.Networking
     public struct ClientInputMessage : NetworkMessage
     {
         // The world tick for the first input in the array.
-        public uint StartWorldTick;
+        public int StartWorldTick;
 
         // An array of inputs, one entry for tick.  Ticks are guaranteed to be contiguous.
         public ClientInput[] Inputs;

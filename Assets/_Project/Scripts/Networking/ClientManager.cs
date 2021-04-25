@@ -22,7 +22,7 @@ namespace Mahou.Networking
 
         public static ClientManager local;
 
-        public uint InputDelay { get; protected set; } = 0;
+        public int InputDelay { get; protected set; } = 0;
 
         public NetworkIdentity networkIdentity;
 
@@ -205,7 +205,7 @@ namespace Mahou.Networking
             }
         }
 
-        public void ReplaceInput(ClientInput cInputs, uint offset)
+        public void ReplaceInput(ClientInput cInputs, int offset)
         {
             if (cInputs.playerInputs == null)
             {
@@ -217,7 +217,7 @@ namespace Mahou.Networking
             }
         }
 
-        public void SetInputFrame(uint offset)
+        public void SetInputFrame(int offset)
         {
             for (int i = 0; i < players.Count; i++)
             {

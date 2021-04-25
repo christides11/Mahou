@@ -24,6 +24,7 @@ namespace Mahou.Debugging
         public LobbyManager lobbyManager;
 
         [Header("MP Info")]
+        public TextMeshProUGUI rttText;
         public TextMeshProUGUI frameText;
         public TextMeshProUGUI leadServerText;
         public TextMeshProUGUI leadLocalText;
@@ -69,6 +70,7 @@ namespace Mahou.Debugging
 
         private void UpdateMatchInfo()
         {
+            rttText.text = (Mirror.NetworkTime.rtt * 1000).ToString("F0");
             if(lobbyManager.MatchManager.SimulationManager == null)
             {
                 return;
@@ -81,8 +83,8 @@ namespace Mahou.Debugging
                 leadLocalText.text = csm.localTickLead.ToString();
             }
 
-            uint currentTick = lobbyManager.MatchManager.SimulationManager.CurrentTick;
-            frameText.text = (currentTick%1024).ToString();
+            int currentTick = lobbyManager.MatchManager.SimulationManager.CurrentTick;
+            frameText.text = currentTick.ToString();
             adjText.text = lobbyManager.MatchManager.SimulationManager.AdjustedInterval.ToString();
         }
 

@@ -4,9 +4,9 @@ namespace Mahou.Networking
 {
     public struct MatchInitMessage : NetworkMessage
     {
-        public uint worldTick;
+        public int worldTick;
 
-        public MatchInitMessage(uint worldTick)
+        public MatchInitMessage(int worldTick)
         {
             this.worldTick = worldTick;
         }
