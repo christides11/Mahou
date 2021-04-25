@@ -61,6 +61,20 @@ namespace Mahou.Content.Fighters
                 + (InputManager as FighterInputManager).GetCameraRight() * movement.x;
         }
 
+        public override Vector3 GetMovementVector(float horizontal, float vertical)
+        {
+            Vector3 forward = (InputManager as FighterInputManager).GetCameraForward();
+            Vector3 right = (InputManager as FighterInputManager).GetCameraRight();
+
+            forward.y = 0;
+            right.y = 0;
+
+            forward.Normalize();
+            right.Normalize();
+
+            return forward * vertical + right * horizontal;
+        }
+
         public ISimState GetSimState()
         {
             PlayerSimState simState = new PlayerSimState();

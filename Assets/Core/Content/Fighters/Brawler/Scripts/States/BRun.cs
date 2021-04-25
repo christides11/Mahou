@@ -31,6 +31,11 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
+            if ((Manager.InputManager as FighterInputManager).GetButton(Input.Action.Jump).firstPress)
+            {
+                StateManager.ChangeState((ushort)BrawlerState.JUMP_SQUAT);
+                return true;
+            }
             Manager.PhysicsManager.CheckIfGrounded();
             if (!Manager.IsGrounded)
             {

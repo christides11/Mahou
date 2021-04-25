@@ -20,7 +20,7 @@ namespace Mahou.Core
             dir = movementDir.normalized;
 
             Vector3 mov = Manager.GetMovementVector(movementDir.x, movementDir.y);
-            //PhysicsManager.forceMovement = mov * ;
+            PhysicsManager.forceMovement = mov * Stats.dashInitSpeed;
         }
 
         public override void OnUpdate()

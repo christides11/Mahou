@@ -39,6 +39,7 @@ namespace Mahou.Content.Fighters
                 pinput.cameraRight = manager.lookHandler.LookTransform().transform.right;
             }
             pinput.movement = p.GetAxis2D(Action.Movement_X, Action.Movement_Y);
+            pinput.attack = p.GetButton(Action.Attack);
             pinput.jump = p.GetButton(Action.Jump);
             pinput.dash = p.GetButton(Action.Dash);
             return pinput;
@@ -119,6 +120,7 @@ namespace Mahou.Content.Fighters
             recordItem.cameraForward = pInput.cameraForward;
             recordItem.cameraRight = pInput.cameraRight;
             recordItem.AddInput(Input.Action.Movement_X, new InputRecordAxis2D(pInput.movement));
+            recordItem.AddInput(Input.Action.Attack, new InputRecordButton(pInput.attack));
             recordItem.AddInput(Input.Action.Jump, new InputRecordButton(pInput.jump));
             recordItem.AddInput(Input.Action.Dash, new InputRecordButton(pInput.dash));
             return recordItem;

@@ -20,6 +20,7 @@ namespace Mahou.Core
             stateManager.AddState(new BFall(), (ushort)BrawlerState.FALL);
             stateManager.AddState(new BJumpSquat(), (ushort)BrawlerState.JUMP_SQUAT);
             stateManager.AddState(new BJump(), (ushort)BrawlerState.JUMP);
+            stateManager.AddState(new BAirDash(), (ushort)BrawlerState.AIR_DASH);
 
             stateManager.ChangeState((ushort)BrawlerState.FALL);
         }

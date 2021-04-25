@@ -8,6 +8,7 @@ namespace Mahou.Core
         RUN,
         JUMP_SQUAT,
         JUMP,
-        FALL
+        FALL,
+        AIR_DASH
     }
 }

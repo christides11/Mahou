@@ -18,6 +18,7 @@ namespace Mahou.Content.Fighters
         public float runBaseAccel = 2.0f;
         public float runAcceleration = 2.5f;
         public float runRotationSpeed = 0.97f;
+        public float dashInitSpeed = 5;
         public float maxDashSpeed = 20;
         public float dashAcceleration = 1;
         public int dashTime = 20;
@@ -27,6 +28,7 @@ namespace Mahou.Content.Fighters
         public float shortHopVelocity = 13;
         public float fullHopVelocity = 16;
         public float jumpConversedMomentum = 1;
+        public float jumpInitHozVelo = 8;
 
         [Header("Gravity")]
         public float gravity = 0;
@@ -36,6 +38,14 @@ namespace Mahou.Content.Fighters
         public float airAcceleration = 0;
         public float airDeceleration = 0;
         public float maxAirSpeed = 0;
+
+        [Header("Air Dash")]
+        public int airDashPreFrames = 3;
+        public float airDashInitVelo = 20;
+        public float airDashFriction = 0.25f;
+        public int airDashFrictionAfter = 10;
+        public int airDashGravityAfter = 10;
+        public int airDashLength = 25;
 
         [Header("Hitstun")]
         public float hitstunGravity; //Gravity while in hitstun.

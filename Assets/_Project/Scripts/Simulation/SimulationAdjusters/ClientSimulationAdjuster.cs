@@ -64,24 +64,24 @@ namespace Mahou.Simulation
             }
 
             decimal avg = actualTickLeadAvg.Average;
-            //float simRate = 1.0f / 60.0f;
+            float simRate = 1.0f / 60.0f;
             if (droppedInputTimer.IsRunning && droppedInputTimer.ElapsedMilliseconds < 1000)
             {
                 // We are behind the server. Use larger values here as dropped inputs is worse than buffering.
                 if (avg <= -16)
                 {
-                    AdjustedInterval = 0.875f;
-                    //AdjustedInterval = (simRate - (0.14f / 60.0f)) / simRate;
+                    //AdjustedInterval = 0.875f;
+                    AdjustedInterval = (simRate - (0.14f / 60.0f)) / simRate;
                 }
                 else if (avg <= -8)
                 {
-                    AdjustedInterval = 0.9375f;
-                    //AdjustedInterval = (simRate - (0.06f / 60.0f)) / simRate;
+                    //AdjustedInterval = 0.9375f;
+                    AdjustedInterval = (simRate - (0.06f / 60.0f)) / simRate;
                 }
                 else
                 {
-                    AdjustedInterval = 0.96875f;
-                    //AdjustedInterval = (simRate - (0.03f / 60.0f)) / simRate;
+                    //AdjustedInterval = 0.96875f;
+                    AdjustedInterval = (simRate - (0.03f / 60.0f)) / simRate;
                 }
                 return;
             }
@@ -90,18 +90,18 @@ namespace Mahou.Simulation
             // We are too far ahead.
             if(avg >= 16)
             {
-                AdjustedInterval = 1.125f;
-                //AdjustedInterval = (simRate + (0.12f / 60.0f)) / simRate;
+                //AdjustedInterval = 1.125f;
+                AdjustedInterval = (simRate + (0.12f / 60.0f)) / simRate;
             }
             else if(avg >= 8)
             {
-                AdjustedInterval = 1.0625f;
-                //AdjustedInterval = (simRate + (0.06f / 60.0f)) / simRate;
+                //AdjustedInterval = 1.0625f;
+                AdjustedInterval = (simRate + (0.06f / 60.0f)) / simRate;
             }
             else if(avg >= 4)
             {
-                AdjustedInterval = 1.03125f;
-                //AdjustedInterval = (simRate + (0.03f / 60.0f)) / simRate;
+                //AdjustedInterval = 1.03125f;
+                AdjustedInterval = (simRate + (0.03f / 60.0f)) / simRate;
             }
             else
             {

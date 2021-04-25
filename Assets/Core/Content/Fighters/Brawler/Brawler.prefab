@@ -243,19 +243,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpSquat: 5
-  gravity: 0.5
-  maxFallSpeed: 5
-  airAcceleration: 0.3
-  airDeceleration: 0.05
-  maxAirSpeed: 5
-  shortHopVelocity: 10
-  fullHopVelocity: 12
-  jumpConversedMomentum: 1
   groundFriction: 1.2
   maxWalkSpeed: 8
   walkBaseAccel: 1
   walkAcceleration: 1
   walkRotationSpeed: 0.35
+  maxRunSpeed: 20
+  runBaseAccel: 0.5
+  runAcceleration: 0.4
+  runRotationSpeed: 0.97
+  dashInitSpeed: 5
+  maxDashSpeed: 20
+  dashAcceleration: 1
+  dashTime: 20
+  jumpsquat: 5
+  shortHopVelocity: 12
+  fullHopVelocity: 14
+  jumpConversedMomentum: 1
+  jumpInitHozVelo: 8
+  gravity: 0.6
+  maxFallSpeed: 11
+  airAcceleration: 1
+  airDeceleration: 0.9
+  maxAirSpeed: 9
+  airDashPreFrames: 3
+  airDashInitVelo: 30
+  airDashFriction: 1.7
+  airDashFrictionAfter: 10
+  airDashGravityAfter: 18
+  airDashLength: 25
+  hitstunGravity: 0
+  hitstunMaxFallSpeed: 0
+  hitstunFrictionXZ: 0
+  inertiaFriction: 0
+  weight: 1
 --- !u!114 &6809904219315617522
 MonoBehaviour:
   m_ObjectHideFlags: 0

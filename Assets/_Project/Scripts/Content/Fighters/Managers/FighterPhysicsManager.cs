@@ -66,15 +66,15 @@ namespace Mahou.Content.Fighters
             if (movement.magnitude >= InputConstants.movementThreshold)
             {
                 //Translate movment based on "camera."
-                Vector3 translatedMovement = Manager.GetMovementVector(movement.x, movement.y);
+                Vector3 translatedMovement = Manager.GetMovementVector();
                 translatedMovement.y = 0;
                 translatedMovement *= accel;
 
                 forceMovement += translatedMovement;
                 //Limit movement velocity.
-                if (forceMovement.magnitude > max * movement.magnitude)
+                if (forceMovement.magnitude > max)
                 {
-                    forceMovement *= decel;
+                    forceMovement = forceMovement.normalized * max;
                 }
             }
             else

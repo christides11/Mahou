@@ -14,10 +14,10 @@ namespace Mahou.Core
 
             Vector3 mVector = (Manager as FighterManager).GetMovementVector();
             mVector.y = 0;
-            if (mVector.magnitude >= InputConstants.movementThreshold)
+            PhysicsManager.forceMovement *= (Manager as FighterManager).Stats.jumpConversedMomentum;
+            if(mVector.magnitude >= InputConstants.movementThreshold)
             {
-                PhysicsManager.forceMovement = mVector;
-                PhysicsManager.forceMovement *= (Manager as FighterManager).Stats.jumpConversedMomentum;
+                PhysicsManager.forceMovement += mVector * Stats.jumpInitHozVelo;
             }
 
             // Transfer moving platform forces into actual force.
@@ -56,6 +56,11 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
+            if (InputManager.GetButton(Input.Action.Dash, 0).firstPress)
+            {
+                StateManager.ChangeState((ushort)BrawlerState.AIR_DASH);
+                return true;
+            }
             if (PhysicsManager.forceGravity.y <= 0)
             {
                 StateManager.ChangeState((int)BrawlerState.FALL);
