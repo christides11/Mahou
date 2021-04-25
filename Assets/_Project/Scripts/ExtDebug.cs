@@ -4,6 +4,10 @@ using UnityEngine;
 
 public static class ExtDebug
 {
+    public static int mod(int x, int m)
+    {
+        return (x % m + m) % m;
+    }
     public static void DrawBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Color color, float duration = 0.0f)
     {
         DrawBox(new Box(origin, halfExtents, orientation), color, duration);

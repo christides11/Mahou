@@ -54,8 +54,7 @@ namespace Mahou.Simulation
 
         public void NotifyActualTickLead(int actualTickLead)
         {
-            actualTickLeadAvg.ComputeAverage((decimal)actualTickLead);
-            decimal avg = actualTickLeadAvg.Average;
+            actualTickLeadAvg.ComputeAverage(actualTickLead);
 
             // We have fallen behind the server, we need to catch up immediately.
             if (actualTickLead < 0)
@@ -64,6 +63,7 @@ namespace Mahou.Simulation
                 estimatedMissedInputs++;
             }
 
+            decimal avg = actualTickLeadAvg.Average;
             //float simRate = 1.0f / 60.0f;
             if (droppedInputTimer.IsRunning && droppedInputTimer.ElapsedMilliseconds < 1000)
             {

@@ -77,11 +77,11 @@ namespace Mahou.Simulation
             }
 
             // Update the latest input tick that we have for that client.
-            if (lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick < arg2.StartWorldTick)
-            {
+            //if (lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick < arg2.StartWorldTick-1)
+            //{
                 lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick =
-                    arg2.StartWorldTick + (arg2.Inputs.Length - 1);
-            }
+                    arg2.StartWorldTick + arg2.Inputs.Length - 1;
+            //}
         }
 
         protected override void Tick(float dt)

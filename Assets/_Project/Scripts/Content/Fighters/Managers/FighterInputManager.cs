@@ -84,19 +84,19 @@ namespace Mahou.Content.Fighters
                 return;
             }
 
-            if (InputRecord[(tick - 1) % inputRecordSize] == null)
+            if (InputRecord[ExtDebug.mod(tick - 1, (int)inputRecordSize)] == null)
             {
                 return;
             }
             
-            if(InputRecord[(tick - 1) % inputRecordSize].inputs.Count == 0)
+            if(InputRecord[ExtDebug.mod(tick - 1, (int)inputRecordSize)].inputs.Count == 0)
             {
                 return;
             }
 
-            foreach(var t in InputRecord[tick % inputRecordSize].inputs)
+            foreach(var t in InputRecord[ExtDebug.mod(tick, (int)inputRecordSize)].inputs)
             {
-                t.Value.Process(InputRecord[(tick - 1) % inputRecordSize].inputs[t.Key]);
+                t.Value.Process(InputRecord[ExtDebug.mod(tick - 1, (int)inputRecordSize)].inputs[t.Key]);
             }
         }
 
@@ -109,8 +109,8 @@ namespace Mahou.Content.Fighters
 
         public void ReplaceInput(int offset, PlayerInput pInput)
         {
-            InputRecord[(inputTick-1-offset) % inputRecordSize] = BuildRecordItem(pInput);
-            ProcessInput((int)(inputTick-1-offset));
+            InputRecord[ExtDebug.mod(((int)inputTick)-1-offset, (int)inputRecordSize)] = BuildRecordItem(pInput);
+            ProcessInput(((int)inputTick)-1-offset);
         }
 
         private InputRecordItem BuildRecordItem(PlayerInput pInput)

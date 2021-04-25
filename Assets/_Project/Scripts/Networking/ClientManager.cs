@@ -211,6 +211,10 @@ namespace Mahou.Networking
             {
                 return;
             }
+            if(offset < 0)
+            {
+                return;
+            }
             for(int i = 0; i < cInputs.playerInputs.Count; i++)
             {
                 players[i].GetComponent<FighterInputManager>().ReplaceInput(offset, cInputs.playerInputs[i]);
@@ -307,6 +311,11 @@ namespace Mahou.Networking
         {
             for(int i = 0; i < players.Count; i++)
             {
+                if(((ClientSimState)lastTick).playersStates == null
+                    || ((ClientSimState)lastTick).playersStates.Count < players.Count)
+                {
+                    return;
+                }
                 players[i].GetComponent<FighterManager>().Interpolate(((ClientSimState)lastTick).playersStates[i],
                     ((ClientSimState)currentTick).playersStates[i], alpha);
             }
