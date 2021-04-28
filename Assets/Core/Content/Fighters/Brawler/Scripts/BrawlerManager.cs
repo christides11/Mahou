@@ -7,22 +7,23 @@ namespace Mahou.Core
 {
     public class BrawlerManager : FighterManager
     {
-        public override FighterStats Stats { get { return stats; } protected set { } }
+        public override FighterStatsManager StatsManager { get { return stats; } }
 
-        public BrawlerStats stats;
+        public BrawlerStatsManager stats;
 
         public override void SetupStates()
         {
-            stateManager.AddState(new BIdle(), (ushort)BrawlerState.IDLE);
-            stateManager.AddState(new BWalk(), (ushort)BrawlerState.WALK);
-            stateManager.AddState(new BDash(), (ushort)BrawlerState.DASH);
-            stateManager.AddState(new BRun(), (ushort)BrawlerState.RUN);
-            stateManager.AddState(new BFall(), (ushort)BrawlerState.FALL);
-            stateManager.AddState(new BJumpSquat(), (ushort)BrawlerState.JUMP_SQUAT);
-            stateManager.AddState(new BJump(), (ushort)BrawlerState.JUMP);
-            stateManager.AddState(new BAirDash(), (ushort)BrawlerState.AIR_DASH);
+            stateManager.AddState(new BIdle(), (ushort)FighterStates.IDLE);
+            stateManager.AddState(new BWalk(), (ushort)FighterStates.WALK);
+            stateManager.AddState(new BDash(), (ushort)FighterStates.DASH);
+            stateManager.AddState(new BRun(), (ushort)FighterStates.RUN);
+            stateManager.AddState(new BFall(), (ushort)FighterStates.FALL);
+            stateManager.AddState(new BJumpSquat(), (ushort)FighterStates.JUMP_SQUAT);
+            stateManager.AddState(new BJump(), (ushort)FighterStates.JUMP);
+            stateManager.AddState(new BAirDash(), (ushort)FighterStates.AIR_DASH);
+            stateManager.AddState(new BAirJump(), (ushort)FighterStates.AIR_JUMP);
 
-            stateManager.ChangeState((ushort)BrawlerState.FALL);
+            stateManager.ChangeState((ushort)FighterStates.FALL);
         }
     }
 }

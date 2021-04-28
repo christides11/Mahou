@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 6809904219315617522}
   m_Layer: 0
   m_Name: Brawler
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -143,6 +143,7 @@ MonoBehaviour:
   cc: {fileID: 844805816179117161}
   movSpeed: 0.5
   fullHop: 0
+  currentJump: 0
   stats: {fileID: 9161192216790614098}
 --- !u!114 &4195765052651656638
 MonoBehaviour:
@@ -242,41 +243,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df79d86e86da124d9cc6d005b1a1185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpSquat: 5
-  groundFriction: 1.2
-  maxWalkSpeed: 8
-  walkBaseAccel: 1
-  walkAcceleration: 1
-  walkRotationSpeed: 0.35
-  maxRunSpeed: 20
-  runBaseAccel: 0.5
-  runAcceleration: 0.4
-  runRotationSpeed: 0.97
-  dashInitSpeed: 5
-  maxDashSpeed: 20
-  dashAcceleration: 1
-  dashTime: 20
-  jumpsquat: 5
-  shortHopVelocity: 12
-  fullHopVelocity: 14
-  jumpConversedMomentum: 1
-  jumpInitHozVelo: 8
-  gravity: 0.6
-  maxFallSpeed: 11
-  airAcceleration: 1
-  airDeceleration: 0.9
-  maxAirSpeed: 9
-  airDashPreFrames: 3
-  airDashInitVelo: 30
-  airDashFriction: 1.7
-  airDashFrictionAfter: 10
-  airDashGravityAfter: 18
-  airDashLength: 25
-  hitstunGravity: 0
-  hitstunMaxFallSpeed: 0
-  hitstunFrictionXZ: 0
-  inertiaFriction: 0
-  weight: 1
+  fighterStatsScriptableObject: {fileID: 11400000, guid: fb328296379ca5b43a115408b3b67ef1,
+    type: 2}
+  baseStats:
+    groundFriction: 0.8
+    maxWalkSpeed: 8
+    walkBaseAccel: 1
+    walkAcceleration: 1
+    walkRotationSpeed: 5
+    maxRunSpeed: 15
+    runBaseAccel: 0.4
+    runAcceleration: 0.4
+    runRotationSpeed: 5
+    dashInitSpeed: 5
+    maxDashSpeed: 15
+    dashAcceleration: 0.5
+    dashTime: 10
+    jumpsAvailable: 2
+    jumpSquat: 5
+    shortHopVelocity: 12
+    fullHopVelocity: 15
+    jumpConversedMomentum: 1
+    jumpInitHozVelo: 6
+    airJumpConversedMomentum: 0
+    airJumpHozVelo: 6
+    airJumpVelocity:
+    - 13
+    gravity: 0.7
+    maxFallSpeed: 11
+    airAcceleration: 1.75
+    airDeceleration: 0.95
+    maxAirSpeed: 10
+    airDashPreFrames: 3
+    airDashInitVelo: 30
+    airDashFriction: 0.2
+    airDashFrictionAfter: 10
+    airDashGravityAfter: 21
+    airDashLength: 25
+    hitstunGravity: 0
+    hitstunMaxFallSpeed: 0
+    hitstunFrictionXZ: 0
+    inertiaFriction: 0
+    weight: 0
 --- !u!114 &6809904219315617522
 MonoBehaviour:
   m_ObjectHideFlags: 0

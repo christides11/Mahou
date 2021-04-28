@@ -7,6 +7,12 @@ namespace Mahou.Core
 {
     public class BIdle : FighterState
     {
+        public override void Initialize()
+        {
+            base.Initialize();
+            FighterManager.ResetGroundOptions();
+        }
+
         public override void OnUpdate()
         {
             PhysicsManager.ApplyMovementFriction();
@@ -15,17 +21,16 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
-            Manager.PhysicsManager.CheckIfGrounded();
+            PhysicsManager.CheckIfGrounded();
 
-            if ((Manager.InputManager as FighterInputManager).GetButton(Input.Action.Jump).firstPress)
+            if (FighterManager.TryJump())
             {
-                StateManager.ChangeState((ushort)BrawlerState.JUMP_SQUAT);
                 return true;
             }
             Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(Input.Action.Movement_X, 0);
             if (mov.magnitude > 0.2f)
             {
-                StateManager.ChangeState((ushort)BrawlerState.WALK);
+                StateManager.ChangeState((ushort)FighterStates.WALK);
                 return true;
             }
             return false;

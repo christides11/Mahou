@@ -37,9 +37,9 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
-            if (Manager.StateManager.CurrentStateFrame >= (Manager as FighterManager).Stats.jumpSquat)
+            if (Manager.StateManager.CurrentStateFrame >= (Manager as FighterManager).StatsManager.baseStats.jumpSquat)
             {
-                Manager.StateManager.ChangeState((int)BrawlerState.JUMP);
+                Manager.StateManager.ChangeState((int)FighterStates.JUMP);
                 return true;
             }
             return false;

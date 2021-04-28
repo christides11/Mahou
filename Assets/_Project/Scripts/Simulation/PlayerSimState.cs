@@ -14,6 +14,7 @@ namespace Mahou.Simulation
 
         public ushort mainState;
         public uint mainStateFrame;
+        public int currentJump;
 
         public bool isGrounded;
         public bool fullHop;

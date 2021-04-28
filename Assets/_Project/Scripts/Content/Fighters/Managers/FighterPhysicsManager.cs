@@ -26,25 +26,25 @@ namespace Mahou.Content.Fighters
 
         public virtual void HandleGravity()
         {
-            HandleGravity(Manager.Stats.maxFallSpeed,
-                Manager.Stats.gravity, GravityScale);
+            HandleGravity(Manager.StatsManager.baseStats.maxFallSpeed,
+                Manager.StatsManager.baseStats.gravity, GravityScale);
         }
 
         public virtual void HandleGravity(float gravity)
         {
-            HandleGravity(Manager.Stats.maxFallSpeed, gravity, GravityScale);
+            HandleGravity(Manager.StatsManager.baseStats.maxFallSpeed, gravity, GravityScale);
         }
 
         public virtual void HandleGravity(float gravity, float gravityScale)
         {
-            HandleGravity(Manager.Stats.maxFallSpeed, gravity, gravityScale);
+            HandleGravity(Manager.StatsManager.baseStats.maxFallSpeed, gravity, gravityScale);
         }
 
         public override void ApplyMovementFriction(float friction = -1)
         {
             if (friction == -1)
             {
-                friction = Manager.Stats.groundFriction;
+                friction = Manager.StatsManager.baseStats.groundFriction;
             }
             Vector3 realFriction = forceMovement.normalized * friction;
             forceMovement.x = ApplyFriction(forceMovement.x, Mathf.Abs(realFriction.x));

@@ -8,6 +8,7 @@ namespace Mahou
     {
         public CharacterSelectMenu characterSelectMenu;
         public PlayerCamera playerCamera;
+        public GameObject thirdPersonVirtualCamera;
         /// <summary>
         /// If the client should interpolate positions of remote entities.
         /// </summary>

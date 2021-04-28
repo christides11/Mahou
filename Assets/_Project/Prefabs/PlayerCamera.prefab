@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8709097501388242971}
   - component: {fileID: 7098787419209501276}
   - component: {fileID: 3487642761283720183}
+  - component: {fileID: 3694966245615804368}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -57,9 +58,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -123,6 +124,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 7322151463941799124}
   thirdPersonaCamera: {fileID: 3487642761283720183}
+  cinemachineBrain: {fileID: 3694966245615804368}
+  freeLook: {fileID: 0}
+  inputProvider: {fileID: 0}
   mouseDeadzone: 0.05
   mouseXAxisSpeed: 0.15
   mouseYAxisSpeed: 0.15
@@ -147,7 +151,6 @@ MonoBehaviour:
   enableCamReset: 1
   enableChangeTarget: 1
   useInputManagerInsteadOfKeyCode: 0
-  changeTargetKeyCodes: 
   lockOnButton: LockOn
   usingController: 0
   usingMouse: 1
@@ -214,6 +217,38 @@ MonoBehaviour:
   debugCameraLookingUpDown: 0
   cameraX: 0
   cameraY: 0
-  camUpdateType: 3
   targetPositionOffset: {x: 0, y: 0, z: 0}
-  lastPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &3694966245615804368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7098787419209501277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowDebugText: 0
+  m_ShowCameraFrustum: 1
+  m_IgnoreTimeScale: 0
+  m_WorldUpOverride: {fileID: 0}
+  m_UpdateMethod: 3
+  m_BlendUpdateMethod: 1
+  m_DefaultBlend:
+    m_Style: 1
+    m_Time: 2
+    m_CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_CustomBlends: {fileID: 0}
+  m_CameraCutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []

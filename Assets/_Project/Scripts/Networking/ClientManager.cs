@@ -58,6 +58,21 @@ namespace Mahou.Networking
             characterSelect.OnCharacterSubmit += OnCharacterSelected;
         }
 
+        private void Update()
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
+            {
+                if (characterSelect.gameObject.activeInHierarchy)
+                {
+                    characterSelect.CloseMenu();
+                }
+                else
+                {
+                    characterSelect.OpenMenu();
+                }
+            }
+        }
+
         [Client]
         public void SetInputDelay(int inputDelay)
         {

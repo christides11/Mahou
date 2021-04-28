@@ -14,10 +14,10 @@ namespace Mahou.Core
 
             Vector3 mVector = (Manager as FighterManager).GetMovementVector();
             mVector.y = 0;
-            PhysicsManager.forceMovement *= (Manager as FighterManager).Stats.jumpConversedMomentum;
+            PhysicsManager.forceMovement *= (Manager as FighterManager).StatsManager.baseStats.jumpConversedMomentum;
             if(mVector.magnitude >= InputConstants.movementThreshold)
             {
-                PhysicsManager.forceMovement += mVector * Stats.jumpInitHozVelo;
+                PhysicsManager.forceMovement += mVector * Stats.baseStats.jumpInitHozVelo;
             }
 
             // Transfer moving platform forces into actual force.
@@ -33,14 +33,14 @@ namespace Mahou.Core
             }
 
             // Add jump force.
-            PhysicsManager.forceGravity.y += (Manager as FighterManager).fullHop ? (Manager as FighterManager).Stats.fullHopVelocity
-                : (Manager as FighterManager).Stats.shortHopVelocity;
+            PhysicsManager.forceGravity.y += (Manager as FighterManager).fullHop ? (Manager as FighterManager).StatsManager.baseStats.fullHopVelocity
+                : (Manager as FighterManager).StatsManager.baseStats.shortHopVelocity;
         }
 
         public override void OnUpdate()
         {
-            FighterStats es = (Manager as FighterManager).Stats;
-            PhysicsManager.ApplyMovement(es.airAcceleration, es.maxAirSpeed, es.airDeceleration);
+            FighterStatsManager es = (Manager as FighterManager).StatsManager;
+            PhysicsManager.ApplyMovement(es.baseStats.airAcceleration, es.baseStats.maxAirSpeed, es.baseStats.airDeceleration);
             PhysicsManager.HandleGravity();
             /*if (controller.LockedOn)
             {
@@ -50,20 +50,23 @@ namespace Mahou.Core
             {
                 controller.RotateVisual(controller.GetMovementVector(0), es.airRotationSpeed);
             }*/
-
             CheckInterrupt();
         }
 
         public override bool CheckInterrupt()
         {
+            if (FighterManager.TryJump())
+            {
+                return true;
+            }
             if (InputManager.GetButton(Input.Action.Dash, 0).firstPress)
             {
-                StateManager.ChangeState((ushort)BrawlerState.AIR_DASH);
+                StateManager.ChangeState((ushort)FighterStates.AIR_DASH);
                 return true;
             }
             if (PhysicsManager.forceGravity.y <= 0)
             {
-                StateManager.ChangeState((int)BrawlerState.FALL);
+                StateManager.ChangeState((int)FighterStates.FALL);
                 return true;
             }
             return false;

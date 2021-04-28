@@ -21,6 +21,13 @@
       "dependencies": {},
       "hash": "72e620d169841f32bc6110ad0e12ee9eae6f1aaf"
     },
+    "com.dbrizov.naughtyattributes": {
+      "version": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "ca67285bd1b013ce4ee1a6b5c27f9e11453bd64e"
+    },
     "com.github.siccity.xnode": {
       "version": "https://github.com/siccity/xNode.git#1.8.0",
       "depth": 0,
@@ -43,7 +50,7 @@
       "hash": "1ebb228ced65a6607ceaa00fcfd74b9945ea3d59"
     },
     "com.unity.addressables": {
-      "version": "1.16.16",
+      "version": "1.16.19",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -52,6 +59,13 @@
         "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.cinemachine": {
+      "version": "2.6.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {

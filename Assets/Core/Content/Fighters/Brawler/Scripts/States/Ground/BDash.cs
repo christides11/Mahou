@@ -20,7 +20,7 @@ namespace Mahou.Core
             dir = movementDir.normalized;
 
             Vector3 mov = Manager.GetMovementVector(movementDir.x, movementDir.y);
-            PhysicsManager.forceMovement = mov * Stats.dashInitSpeed;
+            PhysicsManager.forceMovement = mov * Stats.baseStats.dashInitSpeed;
         }
 
         public override void OnUpdate()
@@ -28,12 +28,12 @@ namespace Mahou.Core
             base.OnUpdate();
 
             Vector3 mov = Manager.GetMovementVector(dir.x, dir.y);
-            PhysicsManager.forceMovement += mov * Stats.dashAcceleration;
+            PhysicsManager.forceMovement += mov * Stats.baseStats.dashAcceleration;
 
             //Clamp movement velocity.
-            if (PhysicsManager.forceMovement.magnitude > Stats.maxDashSpeed)
+            if (PhysicsManager.forceMovement.magnitude > Stats.baseStats.maxDashSpeed)
             {
-                PhysicsManager.forceMovement = PhysicsManager.forceMovement.normalized * Stats.maxDashSpeed;
+                PhysicsManager.forceMovement = PhysicsManager.forceMovement.normalized * Stats.baseStats.maxDashSpeed;
             }
 
             StateManager.IncrementFrame();
@@ -42,17 +42,17 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
-            if (StateManager.CurrentStateFrame > Stats.dashTime)
+            if (StateManager.CurrentStateFrame > Stats.baseStats.dashTime)
             {
                 Vector2 movementDir = InputManager.GetAxis2D(Mahou.Input.Action.Movement_X);
                 if (movementDir.magnitude < InputConstants.movementThreshold)
                 {
-                    StateManager.ChangeState((ushort)BrawlerState.IDLE);
+                    StateManager.ChangeState((ushort)FighterStates.IDLE);
                     return true;
                 }
                 else
                 {
-                    StateManager.ChangeState((ushort)BrawlerState.RUN);
+                    StateManager.ChangeState((ushort)FighterStates.RUN);
                     return true;
                 }
             }

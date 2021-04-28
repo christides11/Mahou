@@ -1,57 +1,62 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Mahou.Content.Fighters
+namespace Mahou
 {
-    public class FighterStats : MonoBehaviour
+    [System.Serializable]
+    public struct FighterStats
     {
-        public int jumpSquat = 5;
 
         [Header("Ground Movement")]
-        public float groundFriction = 0.1f;
-        public float maxWalkSpeed = 8.0f;
-        public float walkBaseAccel = 1.0f;
-        public float walkAcceleration = 1.0f;
-        public float walkRotationSpeed = 0.35f;
-        public float maxRunSpeed = 20;
-        public float runBaseAccel = 2.0f;
-        public float runAcceleration = 2.5f;
-        public float runRotationSpeed = 0.97f;
-        public float dashInitSpeed = 5;
-        public float maxDashSpeed = 20;
-        public float dashAcceleration = 1;
-        public int dashTime = 20;
+        public float groundFriction;
+        public float maxWalkSpeed;
+        public float walkBaseAccel;
+        public float walkAcceleration;
+        public float walkRotationSpeed;
+        public float maxRunSpeed;
+        public float runBaseAccel;
+        public float runAcceleration;
+        public float runRotationSpeed;
+        public float dashInitSpeed;
+        public float maxDashSpeed;
+        public float dashAcceleration;
+        public int dashTime;
 
         [Header("Jump")]
-        public int jumpsquat = 5;
-        public float shortHopVelocity = 13;
-        public float fullHopVelocity = 16;
-        public float jumpConversedMomentum = 1;
-        public float jumpInitHozVelo = 8;
+        public int jumpsAvailable;
+        public int jumpSquat;
+        public float shortHopVelocity;
+        public float fullHopVelocity;
+        public float jumpConversedMomentum;
+        public float jumpInitHozVelo;
+
+        [Header("Air Jump")]
+        public float airJumpConversedMomentum;
+        public float airJumpHozVelo;
+        public float[] airJumpVelocity;
 
         [Header("Gravity")]
-        public float gravity = 0;
-        public float maxFallSpeed = 0;
+        public float gravity;
+        public float maxFallSpeed;
 
         [Header("Air")]
-        public float airAcceleration = 0;
-        public float airDeceleration = 0;
-        public float maxAirSpeed = 0;
+        public float airAcceleration;
+        public float airDeceleration;
+        public float maxAirSpeed;
 
         [Header("Air Dash")]
-        public int airDashPreFrames = 3;
-        public float airDashInitVelo = 20;
-        public float airDashFriction = 0.25f;
-        public int airDashFrictionAfter = 10;
-        public int airDashGravityAfter = 10;
-        public int airDashLength = 25;
+        public int airDashPreFrames;
+        public float airDashInitVelo;
+        public float airDashFriction;
+        public int airDashFrictionAfter;
+        public int airDashGravityAfter;
+        public int airDashLength;
 
         [Header("Hitstun")]
         public float hitstunGravity; //Gravity while in hitstun.
         public float hitstunMaxFallSpeed;
         public float hitstunFrictionXZ;
         public float inertiaFriction;
-        public float weight = 1;
+        public float weight;
     }
 }

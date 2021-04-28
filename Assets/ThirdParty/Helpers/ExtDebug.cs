@@ -4,14 +4,53 @@ using UnityEngine;
 
 public static class ExtDebug
 {
+    public static bool FastApproximately(float a, float b, float threshold)
+    {
+        return ((a < b) ? (b - a) : (a - b)) <= threshold;
+    }
+
+    public static float FastSubstractAbs(float a, float b)
+    {
+        return ((a < b) ? (b - a) : (a - b));
+    }
+
     public static int mod(int x, int m)
     {
         return (x % m + m) % m;
     }
+
+    //Draws just the box at where it is currently hitting.
+    public static void DrawBoxCastOnHit(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Vector3 direction, float hitInfoDistance, Color color)
+    {
+        origin = CastCenterOnCollision(origin, direction, hitInfoDistance);
+        DrawBox(origin, halfExtents, orientation, color);
+    }
+
+    //Draws the full box from start of cast to its end distance. Can also pass in hitInfoDistance instead of full distance
+    public static void DrawBoxCastBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Vector3 direction, float distance, Color color)
+    {
+        direction.Normalize();
+        Box bottomBox = new Box(origin, halfExtents, orientation);
+        Box topBox = new Box(origin + (direction * distance), halfExtents, orientation);
+
+        Debug.DrawLine(bottomBox.backBottomLeft, topBox.backBottomLeft, color);
+        Debug.DrawLine(bottomBox.backBottomRight, topBox.backBottomRight, color);
+        Debug.DrawLine(bottomBox.backTopLeft, topBox.backTopLeft, color);
+        Debug.DrawLine(bottomBox.backTopRight, topBox.backTopRight, color);
+        Debug.DrawLine(bottomBox.frontTopLeft, topBox.frontTopLeft, color);
+        Debug.DrawLine(bottomBox.frontTopRight, topBox.frontTopRight, color);
+        Debug.DrawLine(bottomBox.frontBottomLeft, topBox.frontBottomLeft, color);
+        Debug.DrawLine(bottomBox.frontBottomRight, topBox.frontBottomRight, color);
+
+        DrawBox(bottomBox, color);
+        DrawBox(topBox, color);
+    }
+
     public static void DrawBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Color color, float duration = 0.0f)
     {
         DrawBox(new Box(origin, halfExtents, orientation), color, duration);
     }
+
     public static void DrawBox(Box box, Color color, float duration = 0.0f)
     {
         Debug.DrawLine(box.frontTopLeft, box.frontTopRight, color, duration);

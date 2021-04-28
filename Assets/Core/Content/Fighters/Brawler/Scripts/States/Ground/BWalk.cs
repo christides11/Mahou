@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mahou.Core
 {
-    public class BRun : FighterState
+    public class BWalk : FighterState
     {
         public override void OnUpdate()
         {
@@ -16,14 +16,14 @@ namespace Mahou.Core
             translatedMovement.y = 0;
 
             // Add velocity.
-            Vector3 velo = (translatedMovement * bManager.stats.runAcceleration)
-                + (translatedMovement.normalized * bManager.stats.runBaseAccel);
+            Vector3 velo = (translatedMovement * bManager.stats.baseStats.walkAcceleration)
+                + (translatedMovement.normalized * bManager.stats.baseStats.walkBaseAccel);
             physicsManager.forceMovement += velo;
 
             //Clamp movement velocity.
-            if (physicsManager.forceMovement.magnitude > Stats.maxRunSpeed)
+            if (physicsManager.forceMovement.magnitude > bManager.stats.baseStats.maxWalkSpeed)
             {
-                physicsManager.forceMovement = physicsManager.forceMovement.normalized * Stats.maxRunSpeed;
+                physicsManager.forceMovement = physicsManager.forceMovement.normalized * bManager.stats.baseStats.maxWalkSpeed;
             }
 
             CheckInterrupt();
@@ -31,27 +31,28 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
-            if ((Manager.InputManager as FighterInputManager).GetButton(Input.Action.Jump).firstPress)
+            if (FighterManager.TryJump())
             {
-                StateManager.ChangeState((ushort)BrawlerState.JUMP_SQUAT);
                 return true;
             }
             Manager.PhysicsManager.CheckIfGrounded();
             if (!Manager.IsGrounded)
             {
-                StateManager.ChangeState((ushort)BrawlerState.FALL);
+                StateManager.ChangeState((ushort)FighterStates.FALL);
                 return true;
             }
-            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(0, 0);
-            if (mov.magnitude <= 0.2f)
+            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(Input.Action.Movement_X, 0);
+            if(mov.magnitude < InputConstants.movementThreshold)
             {
-                StateManager.ChangeState((ushort)BrawlerState.IDLE);
+                StateManager.ChangeState((ushort)FighterStates.IDLE);
+                return true;
+            }
+            if(InputManager.GetButton(Input.Action.Dash, 0).firstPress)
+            {
+                StateManager.ChangeState((ushort)FighterStates.DASH);
                 return true;
             }
             return false;
         }
-
-        public override string GetName() => "Run";
     }
 }
- 

@@ -1,6 +1,8 @@
 using CAF.Fighters;
+using Cinemachine;
 using Mahou.Content.Fighters;
 using Mahou.Input;
+using Mahou.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using ThirdPersonCameraWithLockOn;
@@ -15,6 +17,11 @@ namespace Mahou
         [Header("References")]
         [SerializeField] private Camera cam;
         [SerializeField] private ThirdPersonCamera thirdPersonaCamera;
+
+        [Header("CineMachine Follow Cam")]
+        public CinemachineBrain cinemachineBrain;
+        public CinemachineVirtualCamera freeLook;
+        public Mahou.CinemacineInputProvider inputProvider;
 
         [Header("Mouse")]
         [SerializeField] private float mouseDeadzone = 0.05f;
@@ -31,7 +38,17 @@ namespace Mahou
 
         void Awake()
         {
-            Simulation.SimulationManagerBase.OnPostUpdate += thirdPersonaCamera.ManualUpdate;
+            Simulation.SimulationManagerBase.OnPostUpdate += CamUpdate;
+            thirdPersonaCamera.SetCameraState(ThirdPersonCamera.CamStates.Off);
+            freeLook = GameObject.Instantiate(GameManager.current.GameSettings.thirdPersonVirtualCamera, transform.position, Quaternion.identity)
+                .GetComponent<CinemachineVirtualCamera>();
+            inputProvider = freeLook.GetComponent<Mahou.CinemacineInputProvider>();
+        }
+
+        public virtual void CamUpdate()
+        {
+            cinemachineBrain.ManualUpdate();
+            thirdPersonaCamera.ManualUpdate();
         }
 
         public virtual void Update()
@@ -78,6 +95,7 @@ namespace Mahou
                     break;
             }
 
+            inputProvider.input = stickInput;
             thirdPersonaCamera.cameraX = stickInput.x;
             thirdPersonaCamera.cameraY = stickInput.y;
         }
@@ -100,17 +118,20 @@ namespace Mahou
         public void SetLookAtTarget(Transform target)
         {
             thirdPersonaCamera.Follow = target;
+            freeLook.Follow = target;
+            freeLook.LookAt = target;
             followTarget = target;
         }
 
         public void SetLockOnTarget(FighterBase entityTarget)
         {
+            /*
             if (entityTarget == null)
             {
                 thirdPersonaCamera.ExitLockOn();
                 return;
             }
-            thirdPersonaCamera.InitiateLockOn(entityTarget.gameObject);
+            thirdPersonaCamera.InitiateLockOn(entityTarget.gameObject);*/
         }
 
         public void SetRotation(Quaternion rotation)

@@ -12,13 +12,14 @@ namespace Mahou.Content.Fighters
 {
     public class FighterManager : FighterBase, ISimObject
     {
-        public virtual FighterStats Stats { get; protected set; }
+        public virtual FighterStatsManager StatsManager { get; }
 
         public NetworkIdentity netid;
         public FighterCharacterController cc;
         public float movSpeed = 0.5f;
 
         public bool fullHop = false;
+        public int currentJump = 0;
 
         public virtual void Awake()
         {
@@ -75,6 +76,44 @@ namespace Mahou.Content.Fighters
             return forward * vertical + right * horizontal;
         }
 
+        public virtual bool TryJump()
+        {
+            // No jumps available.
+            if(currentJump == StatsManager.baseStats.jumpsAvailable)
+            {
+                return false;
+            }
+            // Jump not pressed.
+            if (inputManager.GetButton(Input.Action.Jump).firstPress == false)
+            {
+                return false;
+            }
+            switch (IsGrounded)
+            {
+                case true:
+                    currentJump = 1;
+                    StateManager.ChangeState((ushort)FighterStates.JUMP_SQUAT);
+                    return true;
+                case false:
+                    if(currentJump == 0)
+                    {
+                        currentJump = 1;
+                    }
+                    if(currentJump == StatsManager.baseStats.jumpsAvailable)
+                    {
+                        return false;
+                    }
+                    currentJump++;
+                    StateManager.ChangeState((ushort)FighterStates.AIR_JUMP);
+                    return true;
+            }
+        }
+
+        public virtual void ResetGroundOptions()
+        {
+            currentJump = 0;
+        }
+
         public ISimState GetSimState()
         {
             PlayerSimState simState = new PlayerSimState();
@@ -85,6 +124,7 @@ namespace Mahou.Content.Fighters
             simState.mainState = (StateManager as FighterStateManager).CurrentState;
             simState.mainStateFrame = (StateManager as FighterStateManager).CurrentStateFrame;
 
+            simState.currentJump = currentJump;
             simState.isGrounded = IsGrounded;
             simState.fullHop = fullHop;
             return simState;
@@ -96,6 +136,7 @@ namespace Mahou.Content.Fighters
             cc.Motor.ApplyState(pState.motorState);
             fullHop = pState.fullHop;
             IsGrounded = pState.isGrounded;
+            currentJump = pState.currentJump;
 
             (physicsManager as FighterPhysicsManager3D).forceMovement = pState.forceMovement;
             (physicsManager as FighterPhysicsManager3D).forceGravity = pState.forceGravity;

@@ -1,0 +1,20 @@
+{
+    "name": "Mahou.CSharp_Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f00d25796ce4a844da98b41d4cdcea4b",
+        "GUID:60e386f2aae2e3745835ad13422e215a",
+        "GUID:a788ad91fc7f3c2468c2e84d79716fdd"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

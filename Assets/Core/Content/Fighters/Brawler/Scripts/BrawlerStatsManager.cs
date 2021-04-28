@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mahou.Core
 {
-    public class BrawlerStats : FighterStats
+    public class BrawlerStatsManager : FighterStatsManager
     {
 
     }
