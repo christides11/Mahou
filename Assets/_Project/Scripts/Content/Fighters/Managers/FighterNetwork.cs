@@ -14,8 +14,8 @@ namespace Mahou.Content.Fighters
         public override void OnStartAuthority()
         {
             base.OnStartAuthority();
-            CAF.Camera.LookHandler lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.playerCamera.gameObject, transform.position, Quaternion.identity)
-                .GetComponent<CAF.Camera.LookHandler>();
+            HnSF.Fighters.LookHandler lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.playerCamera.gameObject, transform.position, Quaternion.identity)
+                .GetComponent<HnSF.Fighters.LookHandler>();
             GetComponent<FighterManager>().lookHandler = lookHandler;
             lookHandler.SetLookAtTarget(GetComponent<FighterManager>().visual.transform);
             GetComponent<FighterInputManager>().SetControllerID(0);

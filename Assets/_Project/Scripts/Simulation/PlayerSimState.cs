@@ -17,6 +17,6 @@ namespace Mahou.Simulation
         public int currentJump;
 
         public bool isGrounded;
-        public bool fullHop;
+        public bool jumpHold;
     }
 }

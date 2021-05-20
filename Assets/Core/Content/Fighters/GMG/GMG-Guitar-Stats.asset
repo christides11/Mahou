@@ -1,0 +1,205 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b61f39d84a36957448c52cdb18d70b48, type: 3}
+  m_Name: GMG-Guitar-Stats
+  m_EditorClassIdentifier: 
+  stats:
+    groundFriction:
+      baseValue: 45
+    jumpSquatFriction:
+      baseValue: 2
+    maxWalkSpeed:
+      baseValue: 9
+    walkBaseAccel:
+      baseValue: 18
+    walkAcceleration:
+      baseValue: 18
+    walkRotationSpeed:
+      baseValue: 5
+    walkAccelFromDot:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 2
+        inSlope: -2
+        outSlope: -2
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    maxRunSpeed:
+      baseValue: 15
+    runBaseAccel:
+      baseValue: 15
+    runAcceleration:
+      baseValue: 20
+    runAccelFromDot:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.4
+        inSlope: 0.057632934
+        outSlope: 0.057632934
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.22916667
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.6
+        outSlope: 0.6
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    runRotationSpeed:
+      baseValue: 5
+    dashInitSpeed:
+      baseValue: 5
+    maxDashSpeed:
+      baseValue: 15
+    dashAcceleration:
+      baseValue: 25
+    dashTime: 10
+    jumpsAvailable: 2
+    jumpSquat: 3
+    jumpVeloMinHoldFrames: 5
+    jumpVeloMaxHoldFrames: 10
+    jumpVelocity:
+      baseValue: 13.5
+    jumpConversedMomentum:
+      baseValue: 0.5
+    jumpInitHozVelo:
+      baseValue: 3
+    airJumpConversedMomentum:
+      baseValue: 0
+    airJumpHozVelo:
+      baseValue: 6
+    airJumpVelocity:
+    - baseValue: 15
+    gravity:
+      baseValue: 50
+    maxFallSpeed:
+      baseValue: 17
+    accelFromDotProduct:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.5
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    airBaseAccel:
+      baseValue: 5
+    airAccel:
+      baseValue: 10
+    airDeceleration:
+      baseValue: 10
+    maxAirSpeed:
+      baseValue: 12
+    airDashVelocityCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 25
+        inSlope: 0.204182
+        outSlope: 0.204182
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.21115333
+      - serializedVersion: 3
+        time: 0.543642
+        value: 25
+        inSlope: 0
+        outSlope: -40.05416
+        tangentMode: 1
+        weightedMode: 0
+        inWeight: 0.31646878
+        outWeight: 0.07342312
+      - serializedVersion: 3
+        time: 1
+        value: 9
+        inSlope: -16.203491
+        outSlope: -16.203491
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.123870865
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    airDashGravityAfter: 15
+    airDashLength: 20
+    hitstunGravity:
+      baseValue: 0.7
+    hitstunMaxFallSpeed:
+      baseValue: 11
+    hitstunFrictionXZ:
+      baseValue: 0
+    inertiaFriction:
+      baseValue: 0
+    weight:
+      baseValue: 1

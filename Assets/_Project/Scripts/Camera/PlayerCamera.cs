@@ -1,4 +1,4 @@
-using CAF.Fighters;
+using HnSF.Fighters;
 using Cinemachine;
 using Mahou.Content.Fighters;
 using Mahou.Input;
@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Mahou
 {
-    public class PlayerCamera : MonoBehaviour, CAF.Camera.LookHandler
+    public class PlayerCamera : MonoBehaviour, HnSF.Fighters.LookHandler
     {
         public Camera Cam { get { return cam; } }
 

@@ -8,7 +8,7 @@ using Mahou.Managers;
 using Mahou.Menus;
 using Mahou.Content;
 using System;
-using CAF.Input;
+using HnSF.Input;
 using Mahou.Content.Fighters;
 
 namespace Mahou.Networking

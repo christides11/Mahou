@@ -6,6 +6,9 @@ namespace Mahou.Content
 {
     public class GameModeBase : MonoBehaviour
     {
+        public virtual void InitGamemode(IBattleDefinition battleDefinition = null)
+        {
 
+        }
     }
 }

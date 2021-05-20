@@ -14,6 +14,7 @@ namespace Mahou.Content
         bool GamemodeDefinitionsLoaded { get; }
         bool MapDefinitionsLoaded { get; }
         bool FighterDefinitionsLoaded { get; }
+        bool BattleDefinitionsLoaded { get; }
 
         // GAMEMODES //
         UniTask<bool> LoadGamemodeDefinitions();
@@ -32,6 +33,12 @@ namespace Mahou.Content
         List<IFighterDefinition> GetFighterDefinitions();
         IFighterDefinition GetFighterDefinition(string entityIdentifier);
         void UnloadFighterDefinitions();
+
+        // BATTLES //
+        UniTask LoadBattleDefinitions();
+        List<IBattleDefinition> GetBattleDefinitions();
+        IBattleDefinition GetBattleDefinition(string battleIdentifier);
+        void UnloadBattleDefinitions();
 
     }
 }

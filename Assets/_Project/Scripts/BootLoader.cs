@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
 using Mahou.Managers;
+using Mahou.Debugging;
 
 namespace Mahou
 {
@@ -13,6 +14,10 @@ namespace Mahou
         public string mainMenuScene;
 
         public GameManager gameManager;
+        [SerializeField] private ConsoleReader consoleReader;
+
+        public bool useArgs = false;
+        public List<string> args = new List<string>();
 
         private void Awake()
         {
@@ -39,6 +44,14 @@ namespace Mahou
             {
                 await SceneManager.LoadSceneAsync(mainMenuScene, LoadSceneMode.Additive);
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(mainMenuScene));
+            }
+
+            if (useArgs)
+            {
+                foreach(string s in args)
+                {
+                    _ = consoleReader.Convert(s);
+                }
             }
         }
     }

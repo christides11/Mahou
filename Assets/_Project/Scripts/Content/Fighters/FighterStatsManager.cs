@@ -7,19 +7,26 @@ namespace Mahou.Content.Fighters
 {
     public class FighterStatsManager : MonoBehaviour
     {
-        [SerializeField, Expandable] protected FighterStatsSO fighterStatsScriptableObject;
-        public FighterStats baseStats;
+        [SerializeField] protected FighterManager fighterManager;
 
-        [Button(text: "Copy Stats From SO")]
-        public virtual void CopyStatsFromScriptableObject()
+        public FighterStats CurrentStats { get { return currentStats; } }
+        [SerializeField] private FighterStats currentStats = new FighterStats();
+
+        public void SetStats(FighterStatsSO statsHolder)
         {
-            baseStats = fighterStatsScriptableObject.baseStats;
+            currentStats = new FighterStats(statsHolder.stats);
         }
 
-        [Button(text: "Copy Stats To SO")]
+        [Button(text: "Enable Editing")]
+        public void DirtyStats()
+        {
+            FighterStat<float>.debugMode = true;
+        }
+
+        [Button(text: "Copy Stats to SO")]
         public virtual void CopyStatsToScriptableObject()
         {
-            fighterStatsScriptableObject.baseStats = baseStats;
+
         }
     }
 }

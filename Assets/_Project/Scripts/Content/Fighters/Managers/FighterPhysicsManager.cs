@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace Mahou.Content.Fighters
 {
-    public class FighterPhysicsManager : CAF.Fighters.FighterPhysicsManager3D
+    public class FighterPhysicsManager : HnSF.Fighters.FighterPhysicsManager3D
     {
+        public delegate void GroundedStateAction(bool state);
+        public event GroundedStateAction OnGroundedChanged;
+
         protected FighterManager Manager { get { return (FighterManager)manager; } }
 
         public override void Tick()
@@ -26,70 +29,57 @@ namespace Mahou.Content.Fighters
 
         public virtual void HandleGravity()
         {
-            HandleGravity(Manager.StatsManager.baseStats.maxFallSpeed,
-                Manager.StatsManager.baseStats.gravity, GravityScale);
+            forceGravity = Vector3.MoveTowards(forceGravity, 
+                new Vector3(0, -Manager.StatsManager.CurrentStats.maxFallSpeed, 0), 
+                Manager.StatsManager.CurrentStats.gravity * Time.fixedDeltaTime);
+            //HandleGravity(Manager.StatsManager.CurrentStats.maxFallSpeed,
+            //    Manager.StatsManager.CurrentStats.gravity, 1.0f);
         }
 
         public virtual void HandleGravity(float gravity)
         {
-            HandleGravity(Manager.StatsManager.baseStats.maxFallSpeed, gravity, GravityScale);
+            HandleGravity(Manager.StatsManager.CurrentStats.maxFallSpeed, gravity, GravityScale);
         }
 
         public virtual void HandleGravity(float gravity, float gravityScale)
         {
-            HandleGravity(Manager.StatsManager.baseStats.maxFallSpeed, gravity, gravityScale);
+            HandleGravity(Manager.StatsManager.CurrentStats.maxFallSpeed, gravity, gravityScale);
         }
 
         public override void ApplyMovementFriction(float friction = -1)
         {
             if (friction == -1)
             {
-                friction = Manager.StatsManager.baseStats.groundFriction;
+                friction = Manager.StatsManager.CurrentStats.groundFriction;
             }
             Vector3 realFriction = forceMovement.normalized * friction;
-            forceMovement.x = ApplyFriction(forceMovement.x, Mathf.Abs(realFriction.x));
-            forceMovement.z = ApplyFriction(forceMovement.z, Mathf.Abs(realFriction.z));
+            forceMovement.x = ApplyFriction(forceMovement.x, Mathf.Abs(realFriction.x) * Time.fixedDeltaTime);
+            forceMovement.z = ApplyFriction(forceMovement.z, Mathf.Abs(realFriction.z) * Time.fixedDeltaTime);
         }
 
-        /// <summary>
-        /// Create a force based on the parameters given and
-        /// adds it to our movement force.
-        /// </summary>
-        /// <param name="accel">How fast the entity accelerates in the movement direction.</param>
-        /// <param name="max">The max magnitude of our movement force.</param>
-        /// <param name="decel">How much the entity decelerates when moving faster than the max magnitude.
-        /// 1.0 = doesn't decelerate, 0.0 = force set to 0.</param>
-        public virtual void ApplyMovement(float accel, float max, float decel, bool decelAtNeutral = true)
+        public virtual void HandleMovement(float baseAccel, float movementAccel, float deceleration, float maxSpeed, AnimationCurve accelFromDot)
         {
-            Vector2 movement = Manager.InputManager.GetAxis2D(Input.Action.Movement_X);
-            // Player moving in a direction.
-            if (movement.magnitude >= InputConstants.movementThreshold)
+            // Get wanted movement vector.
+            Vector3 movement = Manager.GetMovementVector();
+            if(movement.magnitude < InputConstants.movementThreshold)
             {
-                //Translate movment based on "camera."
-                Vector3 translatedMovement = Manager.GetMovementVector();
-                translatedMovement.y = 0;
-                translatedMovement *= accel;
+                movement = Vector3.zero;
+            }
+            
+            // Real Accel
+            float realAcceleration = baseAccel + (movement.magnitude * movementAccel);
 
-                forceMovement += translatedMovement;
-                //Limit movement velocity.
-                if (forceMovement.magnitude > max)
-                {
-                    forceMovement = forceMovement.normalized * max;
-                }
-            }
-            else
+            if (movement.magnitude > 1.0f)
             {
-                if (!decelAtNeutral)
-                {
-                    return;
-                }
-                // Stick at neutral, decelerate.
-                forceMovement *= decel;
-                if (forceMovement.magnitude <= InputConstants.movementSigma)
-                {
-                    forceMovement = Vector3.zero;
-                }
+                movement.Normalize();
             }
+
+            // Calculated our wanted movement force.
+            float accel = movement == Vector3.zero ? deceleration : realAcceleration * accelFromDot.Evaluate(Vector3.Dot(movement, forceMovement.normalized));
+            Vector3 goalVelocity = movement * maxSpeed;
+
+            // Move towards that goal based on our acceleration.
+            forceMovement = Vector3.MoveTowards(forceMovement, goalVelocity, accel * Time.fixedDeltaTime);
         }
 
         /// <summary>
@@ -97,7 +87,12 @@ namespace Mahou.Content.Fighters
         /// </summary>
         public override void CheckIfGrounded()
         {
-            Manager.IsGrounded = Manager.cc.Motor.GroundingStatus.IsStableOnGround;
+            bool currentGroundState = IsGrounded;
+            IsGrounded = Manager.cc.Motor.GroundingStatus.IsStableOnGround;
+            if(IsGrounded != currentGroundState)
+            {
+                OnGroundedChanged?.Invoke(IsGrounded);
+            }
         }
     }
 }

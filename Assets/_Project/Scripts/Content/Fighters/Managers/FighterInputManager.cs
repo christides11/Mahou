@@ -4,12 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player = Rewired.Player;
-using CAF.Input;
+using HnSF.Input;
 using InputRecordItem = Mahou.Input.InputRecordItem;
 
 namespace Mahou.Content.Fighters
 {
-    public class FighterInputManager : CAF.Fighters.FighterInputManager
+    public class FighterInputManager : HnSF.Fighters.FighterInputManager
     {
         Player p = null;
 
@@ -62,7 +62,7 @@ namespace Mahou.Content.Fighters
 
         public virtual Vector3 GetCameraForward(int frameOffset = 0)
         {
-            if(inputTick < frameOffset)
+            if(inputTick <= frameOffset)
             {
                 return Vector3.forward;
             }
@@ -71,7 +71,7 @@ namespace Mahou.Content.Fighters
 
         public virtual Vector3 GetCameraRight(int frameOffset = 0)
         {
-            if (inputTick < frameOffset)
+            if (inputTick <= frameOffset)
             {
                 return Vector3.right;
             }

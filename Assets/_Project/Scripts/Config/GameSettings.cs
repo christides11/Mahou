@@ -10,10 +10,6 @@ namespace Mahou
         public PlayerCamera playerCamera;
         public GameObject thirdPersonVirtualCamera;
         /// <summary>
-        /// If the client should interpolate positions of remote entities.
-        /// </summary>
-        public bool useClientInterpolation = true;
-        /// <summary>
         /// How often the client sends updates to the server.
         /// </summary>
         public int clientTickRate = 60;

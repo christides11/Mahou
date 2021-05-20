@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using Mahou.Helpers;
 
 namespace Mahou.Menus
 {
@@ -16,14 +18,25 @@ namespace Mahou.Menus
         public delegate void CloseAction(GameObject hostMenu);
         public event CloseAction OnMenuClosed;
 
-        public TMP_Dropdown gamemodeDropdown;
-        public TMP_Dropdown mapDropdown;
-
         List<ModObjectReference> maps;
         List<ModObjectReference> gamemodes;
 
         [SerializeField] private ModObjectReference selectedGamemode;
         [SerializeField] private ModObjectReference selectedMap;
+        [SerializeField] private ModObjectReference selectedBattle;
+
+        [Header("UI (General)")]
+        [SerializeField] private GameObject generalTab;
+        [SerializeField] private TMP_InputField lobbyName;
+        [SerializeField] private TMP_InputField password;
+        [SerializeField] private UnityEngine.UI.Slider maxPlayers;
+        [SerializeField] private TMP_InputField maxPing;
+        [SerializeField] private TMP_InputField serverTickRate;
+
+        [Header("UI (Gamemode)")]
+        [SerializeField] private GameObject gamemodeTab;
+        [SerializeField] private Transform gamemodeContentHolder;
+        [SerializeField] private GameObject gamemodeContentPrefab;
 
         public void CloseMenu()
         {
@@ -33,8 +46,6 @@ namespace Mahou.Menus
             ModManager.instance.UnloadMapDefinitions();
             OnMenuClosed?.Invoke(gameObject);
             gameObject.SetActive(false);
-            gamemodeDropdown.onValueChanged.RemoveAllListeners();
-            mapDropdown.onValueChanged.RemoveAllListeners();
         }
 
         public async void OpenMenu()
@@ -44,14 +55,47 @@ namespace Mahou.Menus
             maps = ModManager.instance.GetMapDefinitions();
             bool gamemodeLoadResult = await ModManager.instance.LoadGamemodeDefinitions();
             gamemodes = ModManager.instance.GetGamemodeDefinitions();
-            FillGamemodeDropdown();
-            FillMapDropdown();
 
-            gamemodeDropdown.onValueChanged.AddListener((data) => { OnGamemodeSelected(data); });
-            mapDropdown.onValueChanged.AddListener((data) => { OnMapSelected(data); });
-            OnGamemodeSelected(1);
-            OnMapSelected(1);
+            OpenGeneralTab();
             gameObject.SetActive(true);
+        }
+
+        public void OpenGeneralTab()
+        {
+            gamemodeTab.SetActive(false);
+            generalTab.SetActive(true);
+            lobbyName.text = "Lobby";
+            maxPlayers.value = 4;
+            maxPing.text = "200";
+            serverTickRate.text = "60";
+        }
+
+        public void OpenGamemodeTab()
+        {
+            generalTab.SetActive(false);
+            gamemodeTab.SetActive(true);
+
+            FillGamemodeList();
+        }
+
+        private void FillGamemodeList()
+        {
+            foreach(Transform child in gamemodeContentHolder)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach (ModObjectReference mor in gamemodes)
+            {
+                ModObjectReference gamemodeReference = mor;
+                GameObject gm = GameObject.Instantiate(gamemodeContentPrefab, gamemodeContentHolder, false);
+                gm.GetComponent<EventTrigger>().AddOnSubmitListeners((data) => { OnGamemodeSelected(gamemodeReference); });
+            }
+        }
+
+        public void OpenBattleSelectionMenu()
+        {
+
         }
 
         public void StartHosting()
@@ -62,63 +106,12 @@ namespace Mahou.Menus
                 return;
             }
 
-            GameManager.current.LobbyManager.HostGame(new LobbySettings(selectedGamemode, selectedMap));
+            GameManager.current.LobbyManager.HostGame(new LobbySettings(selectedGamemode, selectedMap, selectedBattle));
         }
 
-        private void OnMapSelected(int value)
+        private void OnGamemodeSelected(ModObjectReference gamemodeReference)
         {
-            if(value == 0)
-            {
-                selectedMap = null;
-                return;
-            }
-            if(maps.Count < value)
-            {
-                return;
-            }
-            selectedMap = maps[value - 1];
-        }
-
-        private void OnGamemodeSelected(int value)
-        {
-            if(value == 0)
-            {
-                selectedGamemode = null;
-                return;
-            }
-            if(gamemodes.Count < value)
-            {
-                return;
-            }
-            selectedGamemode = gamemodes[value - 1];
-        }
-
-        private void FillMapDropdown()
-        {
-            mapDropdown.ClearOptions();
-            mapDropdown.AddOptions(new List<string> { "N/A" });
-
-            List<string> options = new List<string>();
-            foreach(ModObjectReference mor in maps)
-            {
-                IMapDefinition mapDefinition = ModManager.instance.GetMapDefinition(mor);
-                options.Add(mapDefinition.Name);
-            }
-            mapDropdown.AddOptions(options);
-        }
-
-        private void FillGamemodeDropdown()
-        {
-            gamemodeDropdown.ClearOptions();
-            gamemodeDropdown.AddOptions(new List<string> { "N/A" });
-
-            List<string> options = new List<string>();
-            foreach (ModObjectReference mor in gamemodes)
-            {
-                IGameModeDefinition gmd = ModManager.instance.GetGamemodeDefinition(mor);
-                options.Add(gmd.Name);
-            }
-            gamemodeDropdown.AddOptions(options);
+            selectedGamemode = gamemodeReference;
         }
     }
 }

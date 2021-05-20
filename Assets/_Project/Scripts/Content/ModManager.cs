@@ -341,5 +341,97 @@ namespace Mahou.Managers
             mods[modIdentifier].UnloadMapDefinitions();
         }
         #endregion
+
+        #region Battles
+        public async UniTask<bool> LoadBattleDefinitions()
+        {
+            foreach (string m in mods.Keys)
+            {
+                bool result = await LoadBattleDefinitions(m);
+                if (result == false)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public async UniTask<bool> LoadBattleDefinitions(string modIdentifier)
+        {
+            if (!mods.ContainsKey(modIdentifier))
+            {
+                return false;
+            }
+
+            await mods[modIdentifier].LoadBattleDefinitions();
+            return true;
+        }
+
+        public IMapDefinition GetBattleDefinition(ModObjectReference battle)
+        {
+            if (!mods.ContainsKey(battle.modIdentifier))
+            {
+                return null;
+            }
+
+            IMapDefinition f = mods[battle.modIdentifier].GetMapDefinition(battle.objectIdentifier);
+
+            if (f == null)
+            {
+                return null;
+            }
+            return f;
+        }
+
+        public List<ModObjectReference> GetBattleDefinitions()
+        {
+            List<ModObjectReference> battles = new List<ModObjectReference>();
+            foreach (string m in mods.Keys)
+            {
+                battles.InsertRange(battles.Count, GetBattleDefinitions(m));
+            }
+            return battles;
+        }
+
+        public List<ModObjectReference> GetBattleDefinitions(string modIdentifier)
+        {
+            List<ModObjectReference> battles = new List<ModObjectReference>();
+            if (!mods.ContainsKey(modIdentifier))
+            {
+                return battles;
+            }
+            if (!mods[modIdentifier].BattleDefinitionsLoaded)
+            {
+                return battles;
+            }
+            List<IBattleDefinition> fds = mods[modIdentifier].GetBattleDefinitions();
+            if (fds == null)
+            {
+                return battles;
+            }
+            foreach (IBattleDefinition md in fds)
+            {
+                battles.Add(new ModObjectReference(modIdentifier, md.Identifier));
+            }
+            return battles;
+        }
+
+        public void UnloadBattleDefinitions()
+        {
+            foreach (string m in mods.Keys)
+            {
+                mods[m].UnloadBattleDefinitions();
+            }
+        }
+
+        public void UnloadBattleDefinitions(string modIdentifier)
+        {
+            if (!mods.ContainsKey(modIdentifier))
+            {
+                return;
+            }
+            mods[modIdentifier].UnloadBattleDefinitions();
+        }
+        #endregion
     }
 }

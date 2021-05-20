@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CAF.Fighters;
+using HnSF.Fighters;
 using Mahou.Simulation;
 using Mirror;
 using KinematicCharacterController;
@@ -16,9 +16,10 @@ namespace Mahou.Content.Fighters
 
         public NetworkIdentity netid;
         public FighterCharacterController cc;
+        public IFighterDefinition definition;
         public float movSpeed = 0.5f;
 
-        public bool fullHop = false;
+        public bool jumpHold = false;
         public int currentJump = 0;
 
         public virtual void Awake()
@@ -27,6 +28,9 @@ namespace Mahou.Content.Fighters
             SetupStates();
             KinematicCharacterSystem.Settings.AutoSimulation = false;
             KinematicCharacterSystem.Settings.Interpolate = false;
+            CombatManager.SetMoveset(0);
+            StatsManager.SetStats(definition.GetMovesets()[0].fighterStats);
+            (PhysicsManager as FighterPhysicsManager).OnGroundedChanged += (data) => { if (data == true) ResetGroundOptions(); };
         }
          
         public virtual void Interpolate(PlayerSimState lastState, PlayerSimState currentState, float alpha)
@@ -58,8 +62,7 @@ namespace Mahou.Content.Fighters
         public virtual Vector3 GetMovementVector(uint frame = 0)
         {
             Vector2 movement = InputManager.GetAxis2D(Mahou.Input.Action.Movement_X, frame);
-            return (InputManager as FighterInputManager).GetCameraForward() * movement.y 
-                + (InputManager as FighterInputManager).GetCameraRight() * movement.x;
+            return GetMovementVector(movement.x, movement.y);
         }
 
         public override Vector3 GetMovementVector(float horizontal, float vertical)
@@ -79,7 +82,7 @@ namespace Mahou.Content.Fighters
         public virtual bool TryJump()
         {
             // No jumps available.
-            if(currentJump == StatsManager.baseStats.jumpsAvailable)
+            if(currentJump == StatsManager.CurrentStats.jumpsAvailable)
             {
                 return false;
             }
@@ -88,7 +91,7 @@ namespace Mahou.Content.Fighters
             {
                 return false;
             }
-            switch (IsGrounded)
+            switch (physicsManager.IsGrounded)
             {
                 case true:
                     currentJump = 1;
@@ -99,7 +102,7 @@ namespace Mahou.Content.Fighters
                     {
                         currentJump = 1;
                     }
-                    if(currentJump == StatsManager.baseStats.jumpsAvailable)
+                    if(currentJump == StatsManager.CurrentStats.jumpsAvailable)
                     {
                         return false;
                     }
@@ -125,8 +128,8 @@ namespace Mahou.Content.Fighters
             simState.mainStateFrame = (StateManager as FighterStateManager).CurrentStateFrame;
 
             simState.currentJump = currentJump;
-            simState.isGrounded = IsGrounded;
-            simState.fullHop = fullHop;
+            simState.isGrounded = physicsManager.IsGrounded;
+            simState.jumpHold = jumpHold;
             return simState;
         }
 
@@ -134,9 +137,9 @@ namespace Mahou.Content.Fighters
         {
             PlayerSimState pState = (PlayerSimState)state;
             cc.Motor.ApplyState(pState.motorState);
-            fullHop = pState.fullHop;
-            IsGrounded = pState.isGrounded;
+            physicsManager.SetGrounded(pState.isGrounded);
             currentJump = pState.currentJump;
+            jumpHold = pState.jumpHold;
 
             (physicsManager as FighterPhysicsManager3D).forceMovement = pState.forceMovement;
             (physicsManager as FighterPhysicsManager3D).forceGravity = pState.forceGravity;

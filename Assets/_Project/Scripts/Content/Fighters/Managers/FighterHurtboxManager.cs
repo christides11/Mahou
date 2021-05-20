@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mahou.Content.Fighters
 {
-    public class FighterHurtboxManager : CAF.Fighters.FighterHurtboxManager
+    public class FighterHurtboxManager : HnSF.Fighters.FighterHurtboxManager
     {
 
     }

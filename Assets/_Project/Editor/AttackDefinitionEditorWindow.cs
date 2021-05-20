@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mahou
 {
-    public class AttackDefinitionEditorWindow : CAF.Combat.AttackDefinitionEditorWindow
+    public class AttackDefinitionEditorWindow : HnSF.Combat.AttackDefinitionEditorWindow
     {
 
     }

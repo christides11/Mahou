@@ -10,6 +10,8 @@ namespace Mahou.Content
         public string Identifier { get; }
         public string Name { get; }
         public string Description { get; }
+        public bool BattleSelectionRequired { get; }
+        public bool MapSelectionRequired { get; }
 
         public UniTask<bool> LoadGamemode();
         public GameModeBase GetGamemode();

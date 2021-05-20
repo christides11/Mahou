@@ -113,11 +113,17 @@ namespace Mahou.Managers
 
         private async UniTask<bool> ApplySettings()
         {
-            bool gamemodeLoaded = await gameManager.LoadGamemode(settings.selectedGamemode);
+            bool gamemodeLoaded = await gameManager.SetGamemode(settings.selectedGamemode);
             if (!gamemodeLoaded)
             {
                 return false;
             }
+
+            if (gameManager.CurrentGamemode.BattleSelectionRequired)
+            {
+                bool battleLoaded = await gameManager.ModManager.LoadBattleDefinitions();
+            }
+
             bool mapLoaded = await gameManager.LoadMap(settings.selectedMap, new List<string>() { mainMenuSceneName });
             if (!mapLoaded)
             {

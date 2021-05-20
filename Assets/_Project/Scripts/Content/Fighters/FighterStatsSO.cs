@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Mahou.Content.Fighters
 {
-    [CreateAssetMenu(fileName = "FighterStatsSO", menuName = "Mahou/Fighter/StatsSO")]
+    [CreateAssetMenu(fileName = "FighterStatsSO", menuName = "Mahou/Content/Fighter/StatsSO")]
     public class FighterStatsSO : ScriptableObject
     {
-        public FighterStats baseStats;
+        public FighterStats stats;
     }
 }

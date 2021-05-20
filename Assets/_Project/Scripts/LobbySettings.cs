@@ -9,11 +9,13 @@ namespace Mahou
     {
         public ModObjectReference selectedGamemode;
         public ModObjectReference selectedMap;
+        public ModObjectReference selectedBattle;
 
-        public LobbySettings(ModObjectReference selectedGamemode, ModObjectReference selectedMap)
+        public LobbySettings(ModObjectReference selectedGamemode, ModObjectReference selectedMap, ModObjectReference selectedBattle)
         {
             this.selectedMap = selectedMap;
             this.selectedGamemode = selectedGamemode;
+            this.selectedBattle = selectedBattle;
         }
     }
 }

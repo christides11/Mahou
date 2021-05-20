@@ -16,6 +16,7 @@ namespace Mahou.Managers
         public LobbyManager LobbyManager { get { return lobbyManager; } }
         public NetworkManager NetworkManager { get { return networkManager; } }
         public GameSettings GameSettings { get { return gameSettings; } }
+        public ModManager ModManager { get { return modManager; } }
 
         public IGameModeDefinition CurrentGamemode { get; protected set; } = null;
         public GameModeBase GameMode { get; protected set; } = null;
@@ -25,12 +26,12 @@ namespace Mahou.Managers
         [SerializeField] private NetworkManager networkManager;
         [SerializeField] private LobbyManager lobbyManager;
 
-        [SerializeField] private LocalModDefinition coreMod;
+        [SerializeField] private AddressablesModDefinition coreMod;
 
         public virtual void Initialize()
         {
             current = this;
-            CAF.Input.GlobalInputManager.instance = new Mahou.Input.GlobalInputManager();
+            HnSF.Input.GlobalInputManager.instance = new Mahou.Input.GlobalInputManager();
             modManager.Initialize();
             modManager.mods.Add("core", coreMod);
             lobbyManager.Initialize();
@@ -44,7 +45,12 @@ namespace Mahou.Managers
             }
         }
 
-        public virtual async UniTask<bool> LoadGamemode(ModObjectReference gamemode)
+        /// <summary>
+        /// Sets the current gamemode.
+        /// </summary>
+        /// <param name="gamemode">The gamemode to set.</param>
+        /// <returns>True if successful.</returns>
+        public virtual async UniTask<bool> SetGamemode(ModObjectReference gamemode)
         {
             await modManager.LoadGamemodeDefinitions(gamemode.modIdentifier);
             IGameModeDefinition gamemodeDefinition = modManager.GetGamemodeDefinition(gamemode);

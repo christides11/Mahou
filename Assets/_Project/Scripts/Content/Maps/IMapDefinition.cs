@@ -11,6 +11,7 @@ namespace Mahou.Content
         public string Name { get; }
         public List<string> SceneNames { get; }
         public string Description { get; }
+        public bool Selectable { get; }
 
         UniTask LoadScene();
     }

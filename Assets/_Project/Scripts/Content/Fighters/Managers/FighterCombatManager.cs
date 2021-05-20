@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mahou.Content.Fighters
 {
-    public class FighterCombatManager : CAF.Fighters.FighterCombatManager
+    public class FighterCombatManager : HnSF.Fighters.FighterCombatManager
     {
 
     }

@@ -8,7 +8,7 @@ namespace Mahou.Input
         MK = 0, CONTROLLER = 1
     }
 
-    public class GlobalInputManager : CAF.Input.GlobalInputManager
+    public class GlobalInputManager : HnSF.Input.GlobalInputManager
     {
         public virtual CurrentInputMethod GetCurrentInputMethod(int playerID)
         {
