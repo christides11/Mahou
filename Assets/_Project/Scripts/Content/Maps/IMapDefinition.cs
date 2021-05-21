@@ -5,14 +5,15 @@ using UnityEngine;
 
 namespace Mahou.Content
 {
-    public interface IMapDefinition
+    public abstract class IMapDefinition : ScriptableObject
     {
-        public string Identifier { get; }
-        public string Name { get; }
-        public List<string> SceneNames { get; }
-        public string Description { get; }
-        public bool Selectable { get; }
+        public virtual string Identifier { get; set; } = "";
+        public virtual string Name { get; }
+        public virtual List<string> SceneNames { get; }
+        public virtual string Description { get; }
+        public virtual bool Selectable { get; }
 
-        UniTask LoadScene();
+        public abstract UniTask LoadMap();
+        public abstract UniTask UnloadMap();
     }
 }

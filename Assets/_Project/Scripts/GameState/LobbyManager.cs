@@ -75,7 +75,7 @@ namespace Mahou.Managers
             bool settingsResult = await ApplySettings();
             if (!settingsResult)
             {
-                Debug.Log($"Couldn't load settings. {settings.selectedGamemode}, {settings.selectedMap}");
+                Debug.Log($"Couldn't load settings. {settings.selectedGamemode}, {settings.selectedMap}, {settings.selectedBattle}");
                 return;
             }
             matchManager = new MatchManager(gameManager, this, new ServerSimulationManager(this));
@@ -113,15 +113,10 @@ namespace Mahou.Managers
 
         private async UniTask<bool> ApplySettings()
         {
-            bool gamemodeLoaded = await gameManager.SetGamemode(settings.selectedGamemode);
+            bool gamemodeLoaded = await gameManager.SetGamemode(settings.selectedGamemode, settings.selectedBattle);
             if (!gamemodeLoaded)
             {
                 return false;
-            }
-
-            if (gameManager.CurrentGamemode.BattleSelectionRequired)
-            {
-                bool battleLoaded = await gameManager.ModManager.LoadBattleDefinitions();
             }
 
             bool mapLoaded = await gameManager.LoadMap(settings.selectedMap, new List<string>() { mainMenuSceneName });

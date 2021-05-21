@@ -7,11 +7,10 @@ namespace Mahou.Content
     [CreateAssetMenu(fileName = "AddressablesBattleDefinition", menuName = "Mahou/Content/Addressables/BattleDefinition")]
     public class AddressablesBattleDefinition : IBattleDefinition
     {
-        public override string Identifier { get { return identifier; } }
         public override string Name { get { return battleName; } }
         public override string Description { get { return description; } }
+        public override ModObjectReference MapReference { get { return mapReference; } }
 
-        [SerializeField] private string identifier;
         [SerializeField] private string battleName;
         [SerializeField] [TextArea] private string description;
         [SerializeField] private ModObjectReference mapReference;

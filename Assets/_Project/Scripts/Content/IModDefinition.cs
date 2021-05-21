@@ -11,33 +11,36 @@ namespace Mahou.Content
     {
         string Description { get; }
 
-        bool GamemodeDefinitionsLoaded { get; }
-        bool MapDefinitionsLoaded { get; }
-        bool FighterDefinitionsLoaded { get; }
-        bool BattleDefinitionsLoaded { get; }
+        // FIGHTERS //
+        UniTask<bool> LoadFighterDefinitions();
+        UniTask<bool> LoadFighterDefinition(string fighterIdentifier);
+        List<IFighterDefinition> GetFighterDefinitions();
+        IFighterDefinition GetFighterDefinition(string entityIdentifier);
+        void UnloadFighterDefinition(string fighterIdentifier);
+        void UnloadFighterDefinitions();
 
         // GAMEMODES //
         UniTask<bool> LoadGamemodeDefinitions();
+        UniTask<bool> LoadGamemodeDefinition(string gamemodeIdentifier);
         List<IGameModeDefinition> GetGamemodeDefinitions();
         IGameModeDefinition GetGamemodeDefinition(string gamemodeIdentifier);
+        void UnloadGamemodeDefinition(string gamemodeIdentifier);
         void UnloadGamemodeDefinitions();
 
         // MAPS //
-        UniTask LoadMapDefinitions();
+        UniTask<bool> LoadMapDefinitions();
+        UniTask<bool> LoadMapDefinition(string mapIdentifier);
         List<IMapDefinition> GetMapDefinitions();
         IMapDefinition GetMapDefinition(string mapIdentifier);
+        void UnloadMapDefinition(string mapIdentifier);
         void UnloadMapDefinitions();
 
-        // FIGHTERS //
-        UniTask LoadFighterDefinitions();
-        List<IFighterDefinition> GetFighterDefinitions();
-        IFighterDefinition GetFighterDefinition(string entityIdentifier);
-        void UnloadFighterDefinitions();
-
         // BATTLES //
-        UniTask LoadBattleDefinitions();
+        UniTask<bool> LoadBattleDefinitions();
+        UniTask<bool> LoadBattleDefinition(string battleIdentifier);
         List<IBattleDefinition> GetBattleDefinitions();
         IBattleDefinition GetBattleDefinition(string battleIdentifier);
+        void UnloadBattleDefinition(string battleIdentifier);
         void UnloadBattleDefinitions();
 
     }

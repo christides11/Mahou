@@ -28,6 +28,14 @@ namespace Mahou.Menus
                     OnAnyButtonPressed();
                 }
             }
+
+            if(pd.time >= pd.duration)
+            {
+                pd.Pause();
+                transitioning = false;
+                mainMenu.Open();
+                gameObject.SetActive(false);
+            }
         }
 
         public void OnAnyButtonPressed()

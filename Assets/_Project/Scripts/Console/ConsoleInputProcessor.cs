@@ -131,7 +131,7 @@ namespace Mahou.Debugging
                     return parser.Parse(input, parameterInfo.ParameterType, null);
                 }
             }
-            return null;
+            return input;
         }
     }
 }

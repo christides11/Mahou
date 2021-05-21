@@ -35,6 +35,15 @@
       "dependencies": {},
       "hash": "8ef01722c4f8297866f98ed82a69a3f8aed218a9"
     },
+    "com.laicasaane.unity-addressables-manager": {
+      "version": "https://github.com/laicasaane/unity-addressables-manager.git#1.2.1",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.addressables": "1.6.0"
+      },
+      "hash": "63f330dcd67614963ba5a96bb0d040bb77b41c81"
+    },
     "com.malee.reorderablelist": {
       "version": "https://github.com/cfoulston/Unity-Reorderable-List.git",
       "depth": 0,

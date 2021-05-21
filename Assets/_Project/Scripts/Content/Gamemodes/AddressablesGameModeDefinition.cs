@@ -9,18 +9,14 @@ using System;
 namespace Mahou.Content
 {
     [CreateAssetMenu(fileName = "AddressablesGameModeDefinition", menuName = "Mahou/Content/Addressables/GameModeDefinition")]
-    public class AddressablesGameModeDefinition : ScriptableObject, IGameModeDefinition
+    public class AddressablesGameModeDefinition : IGameModeDefinition
     {
-        public string Identifier { get { return identifier; } }
 
-        public string Name { get { return gamemodeName; } }
+        public override string Name { get { return gamemodeName; } }
+        public override string Description { get { return description; } }
+        public override bool BattleSelectionRequired { get { return battleSelectionRequired; } }
+        public override bool MapSelectionRequired { get { return mapSelectionRequired;  } }
 
-        public string Description { get { return description; } }
-        public bool BattleSelectionRequired { get { return battleSelectionRequired; } }
-        public bool MapSelectionRequired { get { return mapSelectionRequired;  } }
-
-
-        [SerializeField] private string identifier;
         [SerializeField] private string gamemodeName;
         [SerializeField] [TextArea] private string description;
         [SerializeField] private AssetReference gamemodeReference;
@@ -29,7 +25,7 @@ namespace Mahou.Content
 
         [NonSerialized] private GameObject gamemode;
 
-        public async UniTask<bool> LoadGamemode()
+        public override async UniTask<bool> LoadGamemode()
         {
             if(gamemode != null)
             {
@@ -43,11 +39,12 @@ namespace Mahou.Content
                 return true;
             }catch(Exception e)
             {
+                Debug.Log(e.Message);
                 return false;
             }
         }
 
-        public GameModeBase GetGamemode()
+        public override GameModeBase GetGamemode()
         {
             if(gamemode == null)
             {
@@ -56,7 +53,7 @@ namespace Mahou.Content
             return gamemode.GetComponent<GameModeBase>();
         }
 
-        public void UnloadGamemode()
+        public override void UnloadGamemode()
         {
             Addressables.Release<GameObject>(gamemode);
         }

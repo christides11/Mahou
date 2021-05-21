@@ -37,6 +37,9 @@ namespace Mahou.Menus
         [SerializeField] private GameObject gamemodeTab;
         [SerializeField] private Transform gamemodeContentHolder;
         [SerializeField] private GameObject gamemodeContentPrefab;
+        [SerializeField] private GameObject battlesUIGameObject;
+        [SerializeField] private Transform battlesContentHolder;
+        [SerializeField] private GameObject battleContentPrefab;
 
         public void CloseMenu()
         {
@@ -95,13 +98,55 @@ namespace Mahou.Menus
 
         public void OpenBattleSelectionMenu()
         {
+            battlesUIGameObject.SetActive(true);
 
+            foreach(Transform child in battlesContentHolder)
+            {
+                Destroy(child.gameObject);
+            }
+
+            _ = SetupBattleSelection();
+        }
+
+        private async UniTask SetupBattleSelection()
+        {
+            bool battleLoadResult = await ModManager.instance.LoadBattleDefinitions();
+            var battleList = ModManager.instance.GetBattleDefinitions();
+
+            foreach (ModObjectReference battle in battleList)
+            {
+                GameObject uiObject = GameObject.Instantiate(battleContentPrefab, battlesContentHolder, false);
+                ModObjectReference b = new ModObjectReference(battle.modIdentifier, battle.objectIdentifier);
+                uiObject.GetComponent<EventTrigger>().AddOnSubmitListeners((data) => { OnSelectedBattle(b); });
+            }
+        }
+
+        private void OnSelectedBattle(ModObjectReference battle)
+        {
+            selectedBattle = battle;
+            var bat = ModManager.instance.GetBattleDefinition(battle);
+            if (bat)
+            {
+                selectedMap = bat.MapReference;
+            }
+
+            foreach (Transform child in battlesContentHolder)
+            {
+                Destroy(child.gameObject);
+            }
+            battlesUIGameObject.SetActive(false);
         }
 
         public void StartHosting()
         {
-            if(selectedGamemode == null
-                || selectedMap == null)
+            if(selectedGamemode == null || selectedMap == null)
+            {
+                return;
+            }
+
+            var gamemode = ModManager.instance.GetGamemodeDefinition(selectedGamemode);
+
+            if(gamemode.BattleSelectionRequired && selectedBattle == null)
             {
                 return;
             }

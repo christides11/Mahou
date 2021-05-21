@@ -50,7 +50,7 @@ namespace Mahou.Managers
         /// </summary>
         /// <param name="gamemode">The gamemode to set.</param>
         /// <returns>True if successful.</returns>
-        public virtual async UniTask<bool> SetGamemode(ModObjectReference gamemode)
+        public virtual async UniTask<bool> SetGamemode(ModObjectReference gamemode, ModObjectReference battle = null)
         {
             await modManager.LoadGamemodeDefinitions(gamemode.modIdentifier);
             IGameModeDefinition gamemodeDefinition = modManager.GetGamemodeDefinition(gamemode);
@@ -59,6 +59,18 @@ namespace Mahou.Managers
             {
                 Debug.Log($"Can not find gamemode {gamemode.ToString()}");
                 return false;
+            }
+
+            IBattleDefinition battleDefinition = null;
+            if (gamemodeDefinition.BattleSelectionRequired)
+            {
+                await modManager.LoadBattleDefinition(battle);
+                battleDefinition = modManager.GetBattleDefinition(battle);
+                if(battleDefinition == null)
+                {
+                    Debug.Log($"Could not find battle {battle.ToString()}");
+                    return false;
+                }
             }
 
             ClearGamemode();
@@ -72,6 +84,7 @@ namespace Mahou.Managers
 
             GameObject gameMode = Instantiate(gamemodeDefinition.GetGamemode().gameObject, transform);
             this.GameMode = gameMode.GetComponent<GameModeBase>();
+            this.GameMode.InitGamemode(battleDefinition);
             CurrentGamemode = gamemodeDefinition;
             return true;
         }

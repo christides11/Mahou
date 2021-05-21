@@ -7,6 +7,12 @@ namespace Mahou.Debugging
 {
     public class ExtConsoleCommands
     {
+        [Command("close", "Closes the application")]
+        public static void QuitApplication()
+        {
+            Application.Quit();
+        }
+
         [Command("unity-version", "Prints the current unity version.")]
         public static void PrintUnityVersion()
         {

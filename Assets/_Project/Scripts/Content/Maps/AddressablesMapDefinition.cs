@@ -8,17 +8,14 @@ using Cysharp.Threading.Tasks;
 namespace Mahou.Content
 {
     [CreateAssetMenu(fileName = "AddressablesMapDefinition", menuName = "Mahou/Content/Addressables/MapDefinition")]
-    public class AddressablesMapDefinition : ScriptableObject, IMapDefinition
+    public class AddressablesMapDefinition : IMapDefinition
     {
-        public string Identifier { get { return identifier; } }
+        public override string Name { get { return mapName; } }
+        public override List<string> SceneNames { get { return sceneNames; } }
 
-        public string Name { get { return mapName; } }
-        public List<string> SceneNames { get { return sceneNames; } }
+        public override string Description { get { return description; } }
+        public override bool Selectable { get { return selectable; } }
 
-        public string Description { get { return description; } }
-        public bool Selectable { get { return selectable; } }
-
-        [SerializeField] private string identifier;
         [SerializeField] private string mapName;
         [SerializeField] private List<string> sceneNames;
         [SerializeField] [TextArea] private string description;
@@ -26,12 +23,12 @@ namespace Mahou.Content
 
         [SerializeField] private AssetReference sceneReference;
 
-        public async UniTask LoadScene()
+        public override async UniTask LoadMap()
         {
             await Addressables.LoadSceneAsync(sceneReference, UnityEngine.SceneManagement.LoadSceneMode.Additive).Task;
         }
 
-        public async UniTask UnloadScene()
+        public override async UniTask UnloadMap()
         {
 
         }

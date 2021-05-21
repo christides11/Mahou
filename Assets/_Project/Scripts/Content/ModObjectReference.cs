@@ -11,6 +11,16 @@ namespace Mahou.Content
 
         }
 
+        public ModObjectReference(string identifier)
+        {
+            string[] split = identifier.Split('/');
+            if(split.Length >= 2)
+            {
+                modIdentifier = split[0];
+                objectIdentifier = split[1];
+            }
+        }
+
         public ModObjectReference(string modIdentifier, string objectIdentifier)
         {
             this.modIdentifier = modIdentifier;

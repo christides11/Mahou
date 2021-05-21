@@ -78,7 +78,7 @@ namespace Mahou.Managers
                 return false;
             }
 
-            await sd.LoadScene();
+            await sd.LoadMap();
             return true;
         }
 
@@ -136,11 +136,8 @@ namespace Mahou.Managers
         public List<ModObjectReference> GetFighterDefinitions(string modIdentifier)
         {
             List<ModObjectReference> fighters = new List<ModObjectReference>();
+            // Mod does not exist.
             if (!mods.ContainsKey(modIdentifier))
-            {
-                return fighters;
-            }
-            if (!mods[modIdentifier].FighterDefinitionsLoaded)
             {
                 return fighters;
             }
@@ -215,11 +212,6 @@ namespace Mahou.Managers
             {
                 return gamemodes;
             }
-            if (!mods[modIdentifier].GamemodeDefinitionsLoaded)
-            {
-                return gamemodes;
-            }
-
             List<IGameModeDefinition> gmds = mods[modIdentifier].GetGamemodeDefinitions();
             if (gmds == null)
             {
@@ -308,10 +300,6 @@ namespace Mahou.Managers
             {
                 return maps;
             }
-            if (!mods[modIdentifier].MapDefinitionsLoaded)
-            {
-                return maps;
-            }
             List<IMapDefinition> fds = mods[modIdentifier].GetMapDefinitions();
             if (fds == null)
             {
@@ -363,18 +351,27 @@ namespace Mahou.Managers
                 return false;
             }
 
-            await mods[modIdentifier].LoadBattleDefinitions();
-            return true;
+            return await mods[modIdentifier].LoadBattleDefinitions();
         }
 
-        public IMapDefinition GetBattleDefinition(ModObjectReference battle)
+        public async UniTask<bool> LoadBattleDefinition(ModObjectReference battle)
+        {
+            if (!mods.ContainsKey(battle.modIdentifier))
+            {
+                return false;
+            }
+
+            return await mods[battle.modIdentifier].LoadBattleDefinition(battle.objectIdentifier);
+        }
+
+        public IBattleDefinition GetBattleDefinition(ModObjectReference battle)
         {
             if (!mods.ContainsKey(battle.modIdentifier))
             {
                 return null;
             }
 
-            IMapDefinition f = mods[battle.modIdentifier].GetMapDefinition(battle.objectIdentifier);
+            IBattleDefinition f = mods[battle.modIdentifier].GetBattleDefinition(battle.objectIdentifier);
 
             if (f == null)
             {
@@ -397,10 +394,6 @@ namespace Mahou.Managers
         {
             List<ModObjectReference> battles = new List<ModObjectReference>();
             if (!mods.ContainsKey(modIdentifier))
-            {
-                return battles;
-            }
-            if (!mods[modIdentifier].BattleDefinitionsLoaded)
             {
                 return battles;
             }

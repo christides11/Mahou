@@ -6,7 +6,7 @@ namespace Mahou.Content
 {
     public abstract class IBattleDefinition : ScriptableObject
     {
-        public virtual string Identifier { get; }
+        public virtual string Identifier { get; set; } = "";
         public virtual string Name { get; }
         public virtual string Description { get; }
 

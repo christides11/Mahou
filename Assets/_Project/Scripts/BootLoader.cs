@@ -24,7 +24,7 @@ namespace Mahou
             gameManager.Initialize();
         }
 
-        async void Start()
+        async UniTask Start()
         {
             // Unload other scenes.
             if (SceneManager.GetActiveScene().name == bootloaderScene
@@ -45,8 +45,9 @@ namespace Mahou
                 await SceneManager.LoadSceneAsync(mainMenuScene, LoadSceneMode.Additive);
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(mainMenuScene));
             }
+            await UniTask.WaitForEndOfFrame();
 
-            if (useArgs)
+            if (useArgs && Application.isEditor)
             {
                 foreach(string s in args)
                 {

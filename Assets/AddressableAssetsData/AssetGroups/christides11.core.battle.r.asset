@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: christides11.core.battle.r
+  m_EditorClassIdentifier: 
+  m_GroupName: christides11.core.battle.r
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 377044d4d677b6e40aa00020f03e522e
+  m_SerializeEntries:
+  - m_GUID: 48f719d59ea7e5a42875e2908ec0767c
+    m_Address: Battles/VersusR/Definition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 11400000, guid: 48f719d59ea7e5a42875e2908ec0767c, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 48f719d59ea7e5a42875e2908ec0767c, type: 2}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f19033ff650faf4438fedfedb426e295, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 42fb382481145db4982f5756205b5527, type: 2}
+    - {fileID: 11400000, guid: f45d92aeb09608e42ae92125054355bc, type: 2}

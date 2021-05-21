@@ -14,17 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 
   fighterRefs:
-  - m_AssetGUID: b9110db6b096f2549b05c24b4df7b73f
-    m_SubObjectName: 
-    m_SubObjectType: 
+  - identifier: gmg
+    asset:
+      m_AssetGUID: b9110db6b096f2549b05c24b4df7b73f
+      m_SubObjectName: 
+      m_SubObjectType: 
   gamemodeRefs:
-  - m_AssetGUID: ff8c74f26f020db47a982dcb2c9bc147
-    m_SubObjectName: 
-    m_SubObjectType: 
-  - m_AssetGUID: 4563cefb27aa1f743bf9f05186ab3c4a
-    m_SubObjectName: 
-    m_SubObjectType: 
+  - identifier: bandbattle
+    asset:
+      m_AssetGUID: ff8c74f26f020db47a982dcb2c9bc147
+      m_SubObjectName: 
+      m_SubObjectType: 
+  - identifier: versus
+    asset:
+      m_AssetGUID: 4563cefb27aa1f743bf9f05186ab3c4a
+      m_SubObjectName: 
+      m_SubObjectType: 
   mapRefs:
-  - m_AssetGUID: b14fdc83d2928354dbe47df62750d6e0
-    m_SubObjectName: 
-    m_SubObjectType: 
+  - identifier: debugroom
+    asset:
+      m_AssetGUID: b14fdc83d2928354dbe47df62750d6e0
+      m_SubObjectName: 
+      m_SubObjectType: 
+  battleRefs:
+  - identifier: versusr
+    asset:
+      m_AssetGUID: 48f719d59ea7e5a42875e2908ec0767c
+      m_SubObjectName: 
+      m_SubObjectType: 

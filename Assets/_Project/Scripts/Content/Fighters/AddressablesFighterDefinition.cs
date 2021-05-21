@@ -10,14 +10,10 @@ namespace Mahou.Content.Fighters
     [CreateAssetMenu(fileName = "AddressablesFighterDefinition", menuName = "Mahou/Content/Addressables/FighterDefinition")]
     public class AddressablesFighterDefinition : IFighterDefinition
     {
-        public override string Identifier { get { return identifier; } }
-
         public override string Name { get { return fighterName; } }
-
         public override string Description { get { return description; } }
         public override bool Selectable { get { return selectable; } }
 
-        [SerializeField] private string identifier;
         [SerializeField] private string fighterName;
         [SerializeField] [TextArea] private string description;
         [SerializeField] private AssetReference fighterReference;

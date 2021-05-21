@@ -4319,6 +4319,10 @@ MonoBehaviour:
   bootloaderScene: Singletons
   mainMenuScene: MainMenu
   gameManager: {fileID: 1812465252}
+  consoleReader: {fileID: 1471945004}
+  useArgs: 1
+  args:
+  - host core/bandbattle core/debugroom core/versusr
 --- !u!1 &1847963925
 GameObject:
   m_ObjectHideFlags: 0
