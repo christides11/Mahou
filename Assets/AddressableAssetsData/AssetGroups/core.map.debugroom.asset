@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: christides11.core.map.debugroom
+  m_Name: core.map.debugroom
   m_EditorClassIdentifier: 
-  m_GroupName: christides11.core.map.debugroom
+  m_GroupName: core.map.debugroom
   m_Data:
     m_SerializedData: []
   m_GUID: 6a7bd9fd571438443bfaa0f6a3fb7126
   m_SerializeEntries:
   - m_GUID: b14fdc83d2928354dbe47df62750d6e0
-    m_Address: Maps/DebugRoom/DebugRoomDefinition
+    m_Address: core.map.debugroom.definition
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 11400000, guid: b14fdc83d2928354dbe47df62750d6e0, type: 2}
     m_TargetAsset: {fileID: 11400000, guid: b14fdc83d2928354dbe47df62750d6e0, type: 2}
   - m_GUID: a637c67fcb1792946bc6eb061ae997cb
-    m_Address: Maps/Debug/DebugRoom
+    m_Address: core.map.debugroom.scene
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 102900000, guid: a637c67fcb1792946bc6eb061ae997cb, type: 3}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 845f1350bc0c7d5498c527b05d56e9ac, type: 3}
-  m_Name: LocalModDefinition
+  m_Name: Core.ModDefinition
   m_EditorClassIdentifier: 
   description: 
   fighterRefs:
@@ -28,6 +28,11 @@ MonoBehaviour:
   - identifier: versus
     asset:
       m_AssetGUID: 4563cefb27aa1f743bf9f05186ab3c4a
+      m_SubObjectName: 
+      m_SubObjectType: 
+  - identifier: training
+    asset:
+      m_AssetGUID: a30e2e14d92c74f4798105150d96dad8
       m_SubObjectName: 
       m_SubObjectType: 
   mapRefs:

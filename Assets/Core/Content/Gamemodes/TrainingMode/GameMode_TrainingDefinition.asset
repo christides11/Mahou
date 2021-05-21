@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73db8d286bc2bca4f96da12d1a1a7208, type: 3}
-  m_Name: GameMode_VersusDefinition
+  m_Name: GameMode_TrainingDefinition
   m_EditorClassIdentifier: 
-  gamemodeName: Versus
+  gamemodeName: Training Mode
   description: 
   gamemodeReference:
-    m_AssetGUID: 9560524a72e5bca4d8cee458e77976a4
+    m_AssetGUID: e4c4f55d65b485f49ac9118b377332ab
     m_SubObjectName: 
     m_SubObjectType: 
-  battleSelectionRequired: 1
-  mapSelectionRequired: 0
+  battleSelectionRequired: 0
+  mapSelectionRequired: 1

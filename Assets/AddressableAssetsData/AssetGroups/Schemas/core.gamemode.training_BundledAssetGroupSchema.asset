@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5d17a21594effb4e9591490b009e7aa, type: 3}
-  m_Name: christides11.core.map.debugroom_BundledAssetGroupSchema
+  m_Name: core.gamemode.training_BundledAssetGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 99337eb0b83d0874a93246f535f14d21, type: 2}
+  m_Group: {fileID: 11400000, guid: dfffe5d25f4737343a4fa69a3a63274c, type: 2}
   m_Compression: 1
   m_IncludeAddressInCatalog: 1
   m_IncludeGUIDInCatalog: 1

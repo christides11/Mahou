@@ -10,25 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: christides11.core.gamemode.bandbattle
+  m_Name: core.gamemode.bandbattle
   m_EditorClassIdentifier: 
-  m_GroupName: christides11.core.gamemode.bandbattle
+  m_GroupName: core.gamemode.bandbattle
   m_Data:
     m_SerializedData: []
   m_GUID: b33e0853278eeb14481c63d366513649
   m_SerializeEntries:
   - m_GUID: ff8c74f26f020db47a982dcb2c9bc147
-    m_Address: gamemodes/bandbattle/definition
+    m_Address: core.gamemode.bandbattle.definition
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 11400000, guid: ff8c74f26f020db47a982dcb2c9bc147, type: 2}
     m_TargetAsset: {fileID: 11400000, guid: ff8c74f26f020db47a982dcb2c9bc147, type: 2}
   - m_GUID: 731c44d31cb811b47bf1c8ddbb41824e
-    m_Address: gamemodes/bandbattle/gameobject
+    m_Address: core.gamemode.bandbattle.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 7178618059488412214, guid: 731c44d31cb811b47bf1c8ddbb41824e,
+      type: 3}
+    m_TargetAsset: {fileID: 7178618059488412214, guid: 731c44d31cb811b47bf1c8ddbb41824e,
+      type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f19033ff650faf4438fedfedb426e295, type: 2}
   m_SchemaSet:

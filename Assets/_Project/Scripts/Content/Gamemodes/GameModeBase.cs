@@ -12,5 +12,10 @@ namespace Mahou.Content
         {
             this.battleDefinition = battleDefinition;
         }
+
+        public virtual void Tick()
+        {
+
+        }
     }
 }

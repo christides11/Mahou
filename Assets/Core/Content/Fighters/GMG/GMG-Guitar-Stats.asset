@@ -29,16 +29,16 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
+        time: -1
         value: 2
-        inSlope: -2
-        outSlope: -2
+        inSlope: -1
+        outSlope: -1
         tangentMode: 34
         weightedMode: 0
         inWeight: 0
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5
+        time: 0
         value: 1
         inSlope: 0
         outSlope: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
+        time: -1
         value: 0.4
         inSlope: 0.057632934
         outSlope: 0.057632934
@@ -79,8 +79,8 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 0.6
-        outSlope: 0.6
+        inSlope: 0.3
+        outSlope: 0.3
         tangentMode: 34
         weightedMode: 0
         inWeight: 0.33333334
@@ -98,11 +98,11 @@ MonoBehaviour:
       baseValue: 25
     dashTime: 10
     jumpsAvailable: 2
-    jumpSquat: 3
-    jumpVeloMinHoldFrames: 5
-    jumpVeloMaxHoldFrames: 10
+    jumpSquat: 4
+    jumpVeloMinHoldFrames: 1
+    jumpVeloMaxHoldFrames: 6
     jumpVelocity:
-      baseValue: 13.5
+      baseValue: 13
     jumpConversedMomentum:
       baseValue: 0.5
     jumpInitHozVelo:
@@ -121,16 +121,16 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
+        time: -1
         value: 0.5
-        inSlope: 1
-        outSlope: 1
+        inSlope: 0.5
+        outSlope: 0.5
         tangentMode: 34
         weightedMode: 0
         inWeight: 0
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5
+        time: 0
         value: 1
         inSlope: 0
         outSlope: 0
@@ -151,9 +151,9 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     airBaseAccel:
-      baseValue: 5
+      baseValue: 6
     airAccel:
-      baseValue: 10
+      baseValue: 23
     airDeceleration:
       baseValue: 10
     maxAirSpeed:

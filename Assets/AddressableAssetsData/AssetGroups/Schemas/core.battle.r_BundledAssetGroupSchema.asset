@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5d17a21594effb4e9591490b009e7aa, type: 3}
-  m_Name: christides11.core.gamemode.bandbattle_BundledAssetGroupSchema
+  m_Name: core.battle.r_BundledAssetGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 5ef196a347ce76c428630eace489a843, type: 2}
+  m_Group: {fileID: 11400000, guid: e1b954e2c3f76284292b27bcd724df50, type: 2}
   m_Compression: 1
   m_IncludeAddressInCatalog: 1
   m_IncludeGUIDInCatalog: 1

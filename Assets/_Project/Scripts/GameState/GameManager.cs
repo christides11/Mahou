@@ -6,13 +6,13 @@ using Mahou.Networking;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
+using Mahou.Debugging;
 
 namespace Mahou.Managers
 {
     public class GameManager : MonoBehaviour
     {
         public static GameManager current;
-
         public LobbyManager LobbyManager { get { return lobbyManager; } }
         public NetworkManager NetworkManager { get { return networkManager; } }
         public GameSettings GameSettings { get { return gameSettings; } }

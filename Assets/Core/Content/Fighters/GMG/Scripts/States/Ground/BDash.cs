@@ -47,6 +47,10 @@ namespace Mahou.Core
 
         public override bool CheckInterrupt()
         {
+            if (FighterManager.TryJump())
+            {
+                return true;
+            }
             if (StateManager.CurrentStateFrame > Stats.CurrentStats.dashTime)
             {
                 Vector2 movementDir = InputManager.GetAxis2D(Mahou.Input.Action.Movement_X);
