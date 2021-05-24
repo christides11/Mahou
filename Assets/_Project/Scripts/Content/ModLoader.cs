@@ -26,7 +26,7 @@ namespace Mahou.Content
         /// <summary>
         /// A list of all currently enabled mods.
         /// </summary>
-        public Dictionary<string, ModHost> loadedMods = new Dictionary<string, ModHost>();
+        public Dictionary<string, LoadedModDefinition> loadedMods = new Dictionary<string, LoadedModDefinition>();
         /// <summary>
         /// The path where mods are installed.
         /// </summary>
@@ -59,6 +59,7 @@ namespace Mahou.Content
                 loadedMods.Remove(um);
             }
             SaveLoadJsonService.Save(modsLoadedFileName, JsonUtility.ToJson(loadedMods));
+            LoadAllMods();
         }
 
         public virtual void UpdateModList()
@@ -122,10 +123,12 @@ namespace Mahou.Content
         #region Loading
         public virtual void LoadAllMods()
         {
+            int startValue = loadedMods.Count;
             foreach (ModInfo mi in modList)
             {
                 LoadMod(mi);
             }
+            Debug.Log($"Loaded {loadedMods.Count-startValue} mods.");
         }
 
         public virtual bool LoadMod(string identifier)
@@ -167,8 +170,7 @@ namespace Mahou.Content
                     if (mod.Assets.Exists("ModDefinition"))
                     {
                         IModDefinition modDefinition = mod.Assets.Load("ModDefinition") as IModDefinition;
-                        loadedMods.Add(modInfo.identifier, mod);
-                        modManager.mods.Add(modInfo.identifier, modDefinition);
+                        loadedMods.Add(modInfo.identifier, new LoadedModDefinition(mod, modDefinition));
                         ConsoleWindow.current.WriteLine($"Loaded mod {modInfo.identifier}.");
                         CheckLoadedModList();
                         return true;
@@ -195,11 +197,8 @@ namespace Mahou.Content
         {
             if (loadedMods.ContainsKey(modIdentifier))
             {
-                // Cleanup mod
-                modManager.mods.Remove(modIdentifier);
-
                 // Unload mod
-                (loadedMods[modIdentifier] as ModHost).UnloadMod();
+                (loadedMods[modIdentifier].host as ModHost).UnloadMod();
                 loadedMods.Remove(modIdentifier);
                 return true;
             }
@@ -210,7 +209,12 @@ namespace Mahou.Content
         {
             foreach (string k in loadedMods.Keys)
             {
-                (loadedMods[k] as ModHost).UnloadMod();
+                // Ignore addressable mods.
+                if(loadedMods[k].host == null)
+                {
+                    continue;
+                }
+                (loadedMods[k].host as ModHost).UnloadMod();
             }
             loadedMods.Clear();
         }

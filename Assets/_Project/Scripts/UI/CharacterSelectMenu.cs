@@ -45,7 +45,7 @@ namespace Mahou.Menus
 
             ModManager modManager = ModManager.instance;
 
-            foreach(var mod in modManager.mods)
+            foreach(var mod in modManager.ModLoader.loadedMods)
             {
                 GameObject go = GameObject.Instantiate(textContentItem, modContentHolder, false);
                 go.GetComponent<TextMeshProUGUI>().text = mod.Key;

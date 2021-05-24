@@ -33,7 +33,7 @@ namespace Mahou.Managers
             current = this;
             HnSF.Input.GlobalInputManager.instance = new Mahou.Input.GlobalInputManager();
             modManager.Initialize();
-            modManager.mods.Add("core", coreMod);
+            modManager.ModLoader.loadedMods.Add("core", new LoadedModDefinition(null, coreMod));
             lobbyManager.Initialize();
         }
 

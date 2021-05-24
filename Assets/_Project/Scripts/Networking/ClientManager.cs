@@ -10,7 +10,6 @@ using Mahou.Content;
 using System;
 using HnSF.Input;
 using Mahou.Content.Fighters;
-using UnityEditor;
 
 namespace Mahou.Networking
 {
@@ -141,11 +140,6 @@ namespace Mahou.Networking
             playerRequestIncrement++;
             requestFighterRef = fighterReference;
 
-            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(fighter.GetFighter().GetInstanceID(), out string guid, out long file))
-            {
-                Debug.Log(guid);
-            }
-
             // No other clients connected, just spawn the fighter.
             if (unconfirmedClients.Count == 0)
             {
@@ -193,7 +187,14 @@ namespace Mahou.Networking
                 return;
             }
             GameObject fighter = GameObject.Instantiate(fighterGO, new Vector3(0, 1, 0), Quaternion.identity);
-            NetworkServer.Spawn(fighter, new System.Guid(fighterDefinition.GetFighterGUID()), networkIdentity.connectionToClient);
+            if (fighterDefinition.GetFighterGUID() == null)
+            {
+                NetworkServer.Spawn(fighter, gameObject);
+            }
+            else
+            {
+                NetworkServer.Spawn(fighter, new System.Guid(fighterDefinition.GetFighterGUID()), networkIdentity.connectionToClient);
+            }
             players.Add(fighter.GetComponent<NetworkIdentity>());
         }
         #endregion

@@ -18,8 +18,6 @@ namespace Mahou.Managers
 
         public static ModManager instance;
 
-        public Dictionary<string, IModDefinition> mods = new Dictionary<string, IModDefinition>();
-
         public ModLoader ModLoader { get { return modLoader; } }
 
         [SerializeField] private GameManager gameManager;
@@ -89,12 +87,12 @@ namespace Mahou.Managers
 
         public async UniTask<bool> LoadMap(ModObjectReference map)
         {
-            if (!mods.TryGetValue(map.modIdentifier, out IModDefinition mod))
+            if (!modLoader.loadedMods.TryGetValue(map.modIdentifier, out LoadedModDefinition mod))
             {
                 return false;
             }
 
-            IMapDefinition sd = (IMapDefinition)mod.GetContentDefinition(ContentType.Map, map.objectIdentifier);
+            IMapDefinition sd = (IMapDefinition)mod.definition.GetContentDefinition(ContentType.Map, map.objectIdentifier);
             if (sd == null)
             {
                 return false;
@@ -107,7 +105,7 @@ namespace Mahou.Managers
         #region Content
         public async UniTask<bool> LoadContentDefinitions(ContentType contentType)
         {
-            foreach(string m in mods.Keys)
+            foreach(string m in modLoader.loadedMods.Keys)
             {
                 bool result = await LoadContentDefinitions(contentType, m);
                 if(result == false)
@@ -120,26 +118,26 @@ namespace Mahou.Managers
 
         public async UniTask<bool> LoadContentDefinitions(ContentType contentType, string modIdentifier)
         {
-            if (!mods.ContainsKey(modIdentifier))
+            if (!modLoader.loadedMods.ContainsKey(modIdentifier))
             {
                 return false;
             }
-            return await mods[modIdentifier].LoadContentDefinitions(contentType);
+            return await modLoader.loadedMods[modIdentifier].definition.LoadContentDefinitions(contentType);
         }
 
         public async UniTask<bool> LoadContentDefinition(ContentType contentType, ModObjectReference objectReference)
         {
-            if (!mods.ContainsKey(objectReference.modIdentifier))
+            if (!modLoader.loadedMods.ContainsKey(objectReference.modIdentifier))
             {
                 return false;
             }
-            return await mods[objectReference.modIdentifier].LoadContentDefinition(contentType, objectReference.objectIdentifier);
+            return await modLoader.loadedMods[objectReference.modIdentifier].definition.LoadContentDefinition(contentType, objectReference.objectIdentifier);
         }
 
         public List<ModObjectReference> GetContentDefinitionReferences(ContentType contentType)
         {
             List<ModObjectReference> content = new List<ModObjectReference>();
-            foreach (string m in mods.Keys)
+            foreach (string m in modLoader.loadedMods.Keys)
             {
                 content.InsertRange(content.Count, GetContentDefinitionReferences(contentType, m));
             }
@@ -150,11 +148,11 @@ namespace Mahou.Managers
         {
             List<ModObjectReference> content = new List<ModObjectReference>();
             // Mod does not exist.
-            if (!mods.ContainsKey(modIdentifier))
+            if (!modLoader.loadedMods.ContainsKey(modIdentifier))
             {
                 return content;
             }
-            List<IContentDefinition> fds = mods[modIdentifier].GetContentDefinitions(contentType);
+            List<IContentDefinition> fds = modLoader.loadedMods[modIdentifier].definition.GetContentDefinitions(contentType);
             if (fds == null)
             {
                 return content;
@@ -168,18 +166,18 @@ namespace Mahou.Managers
 
         public IContentDefinition GetContentDefinition(ContentType contentType, ModObjectReference reference)
         {
-            if (!mods.ContainsKey(reference.modIdentifier))
+            if (!modLoader.loadedMods.ContainsKey(reference.modIdentifier))
             {
                 return null;
             }
              
-            IContentDefinition g = mods[reference.modIdentifier].GetContentDefinition(contentType, reference.objectIdentifier);
+            IContentDefinition g = modLoader.loadedMods[reference.modIdentifier].definition.GetContentDefinition(contentType, reference.objectIdentifier);
             return g;
         }
 
         public void UnloadContentDefinitions(ContentType contentType)
         {
-            foreach(string m in mods.Keys)
+            foreach(string m in modLoader.loadedMods.Keys)
             {
                 UnloadContentDefinitions(contentType, m);
             }
@@ -187,11 +185,11 @@ namespace Mahou.Managers
 
         public void UnloadContentDefinitions(ContentType contentType, string modIdentifier)
         {
-            if (!mods.ContainsKey(modIdentifier))
+            if (!modLoader.loadedMods.ContainsKey(modIdentifier))
             {
                 return;
             }
-            mods[modIdentifier].UnloadContentDefinitions(contentType);
+            modLoader.loadedMods[modIdentifier].definition.UnloadContentDefinitions(contentType);
         }
         #endregion
     }

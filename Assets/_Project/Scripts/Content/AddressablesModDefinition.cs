@@ -177,17 +177,17 @@ namespace Mahou.Content
             switch (contentType)
             {
                 case ContentType.Battle:
-                    return GetContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
+                    return GetContentDefinition(battleDefinitions, contentIdentifier);
                 case ContentType.Fighter:
-                    return GetContentDefinition(fighterReferences, fighterDefinitions, contentIdentifier);
+                    return GetContentDefinition(fighterDefinitions, contentIdentifier);
                 case ContentType.Gamemode:
-                    return GetContentDefinition(gamemodeReferences, gamemodeDefinitions, contentIdentifier);
+                    return GetContentDefinition(gamemodeDefinitions, contentIdentifier);
                 case ContentType.GamemodeComponent:
-                    return GetContentDefinition(gamemodeComponentReferences, gamemodeComponentDefinitions, contentIdentifier);
+                    return GetContentDefinition(gamemodeComponentDefinitions, contentIdentifier);
                 case ContentType.Map:
-                    return GetContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
+                    return GetContentDefinition(mapDefinitions, contentIdentifier);
                 case ContentType.Song:
-                    return GetContentDefinition(songReferences, songDefinitions, contentIdentifier);
+                    return GetContentDefinition(songDefinitions, contentIdentifier);
                 default:
                     return null;
             }
@@ -300,8 +300,7 @@ namespace Mahou.Content
             return false;
         }
 
-        protected IContentDefinition GetContentDefinition<T>(Dictionary<string, AssetReferenceT<T>> references,
-            Dictionary<string, OperationResult<T>> definitions, string contentIdentifier) where T : IContentDefinition
+        protected IContentDefinition GetContentDefinition<T>(Dictionary<string, OperationResult<T>> definitions, string contentIdentifier) where T : IContentDefinition
         {
             // Content does not exist, or was not loaded.
             if (definitions.ContainsKey(contentIdentifier) == false)
