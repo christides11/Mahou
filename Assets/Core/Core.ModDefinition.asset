@@ -35,6 +35,12 @@ MonoBehaviour:
       m_AssetGUID: a30e2e14d92c74f4798105150d96dad8
       m_SubObjectName: 
       m_SubObjectType: 
+  gamemodeComponentRefs:
+  - identifier: musicmeter
+    asset:
+      m_AssetGUID: 5d5f4cc9b6a9b974dbb85fe5c9b139cd
+      m_SubObjectName: 
+      m_SubObjectType: 
   mapRefs:
   - identifier: debugroom
     asset:
@@ -45,5 +51,11 @@ MonoBehaviour:
   - identifier: versusr
     asset:
       m_AssetGUID: 48f719d59ea7e5a42875e2908ec0767c
+      m_SubObjectName: 
+      m_SubObjectType: 
+  songRefs:
+  - identifier: versusr.phaseone
+    asset:
+      m_AssetGUID: 46f7423281c8daf47a4f41936a5a1e23
       m_SubObjectName: 
       m_SubObjectType: 

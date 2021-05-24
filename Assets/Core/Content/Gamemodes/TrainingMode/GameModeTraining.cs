@@ -1,8 +1,9 @@
+using Mahou.Content;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Mahou.Content
+namespace Mahou.Core
 {
     public class GameModeTraining : GameModeBase
     {

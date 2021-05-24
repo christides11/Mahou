@@ -1,18 +1,12 @@
+using Mahou.Content;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameModeVersus : MonoBehaviour
+namespace Mahou.Core
 {
-    // Start is called before the first frame update
-    void Start()
+    public class GameModeVersus : GameModeBase
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

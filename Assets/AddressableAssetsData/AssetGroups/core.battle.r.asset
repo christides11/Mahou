@@ -23,6 +23,24 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 11400000, guid: 48f719d59ea7e5a42875e2908ec0767c, type: 2}
     m_TargetAsset: {fileID: 11400000, guid: 48f719d59ea7e5a42875e2908ec0767c, type: 2}
+  - m_GUID: 46f7423281c8daf47a4f41936a5a1e23
+    m_Address: core.battle.versusr.music.phaseone.Definition
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 79cf4fd5698299340b9eba7cea649ed1
+    m_Address: core.battle.versusr.music.phaseone.song
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 554ab99ff616e7643a7ed9d972f8a2b4
+    m_Address: core.battle.versusr.battle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f19033ff650faf4438fedfedb426e295, type: 2}
   m_SchemaSet:

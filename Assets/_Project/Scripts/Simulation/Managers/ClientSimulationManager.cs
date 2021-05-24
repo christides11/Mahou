@@ -33,9 +33,14 @@ namespace Mahou.Simulation
         /// <summary>
         /// Snapshots of player states. Index is each player's connection ID.
         /// </summary>
-        [SerializeField] private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
+        private Dictionary<int, ClientSimState[]> clientStateSnapshots = new Dictionary<int, ClientSimState[]>();
 
-        [SerializeField] private Dictionary<int, ClientInput[]> clientInputSnapshots = new Dictionary<int, ClientInput[]>();
+        private Dictionary<int, ClientInput[]> clientInputSnapshots = new Dictionary<int, ClientInput[]>();
+
+        /// <summary>
+        /// Snapshots of the game state.
+        /// </summary>
+        private GameModeBaseSimState[] gameModeSimStateSnapshots;
 
         public float moveFalloff = 0.1f;
 
@@ -50,6 +55,7 @@ namespace Mahou.Simulation
             // simulation whenever we are too far ahead or behind the server simulation.
             simulationAdjuster = clientSimulationAdjuster = new ClientSimulationAdjuster(gameManager.GameSettings.serverTickRate, 3);
 
+            gameModeSimStateSnapshots = new GameModeBaseSimState[circularBufferSize];
             localClientWorldTickSnapshots = new int[circularBufferSize];
             OnClientJoin(localClient);
 
@@ -63,6 +69,11 @@ namespace Mahou.Simulation
             NetworkClient.RegisterHandler<ServerStateInputMessage>(QueueServerInputs);
         }
 
+        /// <summary>
+        /// Interpolate the positions of clients between simulation ticks. 
+        /// Required since if players don't have a framerate that's the same as the simulation rate,
+        /// they will experience jittering of entities, especially the camera.
+        /// </summary>
         protected override void InterpolateClients()
         {
             foreach (ClientManager cm in ClientManager.GetClients())
@@ -267,7 +278,9 @@ namespace Mahou.Simulation
         private void CheckSimulationState(ServerWorldStateMessage worldState, bool serverAhead)
         {
             bool correctSimulation = false;
-            if (!serverAhead)
+            // We are ahead of the server's simulation, which means that we have been predicting other client's inputs.
+            // We need to check if our prediction was wrong, and rollback if so.
+            if (serverAhead == false)
             {
                 // Check if we need to do a rollback.
                 int bufidx = worldState.worldSnapshot.currentTick % circularBufferSize;
@@ -287,14 +300,22 @@ namespace Mahou.Simulation
             }
 
             // Apply the correct state, weither we need to rollback or not.
+            ApplyGameModeSimulationState(worldState);
             ApplyClientSimulationStates(worldState);
 
-            // Simulation diverge detected. Rollback needed.
+            // Our prediction of other clients was wrong, so we need to rollback and apply the correct states to the simulation representation.
             if (correctSimulation)
             {
                 Rollback(worldState.worldSnapshot.currentTick);
             }
             
+        }
+
+        private void ApplyGameModeSimulationState(ServerWorldStateMessage incomingState)
+        {
+            int bufidx = incomingState.worldSnapshot.currentTick % circularBufferSize;
+
+            gameModeSimStateSnapshots[bufidx] = incomingState.worldSnapshot.gameModeSimState;
         }
 
         private void ApplyClientSimulationStates(ServerWorldStateMessage incomingState)
@@ -319,6 +340,7 @@ namespace Mahou.Simulation
             int bufidx = startFrame % circularBufferSize;
 
             // APPLY HISTORICAL STATE //
+            gameManager.GameMode.ApplySimState(gameModeSimStateSnapshots[bufidx]);
             foreach (var cm in ClientManager.clientManagers)
             {
                 cm.Value.ApplyClientSimState(clientStateSnapshots[cm.Key][bufidx]);
@@ -330,6 +352,7 @@ namespace Mahou.Simulation
                 bufidx = startFrame % circularBufferSize;
 
                 // APPLY STATE & INPUT //
+                gameManager.GameMode.ApplySimState(gameModeSimStateSnapshots[bufidx]);
                 foreach (var cm in ClientManager.clientManagers)
                 {
                     // Apply inputs to the client.

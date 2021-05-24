@@ -34,8 +34,6 @@ namespace Mahou.Simulation
         /// </summary>
         private Dictionary<int, TickInput> clientCurrentInput = new Dictionary<int, TickInput>();
 
-        StringBuilder stringBuilder = new StringBuilder();
-
         public ServerSimulationManager(LobbyManager lobbyManager) : base(lobbyManager)
         {
             gameManager = GameManager.current;
@@ -79,7 +77,7 @@ namespace Mahou.Simulation
             // Update the latest input tick that we have for that client.
             //if (lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick < arg2.StartWorldTick-1)
             //{
-                lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick =
+                lobbyManager.MatchManager.joinedClients[arg1.connectionId].latestInputTick =
                     arg2.StartWorldTick + arg2.Inputs.Length - 1;
             //}
         }
@@ -103,7 +101,7 @@ namespace Mahou.Simulation
                 unprocessedPlayerIds.Remove(player.clientID);
 
                 // Mark the player as synchronized.
-                lobbyManager.MatchManager.clientConnectionInfo[player.clientID].synced = true;
+                lobbyManager.MatchManager.joinedClients[player.clientID].synced = true;
             }
 
             // Any remaining players without inputs have their latest input command repeated,
@@ -112,8 +110,8 @@ namespace Mahou.Simulation
             {
                 // If the player is not yet synchronized, this means that they haven't sent any
                 // inputs yet. Ignore them for now.
-                if (!lobbyManager.MatchManager.clientConnectionInfo.ContainsKey(clientID) ||
-                    !lobbyManager.MatchManager.clientConnectionInfo[clientID].synced)
+                if (!lobbyManager.MatchManager.joinedClients.ContainsKey(clientID) ||
+                    !lobbyManager.MatchManager.joinedClients[clientID].synced)
                 {
                     continue;
                 }
@@ -128,9 +126,7 @@ namespace Mahou.Simulation
                 }
                 else
                 {
-                    stringBuilder.Clear();
-                    stringBuilder.Append($"No inputs for player #{clientID} and no history to replay.");
-                    Debug.Log(stringBuilder);
+                    Debug.Log($"No inputs for player #{clientID} and no history to replay.");
                 }
             }
 
@@ -212,13 +208,14 @@ namespace Mahou.Simulation
 
             WorldSnapshot snapshot = new WorldSnapshot()
             {
+                gameModeSimState = gameManager.GameMode.GetSimState(),
                 clientStates = clientStates,
                 currentTick = currentTick
             };
             serverStateMsg.worldSnapshot = snapshot;
 
             // Send Message
-            foreach(var v in lobbyManager.MatchManager.clientConnectionInfo)
+            foreach(var v in lobbyManager.MatchManager.joinedClients)
             {
                 // Ignore the host.
                 if (NetworkServer.localClientActive

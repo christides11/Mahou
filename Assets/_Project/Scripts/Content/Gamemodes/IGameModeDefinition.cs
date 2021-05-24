@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Mahou.Content
 {
-    public abstract class IGameModeDefinition : ScriptableObject
+    public abstract class IGameModeDefinition : IContentDefinition
     {
-        public virtual string Identifier { get; set; } = "";
-        public virtual string Name { get; }
-        public virtual string Description { get; }
+        public override string Name { get; }
+        public override string Description { get; }
         public virtual bool BattleSelectionRequired { get; }
         public virtual bool MapSelectionRequired { get; }
+        public virtual ModObjectReference[] GameModeComponentReferences { get; }
 
         public abstract UniTask<bool> LoadGamemode();
         public abstract GameModeBase GetGamemode();

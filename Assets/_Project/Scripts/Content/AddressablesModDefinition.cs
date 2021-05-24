@@ -27,8 +27,10 @@ namespace Mahou.Content
 
         [SerializeField] private List<IdentifierAssetReferenceRelation<IFighterDefinition>> fighterRefs = new List<IdentifierAssetReferenceRelation<IFighterDefinition>>();
         [SerializeField] private List<IdentifierAssetReferenceRelation<IGameModeDefinition>> gamemodeRefs = new List<IdentifierAssetReferenceRelation<IGameModeDefinition>>();
+        [SerializeField] private List<IdentifierAssetReferenceRelation<IGameModeComponentDefinition>> gamemodeComponentRefs = new List<IdentifierAssetReferenceRelation<IGameModeComponentDefinition>>();
         [SerializeField] private List<IdentifierAssetReferenceRelation<IMapDefinition>> mapRefs = new List<IdentifierAssetReferenceRelation<IMapDefinition>>();
         [SerializeField] private List<IdentifierAssetReferenceRelation<IBattleDefinition>> battleRefs = new List<IdentifierAssetReferenceRelation<IBattleDefinition>>();
+        [SerializeField] private List<IdentifierAssetReferenceRelation<ISongDefinition>> songRefs = new List<IdentifierAssetReferenceRelation<ISongDefinition>>();
 
         [NonSerialized] private Dictionary<string, AssetReferenceT<IFighterDefinition>> fighterReferences = new Dictionary<string, AssetReferenceT<IFighterDefinition>>();
         [NonSerialized] private Dictionary<string, OperationResult<IFighterDefinition>> fighterDefinitions
@@ -38,6 +40,11 @@ namespace Mahou.Content
         [NonSerialized] private Dictionary<string, OperationResult<IGameModeDefinition>> gamemodeDefinitions
             = new Dictionary<string, OperationResult<IGameModeDefinition>>();
 
+        [NonSerialized] private Dictionary<string, AssetReferenceT<IGameModeComponentDefinition>> gamemodeComponentReferences = new Dictionary<string, AssetReferenceT<IGameModeComponentDefinition>>();
+        [NonSerialized]
+        private Dictionary<string, OperationResult<IGameModeComponentDefinition>> gamemodeComponentDefinitions
+            = new Dictionary<string, OperationResult<IGameModeComponentDefinition>>();
+
         [NonSerialized] private Dictionary<string, AssetReferenceT<IMapDefinition>> mapReferences = new Dictionary<string, AssetReferenceT<IMapDefinition>>();
         [NonSerialized] private Dictionary<string, OperationResult<IMapDefinition>> mapDefinitions
             = new Dictionary<string, OperationResult<IMapDefinition>>();
@@ -46,12 +53,18 @@ namespace Mahou.Content
         [NonSerialized] private Dictionary<string, OperationResult<IBattleDefinition>> battleDefinitions
             = new Dictionary<string, OperationResult<IBattleDefinition>>();
 
+        [NonSerialized] private Dictionary<string, AssetReferenceT<ISongDefinition>> songReferences = new Dictionary<string, AssetReferenceT<ISongDefinition>>();
+        [NonSerialized] private Dictionary<string, OperationResult<ISongDefinition>> songDefinitions
+            = new Dictionary<string, OperationResult<ISongDefinition>>();
+
         public void OnEnable()
         {
             fighterReferences.Clear();
             gamemodeReferences.Clear();
+            gamemodeComponentReferences.Clear();
             mapReferences.Clear();
             battleReferences.Clear();
+            songReferences.Clear();
             foreach (IdentifierAssetReferenceRelation<IFighterDefinition> a in fighterRefs)
             {
                 fighterReferences.Add(a.identifier, a.asset);
@@ -59,6 +72,10 @@ namespace Mahou.Content
             foreach (IdentifierAssetReferenceRelation<IGameModeDefinition> a in gamemodeRefs)
             {
                 gamemodeReferences.Add(a.identifier, a.asset);
+            }
+            foreach (IdentifierAssetReferenceRelation<IGameModeComponentDefinition> a in gamemodeComponentRefs)
+            {
+                gamemodeComponentReferences.Add(a.identifier, a.asset);
             }
             foreach (IdentifierAssetReferenceRelation<IMapDefinition> a in mapRefs)
             {
@@ -68,368 +85,263 @@ namespace Mahou.Content
             {
                 battleReferences.Add(a.identifier, a.asset);
             }
+            foreach (IdentifierAssetReferenceRelation<ISongDefinition> a in songRefs)
+            {
+                songReferences.Add(a.identifier, a.asset);
+            }
         }
 
-        #region Fighter
+        #region Content
         /// <summary>
-        /// Loads all fighters contained in this mod.
+        /// 
         /// </summary>
-        public async UniTask<bool> LoadFighterDefinitions()
+        /// <param name="contentType"></param>
+        /// <returns></returns>
+        public async UniTask<bool> LoadContentDefinitions(ContentType contentType)
         {
-            // All fighters are already loaded.
-            if (fighterDefinitions.Count == fighterReferences.Count)
+            switch (contentType)
             {
-                return true;
+                case ContentType.Fighter:
+                    return await LoadContentDefinitions(fighterReferences, fighterDefinitions);
+                case ContentType.Battle:
+                    return await LoadContentDefinitions(battleReferences, battleDefinitions);
+                case ContentType.Gamemode:
+                    return await LoadContentDefinitions(gamemodeReferences, gamemodeDefinitions);
+                case ContentType.GamemodeComponent:
+                    return await LoadContentDefinitions(gamemodeComponentReferences, gamemodeComponentDefinitions);
+                case ContentType.Map:
+                    return await LoadContentDefinitions(mapReferences, mapDefinitions);
+                case ContentType.Song:
+                    return await LoadContentDefinitions(songReferences, songDefinitions);
+                default:
+                    return false;
             }
-            try
-            {
-                foreach (string fighterIdentifier in fighterReferences.Keys)
-                {
-                    await LoadFighterDefinition(fighterIdentifier);
-                }
-                return true;
-            } catch (Exception e)
-            {
-                Debug.Log(e.Message);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Loads the fighter by it's identifier.
-        /// </summary>
-        /// <param name="fighterIdentifier">The fighter to load.</param>
-        /// <returns>True if the load was successful.</returns>
-        public async UniTask<bool> LoadFighterDefinition(string fighterIdentifier)
-        {
-            // Fighter doesn't exist.
-            if (fighterReferences.ContainsKey(fighterIdentifier) == false)
-            {
-                return false;
-            }
-            // Fighter already loaded.
-            if (fighterDefinitions.ContainsKey(fighterIdentifier) == true)
-            {
-                return true;
-            }
-            OperationResult<IFighterDefinition> result
-                = await AddressablesManager.LoadAssetAsync<IFighterDefinition>((AssetReferenceT<IFighterDefinition>)fighterReferences[fighterIdentifier]);
-            if (result.Succeeded)
-            {
-                result.Value.Identifier = fighterIdentifier;
-                fighterDefinitions.Add(fighterIdentifier, result);
-                return true;
-            }
-            return false;
-        }
-
-        IFighterDefinition IModDefinition.GetFighterDefinition(string fighterIdentifier)
-        {
-            // Fighter does not exist, or was not loaded.
-            if (fighterDefinitions.ContainsKey(fighterIdentifier) == false)
-            {
-                return null;
-            }
-            return fighterDefinitions[fighterIdentifier].Value;
-        }
-
-        public List<IFighterDefinition> GetFighterDefinitions()
-        {
-            List<IFighterDefinition> defs = new List<IFighterDefinition>();
-            foreach (var fighter in fighterDefinitions.Values)
-            {
-                defs.Add(fighter.Value);
-            }
-            return defs;
-        }
+        } 
 
         /// <summary>
-        /// Unload all fighters in this mod.
+        /// 
         /// </summary>
-        public void UnloadFighterDefinitions()
+        /// <param name="contentType"></param>
+        /// <param name="contentIdentifier"></param>
+        /// <returns></returns>
+        public async UniTask<bool> LoadContentDefinition(ContentType contentType, string contentIdentifier)
         {
-            foreach (var v in fighterDefinitions)
+            switch (contentType)
             {
-                AddressablesManager.ReleaseAsset(fighterReferences[v.Key]);
+                case ContentType.Battle:
+                    return await LoadContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
+                case ContentType.Fighter:
+                    return await LoadContentDefinition(fighterReferences, fighterDefinitions, contentIdentifier);
+                case ContentType.Gamemode:
+                    return await LoadContentDefinition(gamemodeReferences, gamemodeDefinitions, contentIdentifier);
+                case ContentType.GamemodeComponent:
+                    return await LoadContentDefinition(gamemodeComponentReferences, gamemodeComponentDefinitions, contentIdentifier);
+                case ContentType.Map:
+                    return await LoadContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
+                case ContentType.Song:
+                    return await LoadContentDefinition(songReferences, songDefinitions, contentIdentifier);
+                default:
+                    return false;
             }
-            fighterDefinitions.Clear();
         }
 
+        public List<IContentDefinition> GetContentDefinitions(ContentType contentType)
+        {
+            switch (contentType)
+            {
+                case ContentType.Battle:
+                    return GetContentDefinitions(battleReferences, battleDefinitions);
+                case ContentType.Fighter:
+                    return GetContentDefinitions(fighterReferences, fighterDefinitions);
+                case ContentType.Gamemode:
+                    return GetContentDefinitions(gamemodeReferences, gamemodeDefinitions);
+                case ContentType.GamemodeComponent:
+                    return GetContentDefinitions(gamemodeComponentReferences, gamemodeComponentDefinitions);
+                case ContentType.Map:
+                    return GetContentDefinitions(mapReferences, mapDefinitions);
+                case ContentType.Song:
+                    return GetContentDefinitions(songReferences, songDefinitions);
+                default:
+                    return null;
+            }
+        }
 
         /// <summary>
-        /// Unload a fighter.
+        /// 
         /// </summary>
-        /// <param name="fighterIdentifier">The fighter to unload.</param>
-        public void UnloadFighterDefinition(string fighterIdentifier)
+        /// <param name="contentType"></param>
+        /// <param name="contentIdentifier"></param>
+        /// <returns></returns>
+        public IContentDefinition GetContentDefinition(ContentType contentType, string contentIdentifier)
         {
-            // Fighter is not loaded.
-            if (fighterDefinitions.ContainsKey(fighterIdentifier) == false)
+            switch (contentType)
             {
-                return;
+                case ContentType.Battle:
+                    return GetContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
+                case ContentType.Fighter:
+                    return GetContentDefinition(fighterReferences, fighterDefinitions, contentIdentifier);
+                case ContentType.Gamemode:
+                    return GetContentDefinition(gamemodeReferences, gamemodeDefinitions, contentIdentifier);
+                case ContentType.GamemodeComponent:
+                    return GetContentDefinition(gamemodeComponentReferences, gamemodeComponentDefinitions, contentIdentifier);
+                case ContentType.Map:
+                    return GetContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
+                case ContentType.Song:
+                    return GetContentDefinition(songReferences, songDefinitions, contentIdentifier);
+                default:
+                    return null;
             }
-            AddressablesManager.ReleaseAsset(fighterReferences[fighterIdentifier]);
-            fighterDefinitions.Remove(fighterIdentifier);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contentType"></param>
+        public void UnloadContentDefinitions(ContentType contentType)
+        {
+            switch (contentType)
+            {
+                case ContentType.Battle:
+                    UnloadContentDefinitions(battleReferences, battleDefinitions);
+                    break;
+                case ContentType.Fighter:
+                    UnloadContentDefinitions(fighterReferences, fighterDefinitions);
+                    break;
+                case ContentType.Gamemode:
+                    UnloadContentDefinitions(gamemodeReferences, gamemodeDefinitions);
+                    break;
+                case ContentType.GamemodeComponent:
+                    UnloadContentDefinitions(gamemodeComponentReferences, gamemodeComponentDefinitions);
+                    break;
+                case ContentType.Map:
+                    UnloadContentDefinitions(mapReferences, mapDefinitions);
+                    break;
+                case ContentType.Song:
+                    UnloadContentDefinitions(songReferences, songDefinitions);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="contentIdentifier"></param>
+        public void UnloadContentDefinition(ContentType contentType, string contentIdentifier)
+        {
+            switch (contentType)
+            {
+                case ContentType.Battle:
+                    UnloadContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
+                    break;
+                case ContentType.Fighter:
+                    UnloadContentDefinition(fighterReferences, fighterDefinitions, contentIdentifier);
+                    break;
+                case ContentType.Gamemode:
+                    UnloadContentDefinition(gamemodeReferences, gamemodeDefinitions, contentIdentifier);
+                    break;
+                case ContentType.GamemodeComponent:
+                    UnloadContentDefinition(gamemodeComponentReferences, gamemodeComponentDefinitions, contentIdentifier);
+                    break;
+                case ContentType.Map:
+                    UnloadContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
+                    break;
+                case ContentType.Song:
+                    UnloadContentDefinition(songReferences, songDefinitions, contentIdentifier);
+                    break;
+            }
         }
         #endregion
 
-        #region Gamemodes
-        public async UniTask<bool> LoadGamemodeDefinitions()
+        #region Shared
+        protected async UniTask<bool> LoadContentDefinitions<T>(Dictionary<string, AssetReferenceT<T>> references,
+            Dictionary<string, OperationResult<T>> definitions) where T : IContentDefinition
         {
-            // All fighters are already loaded.
-            if (gamemodeDefinitions.Count == gamemodeReferences.Count)
+            // All of the content is already loaded.
+            if (definitions.Count == references.Count)
             {
                 return true;
             }
             try
             {
-                foreach (string gamemodeIdentifier in gamemodeReferences.Keys)
+                foreach (string contentIdentifier in references.Keys)
                 {
-                    await LoadGamemodeDefinition(gamemodeIdentifier);
+                    await LoadContentDefinition(references, definitions, contentIdentifier);
                 }
                 return true;
             }
             catch (Exception e)
             {
                 Debug.Log(e.Message);
-                return false;
             }
+            return false;
         }
 
-        public async UniTask<bool> LoadGamemodeDefinition(string gamemodeIdentifier)
+        protected async UniTask<bool> LoadContentDefinition<T>(Dictionary<string, AssetReferenceT<T>> references,
+            Dictionary<string, OperationResult<T>> definitions, string contentIdentifier) where T : IContentDefinition
         {
-            // Gamemode doesn't exist.
-            if (gamemodeReferences.ContainsKey(gamemodeIdentifier) == false)
+            // Content doesn't exist.
+            if (references.ContainsKey(contentIdentifier) == false)
             {
                 return false;
             }
-            // Gamemode already loaded.
-            if (gamemodeDefinitions.ContainsKey(gamemodeIdentifier) == true)
+            // Content already loaded.
+            if (definitions.ContainsKey(contentIdentifier) == true)
             {
                 return true;
             }
-            OperationResult<IGameModeDefinition> result
-                = await AddressablesManager.LoadAssetAsync<IGameModeDefinition>(gamemodeReferences[gamemodeIdentifier]);
+            OperationResult<T> result = await AddressablesManager.LoadAssetAsync<T>(references[contentIdentifier]);
             if (result.Succeeded)
             {
-                result.Value.Identifier = gamemodeIdentifier;
-                gamemodeDefinitions.Add(gamemodeIdentifier, result);
+                result.Value.Identifier = contentIdentifier;
+                definitions.Add(contentIdentifier, result);
                 return true;
             }
             return false;
         }
 
-        public IGameModeDefinition GetGamemodeDefinition(string gamemodeIdentifier)
+        protected IContentDefinition GetContentDefinition<T>(Dictionary<string, AssetReferenceT<T>> references,
+            Dictionary<string, OperationResult<T>> definitions, string contentIdentifier) where T : IContentDefinition
         {
-            // Fighter does not exist, or was not loaded.
-            if (gamemodeDefinitions.ContainsKey(gamemodeIdentifier) == false)
+            // Content does not exist, or was not loaded.
+            if (definitions.ContainsKey(contentIdentifier) == false)
             {
                 return null;
             }
-            return gamemodeDefinitions[gamemodeIdentifier].Value;
+            return definitions[contentIdentifier].Value;
         }
 
-        public List<IGameModeDefinition> GetGamemodeDefinitions()
+        protected List<IContentDefinition> GetContentDefinitions<T>(Dictionary<string, AssetReferenceT<T>> references,
+            Dictionary<string, OperationResult<T>> definitions) where T : IContentDefinition
         {
-            List<IGameModeDefinition> defs = new List<IGameModeDefinition>();
-            foreach (var gamemode in gamemodeDefinitions.Values)
+            List<IContentDefinition> contentList = new List<IContentDefinition>();
+            foreach (var content in definitions.Values)
             {
-                defs.Add(gamemode.Value);
+                contentList.Add(content.Value);
             }
-            return defs;
+            return contentList;
         }
 
-        public void UnloadGamemodeDefinitions()
+        protected void UnloadContentDefinitions<T>(Dictionary<string, AssetReferenceT<T>> references,
+            Dictionary<string, OperationResult<T>> definitions) where T : IContentDefinition
         {
-            foreach (var v in gamemodeDefinitions)
+            foreach (var v in definitions)
             {
-                AddressablesManager.ReleaseAsset(gamemodeReferences[v.Key]);
+                AddressablesManager.ReleaseAsset(references[v.Key]);
             }
-            gamemodeDefinitions.Clear();
+            definitions.Clear();
         }
 
-        public void UnloadGamemodeDefinition(string gamemodeIdentifier)
+        protected void UnloadContentDefinition<T>(Dictionary<string, AssetReferenceT<T>> references,
+            Dictionary<string, OperationResult<T>> definitions, string contentIdentifier) where T : IContentDefinition
         {
             // Fighter is not loaded.
-            if (gamemodeDefinitions.ContainsKey(gamemodeIdentifier) == false)
+            if (fighterDefinitions.ContainsKey(contentIdentifier) == false)
             {
                 return;
             }
-            AddressablesManager.ReleaseAsset(gamemodeReferences[gamemodeIdentifier]);
-            gamemodeDefinitions.Remove(gamemodeIdentifier);
-        }
-        #endregion
-
-        #region Map
-        public async UniTask<bool> LoadMapDefinitions()
-        {
-            // All fighters are already loaded.
-            if (mapDefinitions.Count == mapReferences.Count)
-            {
-                return true;
-            }
-            try
-            {
-                foreach (string mapIdentifier in mapReferences.Keys)
-                {
-                    await LoadMapDefinition(mapIdentifier);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-                return false;
-            }
-        }
-
-        public async UniTask<bool> LoadMapDefinition(string mapIdentifier)
-        {
-            // Map doesn't exist.
-            if (mapReferences.ContainsKey(mapIdentifier) == false)
-            {
-                return false;
-            }
-            // Map already loaded.
-            if (mapDefinitions.ContainsKey(mapIdentifier) == true)
-            {
-                return true;
-            }
-            OperationResult<IMapDefinition> result
-                = await AddressablesManager.LoadAssetAsync<IMapDefinition>((AssetReferenceT<IMapDefinition>)mapReferences[mapIdentifier]);
-            if (result.Succeeded)
-            {
-                result.Value.Identifier = mapIdentifier;
-                mapDefinitions.Add(mapIdentifier, result);
-                return true;
-            }
-            return false;
-        }
-
-        public List<IMapDefinition> GetMapDefinitions()
-        {
-            List<IMapDefinition> defs = new List<IMapDefinition>();
-            foreach (var map in mapDefinitions.Values)
-            {
-                defs.Add(map.Value);
-            }
-            return defs;
-        }
-
-        public IMapDefinition GetMapDefinition(string mapIdentifier)
-        {
-            // Fighter does not exist, or was not loaded.
-            if (mapDefinitions.ContainsKey(mapIdentifier) == false)
-            {
-                return null;
-            }
-            return mapDefinitions[mapIdentifier].Value;
-        }
-
-        public void UnloadMapDefinitions()
-        {
-            foreach (var v in mapDefinitions)
-            {
-                AddressablesManager.ReleaseAsset(mapReferences[v.Key]);
-            }
-            mapDefinitions.Clear();
-        }
-
-        public void UnloadMapDefinition(string mapIdentifier)
-        {
-            // Fighter is not loaded.
-            if (mapDefinitions.ContainsKey(mapIdentifier) == false)
-            {
-                return;
-            }
-            AddressablesManager.ReleaseAsset(mapReferences[mapIdentifier]);
-            mapDefinitions.Remove(mapIdentifier);
-        }
-        #endregion
-
-        #region Battle
-        public async UniTask<bool> LoadBattleDefinitions()
-        {
-            // All fighters are already loaded.
-            if (battleDefinitions.Count == battleReferences.Count)
-            {
-                return true;
-            }
-            try
-            {
-                foreach (string battleIdentifier in battleReferences.Keys)
-                {
-                    await LoadBattleDefinition(battleIdentifier);
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-                return false;
-            }
-        }
-
-        public async UniTask<bool> LoadBattleDefinition(string battleIdentifier)
-        {
-            // Battle doesn't exist.
-            if (battleReferences.ContainsKey(battleIdentifier) == false)
-            {
-                return false;
-            }
-            // Battle already loaded.
-            if (battleDefinitions.ContainsKey(battleIdentifier) == true)
-            {
-                return true;
-            }
-            OperationResult<IBattleDefinition> result
-                = await AddressablesManager.LoadAssetAsync<IBattleDefinition>(battleReferences[battleIdentifier]);
-            if (result.Succeeded)
-            {
-                result.Value.Identifier = battleIdentifier;
-                battleDefinitions.Add(battleIdentifier, result);
-                return true;
-            }
-            return false;
-        }
-
-        public List<IBattleDefinition> GetBattleDefinitions()
-        {
-            List<IBattleDefinition> defs = new List<IBattleDefinition>();
-            foreach (var battle in battleDefinitions.Values)
-            {
-                defs.Add(battle.Value);
-            }
-            return defs;
-        }
-
-        public IBattleDefinition GetBattleDefinition(string battleIdentifier)
-        {
-            // Fighter does not exist, or was not loaded.
-            if (battleDefinitions.ContainsKey(battleIdentifier) == false)
-            {
-                return null;
-            }
-            return battleDefinitions[battleIdentifier].Value;
-        }
-
-        public void UnloadBattleDefinition(string battleIdentifier)
-        {
-            // Fighter is not loaded.
-            if (battleDefinitions.ContainsKey(battleIdentifier) == false)
-            {
-                return;
-            }
-            AddressablesManager.ReleaseAsset(battleReferences[battleIdentifier]);
-            battleDefinitions.Remove(battleIdentifier);
-        }
-
-        public void UnloadBattleDefinitions()
-        {
-            foreach (var v in battleDefinitions)
-            {
-                AddressablesManager.ReleaseAsset(battleReferences[v.Key]);
-            }
-            battleDefinitions.Clear();
+            AddressablesManager.ReleaseAsset(fighterReferences[contentIdentifier]);
+            fighterDefinitions.Remove(contentIdentifier);
         }
         #endregion
     }

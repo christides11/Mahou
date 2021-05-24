@@ -7,6 +7,7 @@ using System;
 //using Newtonsoft.Json;
 using System.Security.AccessControl;
 using Mahou.Managers;
+using Mahou.Debugging;
 
 namespace Mahou.Content
 {
@@ -45,7 +46,7 @@ namespace Mahou.Content
             modDirectory = new ModDirectory(modInstallPath, true, false);
             Mod.DefaultDirectory = modDirectory;
             inited = true;
-            //gameManager.ConsoleWindow.WriteLine($"ModLoader initialized. Path: {modInstallPath}");
+            ConsoleWindow.current.WriteLine($"ModLoader initialized. Path: {modInstallPath}");
             UpdateModList();
             List<string> loadedMods = SaveLoadJsonService.Load<List<string>>("");
             if (loadedMods == null)
@@ -64,7 +65,7 @@ namespace Mahou.Content
         {
             if (!inited)
             {
-                //gameManager.ConsoleWindow.WriteLine("ModLoader was not initialized, can't update mod list.");
+                ConsoleWindow.current.WriteLine("ModLoader was not initialized, can't update mod list.");
                 return;
             }
 
@@ -112,7 +113,7 @@ namespace Mahou.Content
             {
                 if (ModHost.IsModInUse(mi.path) && !loadedMods.ContainsKey(mi.identifier))
                 {
-                    //gameManager.ConsoleWindow.WriteLine($"Found stray mod {mi.identifier}.");
+                    ConsoleWindow.current.WriteLine($"Found stray mod {mi.identifier}.");
                     LoadMod(mi);
                 }
             }
@@ -153,7 +154,7 @@ namespace Mahou.Content
         {
             if (loadedMods.ContainsKey(modInfo.identifier))
             {
-                //gameManager.ConsoleWindow.WriteLine($"Mod {modInfo.identifier} is already loaded.");
+                ConsoleWindow.current.WriteLine($"Mod {modInfo.identifier} is already loaded.");
                 return false;
             }
 
@@ -168,7 +169,7 @@ namespace Mahou.Content
                         IModDefinition modDefinition = mod.Assets.Load("ModDefinition") as IModDefinition;
                         loadedMods.Add(modInfo.identifier, mod);
                         modManager.mods.Add(modInfo.identifier, modDefinition);
-                        //gameManager.ConsoleWindow.WriteLine($"Loaded mod {modInfo.identifier}.");
+                        ConsoleWindow.current.WriteLine($"Loaded mod {modInfo.identifier}.");
                         CheckLoadedModList();
                         return true;
                     }
@@ -178,7 +179,7 @@ namespace Mahou.Content
             }
             catch (Exception e)
             {
-                //gameManager.ConsoleWindow.WriteLine($"Failed loading mod {modInfo.identifier}: {e.Message}");
+                ConsoleWindow.current.WriteLine($"Failed loading mod {modInfo.identifier}: {e.Message}");
                 if (mod.IsModLoaded)
                 {
                     mod.UnloadMod();

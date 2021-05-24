@@ -11,37 +11,12 @@ namespace Mahou.Content
     {
         string Description { get; }
 
-        // FIGHTERS //
-        UniTask<bool> LoadFighterDefinitions();
-        UniTask<bool> LoadFighterDefinition(string fighterIdentifier);
-        List<IFighterDefinition> GetFighterDefinitions();
-        IFighterDefinition GetFighterDefinition(string entityIdentifier);
-        void UnloadFighterDefinition(string fighterIdentifier);
-        void UnloadFighterDefinitions();
-
-        // GAMEMODES //
-        UniTask<bool> LoadGamemodeDefinitions();
-        UniTask<bool> LoadGamemodeDefinition(string gamemodeIdentifier);
-        List<IGameModeDefinition> GetGamemodeDefinitions();
-        IGameModeDefinition GetGamemodeDefinition(string gamemodeIdentifier);
-        void UnloadGamemodeDefinition(string gamemodeIdentifier);
-        void UnloadGamemodeDefinitions();
-
-        // MAPS //
-        UniTask<bool> LoadMapDefinitions();
-        UniTask<bool> LoadMapDefinition(string mapIdentifier);
-        List<IMapDefinition> GetMapDefinitions();
-        IMapDefinition GetMapDefinition(string mapIdentifier);
-        void UnloadMapDefinition(string mapIdentifier);
-        void UnloadMapDefinitions();
-
-        // BATTLES //
-        UniTask<bool> LoadBattleDefinitions();
-        UniTask<bool> LoadBattleDefinition(string battleIdentifier);
-        List<IBattleDefinition> GetBattleDefinitions();
-        IBattleDefinition GetBattleDefinition(string battleIdentifier);
-        void UnloadBattleDefinition(string battleIdentifier);
-        void UnloadBattleDefinitions();
-
+        // CONTENT //
+        UniTask<bool> LoadContentDefinitions(ContentType contentType);
+        UniTask<bool> LoadContentDefinition(ContentType contentType, string contentIdentifier);
+        List<IContentDefinition> GetContentDefinitions(ContentType contentType);
+        IContentDefinition GetContentDefinition(ContentType contentType, string contentIdentifier);
+        void UnloadContentDefinitions(ContentType contentType);
+        void UnloadContentDefinition(ContentType contentType, string contentIdentifier);
     }
 }

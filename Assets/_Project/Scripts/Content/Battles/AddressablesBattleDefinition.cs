@@ -1,6 +1,8 @@
 using Cysharp.Threading.Tasks;
 using Mahou.Content;
+using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Mahou.Content
 {
@@ -14,15 +16,40 @@ namespace Mahou.Content
         [SerializeField] private string battleName;
         [SerializeField] [TextArea] private string description;
         [SerializeField] private ModObjectReference mapReference;
+        [SerializeField] private AssetReferenceT<Battle> battleReference;
 
-        public override UniTask<bool> LoadBattle()
+        [NonSerialized] private Battle battle;
+
+        public override async UniTask<bool> LoadBattle()
         {
-            throw new System.NotImplementedException();
+            if (battle != null)
+            {
+                return true;
+            }
+
+            // Load fighter.
+            try
+            {
+                var loadResult = await AddressablesManager.LoadAssetAsync(battleReference);
+                battle = loadResult.Value;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+                return false;
+            }
+        }
+
+        public override Battle GetBattle()
+        {
+            return battle;
         }
 
         public override void UnloadBattle()
         {
-
+            battle = null;
+            AddressablesManager.ReleaseAsset(battleReference);
         }
     }
 }

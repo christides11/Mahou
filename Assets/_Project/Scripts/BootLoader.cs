@@ -15,12 +15,14 @@ namespace Mahou
 
         public GameManager gameManager;
         [SerializeField] private ConsoleReader consoleReader;
+        [SerializeField] private ConsoleWindow consoleWindow;
 
         public bool useArgs = false;
         public List<string> args = new List<string>();
 
         private void Awake()
         {
+            consoleWindow.Init();
             gameManager.Initialize();
         }
 

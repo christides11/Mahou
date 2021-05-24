@@ -4,17 +4,16 @@ using UnityEngine;
 
 namespace Mahou.Content
 {
-    public abstract class IBattleDefinition : ScriptableObject
+    public abstract class IBattleDefinition : IContentDefinition
     {
-        public virtual string Identifier { get; set; } = "";
-        public virtual string Name { get; }
-        public virtual string Description { get; }
+        public override string Name { get; }
+        public override string Description { get; }
 
         public virtual ModObjectReference MapReference { get; }
 
 
         public abstract UniTask<bool> LoadBattle();
-
+        public abstract Battle GetBattle();
         public abstract void UnloadBattle();
     }
 }

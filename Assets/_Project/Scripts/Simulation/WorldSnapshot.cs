@@ -10,7 +10,7 @@ namespace Mahou.Simulation
         /// The tick that this snapshot is for.
         /// </summary>
         public int currentTick;
-
+        public GameModeBaseSimState gameModeSimState;
         public List<ClientSimState> clientStates;
     }
 }

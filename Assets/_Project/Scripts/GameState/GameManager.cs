@@ -52,8 +52,8 @@ namespace Mahou.Managers
         /// <returns>True if successful.</returns>
         public virtual async UniTask<bool> SetGamemode(ModObjectReference gamemode, ModObjectReference battle = null)
         {
-            await modManager.LoadGamemodeDefinitions(gamemode.modIdentifier);
-            IGameModeDefinition gamemodeDefinition = modManager.GetGamemodeDefinition(gamemode);
+            await modManager.LoadContentDefinitions(ContentType.Gamemode, gamemode.modIdentifier);
+            IGameModeDefinition gamemodeDefinition = (IGameModeDefinition)modManager.GetContentDefinition(ContentType.Gamemode, gamemode);
 
             if (gamemodeDefinition == null)
             {
@@ -61,14 +61,32 @@ namespace Mahou.Managers
                 return false;
             }
 
+            // Load battle.
             IBattleDefinition battleDefinition = null;
             if (gamemodeDefinition.BattleSelectionRequired)
             {
-                await modManager.LoadBattleDefinition(battle);
-                battleDefinition = modManager.GetBattleDefinition(battle);
+                await modManager.LoadContentDefinition(ContentType.Battle, battle);
+                battleDefinition = (IBattleDefinition)modManager.GetContentDefinition(ContentType.Battle, battle);
                 if(battleDefinition == null)
                 {
                     Debug.Log($"Could not find battle {battle.ToString()}");
+                    return false;
+                }
+            }
+
+            // Load components.
+            for(int i = 0; i < gamemodeDefinition.GameModeComponentReferences.Length; i++)
+            {
+                if((await modManager.LoadContentDefinition(ContentType.GamemodeComponent, gamemodeDefinition.GameModeComponentReferences[i])) == false)
+                {
+                    Debug.Log($"Failed loading gamemode component {gamemodeDefinition.GameModeComponentReferences[i].ToString()}");
+                    return false;
+                }
+                if ((await ((IGameModeComponentDefinition)modManager
+                    .GetContentDefinition(ContentType.GamemodeComponent, gamemodeDefinition.GameModeComponentReferences[i]))
+                    .LoadGamemodeComponent()) == false)
+                {
+                    Debug.Log($"Failed loading gamemode component {gamemodeDefinition.GameModeComponentReferences[i].ToString()}");
                     return false;
                 }
             }
@@ -83,8 +101,16 @@ namespace Mahou.Managers
             }
 
             GameObject gameMode = Instantiate(gamemodeDefinition.GetGamemode().gameObject, transform);
+            gameMode.GetComponent<GameModeBase>().Initialize(battleDefinition);
+
+            if ((await gameMode.GetComponent<GameModeBase>().LoadRequirements()) == false)
+            {
+                Debug.Log($"Gamemode could not load it's requirements.");
+                Destroy(gameMode);
+                return false;
+            }
+
             this.GameMode = gameMode.GetComponent<GameModeBase>();
-            this.GameMode.InitGamemode(battleDefinition);
             CurrentGamemode = gamemodeDefinition;
             return true;
         }
@@ -103,8 +129,8 @@ namespace Mahou.Managers
 
         public virtual async UniTask<bool> LoadMap(ModObjectReference map, List<string> scenesToUnload = null)
         {
-            await modManager.LoadMapDefinitions(map.modIdentifier);
-            IMapDefinition mapDefinition = modManager.GetMapDefinition(map);
+            await modManager.LoadContentDefinitions(ContentType.Map, map.modIdentifier);
+            IMapDefinition mapDefinition = (IMapDefinition)modManager.GetContentDefinition(ContentType.Map, map);
 
             if (mapDefinition == null)
             {

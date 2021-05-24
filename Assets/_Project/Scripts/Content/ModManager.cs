@@ -43,9 +43,9 @@ namespace Mahou.Managers
         {
             OnFighterRequestMsgResult?.Invoke(NetworkClient.connection, arg2);
 
-            await LoadFighterDefinitions(arg2.fighterReference.modIdentifier);
-            IFighterDefinition fighter = GetFighterDefinition(arg2.fighterReference);
-            if(fighter == null)
+            await LoadContentDefinition(ContentType.Fighter, arg2.fighterReference);
+            IFighterDefinition fighterDefinition = (IFighterDefinition)GetContentDefinition(ContentType.Fighter, arg2.fighterReference);
+            if(fighterDefinition == null)
             {
                 NetworkClient.Send(new LoadFighterRequestMessage()
                 {
@@ -55,8 +55,30 @@ namespace Mahou.Managers
                 });
                 return;
             }
-            await fighter.LoadFighter();
-            NetworkClient.RegisterPrefab(fighter.GetFighter());
+            if((await fighterDefinition.LoadFighter()) == false)
+            {
+                Debug.Log($"Failed loading fighter. {arg2.fighterReference}");
+                NetworkClient.Send(new LoadFighterRequestMessage()
+                {
+                    requestID = arg2.requestID,
+                    fighterReference = arg2.fighterReference,
+                    requestType = LoadFighterRequestMessage.RequestType.FAILED
+                });
+                return;
+            }
+            GameObject fighterGameobject = fighterDefinition.GetFighter();
+            if(fighterGameobject == null)
+            {
+                Debug.Log($"Failed getting fighter object. {arg2.fighterReference}");
+                NetworkClient.Send(new LoadFighterRequestMessage()
+                {
+                    requestID = arg2.requestID,
+                    fighterReference = arg2.fighterReference,
+                    requestType = LoadFighterRequestMessage.RequestType.FAILED
+                });
+                return;
+            }
+            NetworkClient.RegisterPrefab(fighterGameobject, new System.Guid(fighterDefinition.GetFighterGUID()));
             NetworkClient.Send(new LoadFighterRequestMessage()
             {
                 requestID = arg2.requestID,
@@ -72,7 +94,7 @@ namespace Mahou.Managers
                 return false;
             }
 
-            IMapDefinition sd = mod.GetMapDefinition(map.objectIdentifier);
+            IMapDefinition sd = (IMapDefinition)mod.GetContentDefinition(ContentType.Map, map.objectIdentifier);
             if (sd == null)
             {
                 return false;
@@ -82,12 +104,12 @@ namespace Mahou.Managers
             return true;
         }
 
-        #region Fighter
-        public async UniTask<bool> LoadFighterDefinitions()
+        #region Content
+        public async UniTask<bool> LoadContentDefinitions(ContentType contentType)
         {
             foreach(string m in mods.Keys)
             {
-                bool result = await LoadFighterDefinitions(m);
+                bool result = await LoadContentDefinitions(contentType, m);
                 if(result == false)
                 {
                     return false;
@@ -96,334 +118,80 @@ namespace Mahou.Managers
             return true;
         }
 
-        public async UniTask<bool> LoadFighterDefinitions(string modIdentifier)
+        public async UniTask<bool> LoadContentDefinitions(ContentType contentType, string modIdentifier)
         {
             if (!mods.ContainsKey(modIdentifier))
             {
                 return false;
             }
-
-            await mods[modIdentifier].LoadFighterDefinitions();
-            return true;
+            return await mods[modIdentifier].LoadContentDefinitions(contentType);
         }
 
-        public IFighterDefinition GetFighterDefinition(ModObjectReference fighter)
+        public async UniTask<bool> LoadContentDefinition(ContentType contentType, ModObjectReference objectReference)
         {
-            if (!mods.ContainsKey(fighter.modIdentifier))
+            if (!mods.ContainsKey(objectReference.modIdentifier))
             {
-                return null;
+                return false;
             }
-
-            IFighterDefinition f = mods[fighter.modIdentifier].GetFighterDefinition(fighter.objectIdentifier);
-
-            if (f == null)
-            {
-                return null;
-            }
-            return f;
+            return await mods[objectReference.modIdentifier].LoadContentDefinition(contentType, objectReference.objectIdentifier);
         }
 
-        public List<ModObjectReference> GetFighterDefinitions()
+        public List<ModObjectReference> GetContentDefinitionReferences(ContentType contentType)
         {
-            List<ModObjectReference> fighters = new List<ModObjectReference>();
+            List<ModObjectReference> content = new List<ModObjectReference>();
             foreach (string m in mods.Keys)
             {
-                fighters.InsertRange(fighters.Count, GetFighterDefinitions(m));
+                content.InsertRange(content.Count, GetContentDefinitionReferences(contentType, m));
             }
-            return fighters;
+            return content;
         }
 
-        public List<ModObjectReference> GetFighterDefinitions(string modIdentifier)
+        public List<ModObjectReference> GetContentDefinitionReferences(ContentType contentType, string modIdentifier)
         {
-            List<ModObjectReference> fighters = new List<ModObjectReference>();
+            List<ModObjectReference> content = new List<ModObjectReference>();
             // Mod does not exist.
             if (!mods.ContainsKey(modIdentifier))
             {
-                return fighters;
+                return content;
             }
-            List<IFighterDefinition> fds = mods[modIdentifier].GetFighterDefinitions();
-            if(fds == null)
+            List<IContentDefinition> fds = mods[modIdentifier].GetContentDefinitions(contentType);
+            if (fds == null)
             {
-                return fighters;
+                return content;
             }
-            foreach(IFighterDefinition fd in fds)
+            foreach (IContentDefinition fd in fds)
             {
-                fighters.Add(new ModObjectReference(modIdentifier, fd.Identifier));
+                content.Add(new ModObjectReference(modIdentifier, fd.Identifier));
             }
-            return fighters;
-        }
-        #endregion
-
-        #region Gamemode
-        public async UniTask<bool> LoadGamemodeDefinitions()
-        {
-            foreach (string m in mods.Keys)
-            {
-                bool result = await LoadGamemodeDefinitions(m);
-                if (result == false)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return content;
         }
 
-        public async UniTask<bool> LoadGamemodeDefinitions(string modIdentifier)
+        public IContentDefinition GetContentDefinition(ContentType contentType, ModObjectReference reference)
         {
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return false;
-            }
-
-            return await mods[modIdentifier].LoadGamemodeDefinitions();
-        }
-
-        public IGameModeDefinition GetGamemodeDefinition(ModObjectReference gamemode)
-        {
-            if (!mods.ContainsKey(gamemode.modIdentifier))
+            if (!mods.ContainsKey(reference.modIdentifier))
             {
                 return null;
             }
-
-            IGameModeDefinition g = mods[gamemode.modIdentifier].GetGamemodeDefinition(gamemode.objectIdentifier);
-
-            if (g == null)
-            {
-                return null;
-            }
-
+             
+            IContentDefinition g = mods[reference.modIdentifier].GetContentDefinition(contentType, reference.objectIdentifier);
             return g;
         }
 
-        public List<ModObjectReference> GetGamemodeDefinitions()
+        public void UnloadContentDefinitions(ContentType contentType)
         {
-            List<ModObjectReference> gamemodes = new List<ModObjectReference>();
-            foreach (string m in mods.Keys)
+            foreach(string m in mods.Keys)
             {
-                gamemodes.InsertRange(gamemodes.Count, GetGamemodeDefinitions(m));
-            }
-            return gamemodes;
-        }
-
-        public List<ModObjectReference> GetGamemodeDefinitions(string modIdentifier)
-        {
-            List<ModObjectReference> gamemodes = new List<ModObjectReference>();
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return gamemodes;
-            }
-            List<IGameModeDefinition> gmds = mods[modIdentifier].GetGamemodeDefinitions();
-            if (gmds == null)
-            {
-                return gamemodes;
-            }
-            foreach (IGameModeDefinition gmd in gmds)
-            {
-                gamemodes.Add(new ModObjectReference(modIdentifier, gmd.Identifier));
-            }
-            return gamemodes;
-        }
-
-        public void UnloadGamemodeDefinitions()
-        {
-            foreach (string m in mods.Keys)
-            {
-                mods[m].UnloadGamemodeDefinitions();
+                UnloadContentDefinitions(contentType, m);
             }
         }
 
-        public void UnloadGamemodeDefinitions(string modIdentifier)
+        public void UnloadContentDefinitions(ContentType contentType, string modIdentifier)
         {
             if (!mods.ContainsKey(modIdentifier))
             {
                 return;
             }
-            mods[modIdentifier].UnloadGamemodeDefinitions();
-        }
-        #endregion
-
-        #region Map
-        public async UniTask<bool> LoadMapDefinitions()
-        {
-            foreach (string m in mods.Keys)
-            {
-                bool result = await LoadMapDefinitions(m);
-                if (result == false)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public async UniTask<bool> LoadMapDefinitions(string modIdentifier)
-        {
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return false;
-            }
-
-            await mods[modIdentifier].LoadMapDefinitions();
-            return true;
-        }
-
-        public IMapDefinition GetMapDefinition(ModObjectReference map)
-        {
-            if (!mods.ContainsKey(map.modIdentifier))
-            {
-                return null;
-            }
-
-            IMapDefinition f = mods[map.modIdentifier].GetMapDefinition(map.objectIdentifier);
-
-            if (f == null)
-            {
-                return null;
-            }
-            return f;
-        }
-
-        public List<ModObjectReference> GetMapDefinitions()
-        {
-            List<ModObjectReference> maps = new List<ModObjectReference>();
-            foreach (string m in mods.Keys)
-            {
-                maps.InsertRange(maps.Count, GetMapDefinitions(m));
-            }
-            return maps;
-        }
-
-        public List<ModObjectReference> GetMapDefinitions(string modIdentifier)
-        {
-            List<ModObjectReference> maps = new List<ModObjectReference>();
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return maps;
-            }
-            List<IMapDefinition> fds = mods[modIdentifier].GetMapDefinitions();
-            if (fds == null)
-            {
-                return maps;
-            }
-            foreach (IMapDefinition md in fds)
-            {
-                maps.Add(new ModObjectReference(modIdentifier, md.Identifier));
-            }
-            return maps;
-        }
-
-        public void UnloadMapDefinitions()
-        {
-            foreach (string m in mods.Keys)
-            {
-                mods[m].UnloadMapDefinitions();
-            }
-        }
-
-        public void UnloadMapDefinitions(string modIdentifier)
-        {
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return;
-            }
-            mods[modIdentifier].UnloadMapDefinitions();
-        }
-        #endregion
-
-        #region Battles
-        public async UniTask<bool> LoadBattleDefinitions()
-        {
-            foreach (string m in mods.Keys)
-            {
-                bool result = await LoadBattleDefinitions(m);
-                if (result == false)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public async UniTask<bool> LoadBattleDefinitions(string modIdentifier)
-        {
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return false;
-            }
-
-            return await mods[modIdentifier].LoadBattleDefinitions();
-        }
-
-        public async UniTask<bool> LoadBattleDefinition(ModObjectReference battle)
-        {
-            if (!mods.ContainsKey(battle.modIdentifier))
-            {
-                return false;
-            }
-
-            return await mods[battle.modIdentifier].LoadBattleDefinition(battle.objectIdentifier);
-        }
-
-        public IBattleDefinition GetBattleDefinition(ModObjectReference battle)
-        {
-            if (!mods.ContainsKey(battle.modIdentifier))
-            {
-                return null;
-            }
-
-            IBattleDefinition f = mods[battle.modIdentifier].GetBattleDefinition(battle.objectIdentifier);
-
-            if (f == null)
-            {
-                return null;
-            }
-            return f;
-        }
-
-        public List<ModObjectReference> GetBattleDefinitions()
-        {
-            List<ModObjectReference> battles = new List<ModObjectReference>();
-            foreach (string m in mods.Keys)
-            {
-                battles.InsertRange(battles.Count, GetBattleDefinitions(m));
-            }
-            return battles;
-        }
-
-        public List<ModObjectReference> GetBattleDefinitions(string modIdentifier)
-        {
-            List<ModObjectReference> battles = new List<ModObjectReference>();
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return battles;
-            }
-            List<IBattleDefinition> fds = mods[modIdentifier].GetBattleDefinitions();
-            if (fds == null)
-            {
-                return battles;
-            }
-            foreach (IBattleDefinition md in fds)
-            {
-                battles.Add(new ModObjectReference(modIdentifier, md.Identifier));
-            }
-            return battles;
-        }
-
-        public void UnloadBattleDefinitions()
-        {
-            foreach (string m in mods.Keys)
-            {
-                mods[m].UnloadBattleDefinitions();
-            }
-        }
-
-        public void UnloadBattleDefinitions(string modIdentifier)
-        {
-            if (!mods.ContainsKey(modIdentifier))
-            {
-                return;
-            }
-            mods[modIdentifier].UnloadBattleDefinitions();
+            mods[modIdentifier].UnloadContentDefinitions(contentType);
         }
         #endregion
     }

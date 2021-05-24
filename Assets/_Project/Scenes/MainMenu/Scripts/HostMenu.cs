@@ -45,8 +45,8 @@ namespace Mahou.Menus
         {
             maps.Clear();
             gamemodes.Clear();
-            ModManager.instance.UnloadGamemodeDefinitions();
-            ModManager.instance.UnloadMapDefinitions();
+            ModManager.instance.UnloadContentDefinitions(ContentType.Gamemode);
+            ModManager.instance.UnloadContentDefinitions(ContentType.Map);
             OnMenuClosed?.Invoke(gameObject);
             gameObject.SetActive(false);
         }
@@ -54,10 +54,10 @@ namespace Mahou.Menus
         public async void OpenMenu()
         {
             GameManager gm = GameManager.current;
-            bool mapLoadResult = await ModManager.instance.LoadMapDefinitions();
-            maps = ModManager.instance.GetMapDefinitions();
-            bool gamemodeLoadResult = await ModManager.instance.LoadGamemodeDefinitions();
-            gamemodes = ModManager.instance.GetGamemodeDefinitions();
+            bool mapLoadResult = await ModManager.instance.LoadContentDefinitions(ContentType.Map);
+            maps = ModManager.instance.GetContentDefinitionReferences(ContentType.Map);
+            bool gamemodeLoadResult = await ModManager.instance.LoadContentDefinitions(ContentType.Gamemode);
+            gamemodes = ModManager.instance.GetContentDefinitionReferences(ContentType.Gamemode);
 
             OpenGeneralTab();
             gameObject.SetActive(true);
@@ -110,8 +110,8 @@ namespace Mahou.Menus
 
         private async UniTask SetupBattleSelection()
         {
-            bool battleLoadResult = await ModManager.instance.LoadBattleDefinitions();
-            var battleList = ModManager.instance.GetBattleDefinitions();
+            bool battleLoadResult = await ModManager.instance.LoadContentDefinitions(ContentType.Battle);
+            var battleList = ModManager.instance.GetContentDefinitionReferences(ContentType.Battle);
 
             foreach (ModObjectReference battle in battleList)
             {
@@ -124,7 +124,7 @@ namespace Mahou.Menus
         private void OnSelectedBattle(ModObjectReference battle)
         {
             selectedBattle = battle;
-            var bat = ModManager.instance.GetBattleDefinition(battle);
+            IBattleDefinition bat = (IBattleDefinition)ModManager.instance.GetContentDefinition(ContentType.Battle, battle);
             if (bat)
             {
                 selectedMap = bat.MapReference;
@@ -144,7 +144,7 @@ namespace Mahou.Menus
                 return;
             }
 
-            var gamemode = ModManager.instance.GetGamemodeDefinition(selectedGamemode);
+            IGameModeDefinition gamemode = (IGameModeDefinition)ModManager.instance.GetContentDefinition(ContentType.Gamemode, selectedGamemode);
 
             if(gamemode.BattleSelectionRequired && selectedBattle == null)
             {

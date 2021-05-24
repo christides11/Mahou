@@ -17,3 +17,7 @@ MonoBehaviour:
   mapReference:
     modIdentifier: core
     objectIdentifier: debugroom
+  battleReference:
+    m_AssetGUID: 554ab99ff616e7643a7ed9d972f8a2b4
+    m_SubObjectName: 
+    m_SubObjectType: 

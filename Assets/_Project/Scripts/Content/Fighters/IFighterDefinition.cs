@@ -4,11 +4,8 @@ using UnityEngine;
 
 namespace Mahou.Content
 {
-    public abstract class IFighterDefinition : ScriptableObject
+    public abstract class IFighterDefinition : IContentDefinition
     {
-        public virtual string Identifier { get; set; } = "";
-        public virtual string Name { get; }
-        public virtual string Description { get; }
         public virtual bool Selectable { get; }
 
         /// <summary>
@@ -18,6 +15,7 @@ namespace Mahou.Content
         public abstract UniTask<bool> LoadFighter();
 
         public abstract GameObject GetFighter();
+        public abstract string GetFighterGUID();
 
         public abstract MovesetDefinition[] GetMovesets();
         /// <summary>

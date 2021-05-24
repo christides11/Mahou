@@ -60,12 +60,12 @@ namespace Mahou.Menus
             }
 
             ModManager modManager = ModManager.instance;
-            await modManager.LoadFighterDefinitions(modIdentifier);
-            List<ModObjectReference> fighters = modManager.GetFighterDefinitions(modIdentifier);
+            await modManager.LoadContentDefinitions(ContentType.Fighter, modIdentifier);
+            List<ModObjectReference> fighters = modManager.GetContentDefinitionReferences(ContentType.Fighter, modIdentifier);
 
             foreach(var fighter in fighters)
             {
-                IFighterDefinition fd = modManager.GetFighterDefinition(fighter);
+                IFighterDefinition fd = (IFighterDefinition)modManager.GetContentDefinition(ContentType.Fighter, fighter);
                 GameObject go = GameObject.Instantiate(textContentItem, characterContentHolder, false);
                 go.GetComponent<TextMeshProUGUI>().text = fd.Name;
                 ModObjectReference f = fighter;

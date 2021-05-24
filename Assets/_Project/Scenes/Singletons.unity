@@ -4320,9 +4320,10 @@ MonoBehaviour:
   mainMenuScene: MainMenu
   gameManager: {fileID: 1812465252}
   consoleReader: {fileID: 1471945004}
-  useArgs: 1
+  consoleWindow: {fileID: 1471945002}
+  useArgs: 0
   args:
-  - host core/training core/debugroom core/versusr
+  - host core/bandbattle core/debugroom core/versusr
 --- !u!1 &1847963925
 GameObject:
   m_ObjectHideFlags: 0

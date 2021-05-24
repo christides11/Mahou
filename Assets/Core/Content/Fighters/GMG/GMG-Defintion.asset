@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6f3cb458e87b4842a312c9ac64a67af, type: 3}
   m_Name: GMG-Defintion
   m_EditorClassIdentifier: 
-  identifier: gmg
   fighterName: Guitar Mage
   description: 
   fighterReference:
+    m_AssetGUID: f0013c4f5f2ba1441bbd6a3e6ce81c25
+    m_SubObjectName: 
+    m_SubObjectType: 
+  fighterTestReference:
     m_AssetGUID: f0013c4f5f2ba1441bbd6a3e6ce81c25
     m_SubObjectName: 
     m_SubObjectType: 
@@ -23,3 +26,4 @@ MonoBehaviour:
   - m_AssetGUID: d4b0f56a17af9b74cb55ddbc84b678d4
     m_SubObjectName: 
     m_SubObjectType: 
+  selectable: 1

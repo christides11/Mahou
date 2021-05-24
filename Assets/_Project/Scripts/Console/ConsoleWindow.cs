@@ -36,7 +36,7 @@ namespace Mahou.Debugging
         [SerializeField] private TMP_InputField inputField;
         [SerializeField] private List<Color> messageColors = new List<Color>(4);
 
-        private void Awake()
+        public void Init()
         {
             current = this;
         }
