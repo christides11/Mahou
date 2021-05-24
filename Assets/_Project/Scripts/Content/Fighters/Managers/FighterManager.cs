@@ -12,8 +12,9 @@ namespace Mahou.Content.Fighters
 {
     public class FighterManager : FighterBase, ISimObject
     {
-        public virtual FighterStatsManager StatsManager { get; }
+        public virtual FighterStatsManager StatsManager { get { return statsManager; } }
 
+        private FighterStatsManager statsManager;
         public NetworkIdentity netid;
         public FighterCharacterController cc;
         public IFighterDefinition definition;
@@ -24,6 +25,7 @@ namespace Mahou.Content.Fighters
 
         public virtual void Awake()
         {
+            Initialize();
             (InputManager as FighterInputManager).Initialize();
             SetupStates();
             KinematicCharacterSystem.Settings.AutoSimulation = false;
@@ -31,6 +33,16 @@ namespace Mahou.Content.Fighters
             CombatManager.SetMoveset(0);
             StatsManager.SetStats(definition.GetMovesets()[0].fighterStats);
             (PhysicsManager as FighterPhysicsManager).OnGroundedChanged += (data) => { if (data == true) ResetGroundOptions(); };
+        }
+
+        public virtual void Initialize()
+        {
+            inputManager = GetComponent<FighterInputManager>();
+            stateManager = GetComponent<FighterStateManager>();
+            combatManager = GetComponent<FighterCombatManager>();
+            physicsManager = GetComponent<FighterPhysicsManager>();
+            hurtboxManager = GetComponent<FighterHurtboxManager>();
+            statsManager = GetComponent<FighterStatsManager>();
         }
          
         public virtual void Interpolate(PlayerSimState lastState, PlayerSimState currentState, float alpha)

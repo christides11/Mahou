@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Mahou.Debugging;
 using Mahou.Managers;
+using NaughtyAttributes;
 using System;
 using UMod;
 using UnityEngine;
@@ -20,10 +21,17 @@ namespace Mahou.Content.Fighters
         [SerializeField] private ModObjectSharedReference modNamespace;
         [SerializeField] private string fighterPath;
         [SerializeField] private string[] movesetPaths;
+        [SerializeField] private string fighterGuid;
 
         [NonSerialized] private GameObject fighter;
         [NonSerialized] private MovesetDefinition[] movesets;
-        
+
+        [Button(text: "Generate GUID")]
+        public void GenerateGUID()
+        {
+            fighterGuid = System.Guid.NewGuid().ToString();
+        }
+
         public override async UniTask<bool> LoadFighter()
         {
             ModHost modHost = ModManager.instance.ModLoader.loadedMods[modNamespace.reference.modIdentifier].host;
@@ -62,7 +70,7 @@ namespace Mahou.Content.Fighters
 
         public override string GetFighterGUID()
         {
-            return null;
+            return fighterGuid;
         }
 
         public override MovesetDefinition[] GetMovesets()

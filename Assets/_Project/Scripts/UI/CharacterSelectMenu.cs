@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Mahou.Content;
+using Mahou.Helpers;
+using UnityEngine.EventSystems;
 
 namespace Mahou.Menus
 {
@@ -49,6 +51,8 @@ namespace Mahou.Menus
             {
                 GameObject go = GameObject.Instantiate(textContentItem, modContentHolder, false);
                 go.GetComponent<TextMeshProUGUI>().text = mod.Key;
+                string modIdentifier = mod.Key;
+                go.GetComponent<EventTrigger>().AddOnSubmitListeners((data) => { FillCharacterMenu(modIdentifier); });
             }
         }
 
@@ -66,6 +70,11 @@ namespace Mahou.Menus
             foreach(var fighter in fighters)
             {
                 IFighterDefinition fd = (IFighterDefinition)modManager.GetContentDefinition(ContentType.Fighter, fighter);
+                if(fd == null)
+                {
+                    Debug.Log($"No fighter for {fighter}");
+                    continue;
+                }
                 GameObject go = GameObject.Instantiate(textContentItem, characterContentHolder, false);
                 go.GetComponent<TextMeshProUGUI>().text = fd.Name;
                 ModObjectReference f = fighter;

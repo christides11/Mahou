@@ -187,14 +187,7 @@ namespace Mahou.Networking
                 return;
             }
             GameObject fighter = GameObject.Instantiate(fighterGO, new Vector3(0, 1, 0), Quaternion.identity);
-            if (fighterDefinition.GetFighterGUID() == null)
-            {
-                NetworkServer.Spawn(fighter, gameObject);
-            }
-            else
-            {
-                NetworkServer.Spawn(fighter, new System.Guid(fighterDefinition.GetFighterGUID()), networkIdentity.connectionToClient);
-            }
+            NetworkServer.Spawn(fighter, new System.Guid(fighterDefinition.GetFighterGUID()), networkIdentity.connectionToClient);
             players.Add(fighter.GetComponent<NetworkIdentity>());
         }
         #endregion

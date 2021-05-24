@@ -271,6 +271,7 @@ namespace Mahou.Content
             await request;
             if (request.IsSuccessful)
             {
+                (request.Result as T).Identifier = contentIdentifier;
                 definitions.Add(contentIdentifier, request.Result as T);
                 return true;
             }
