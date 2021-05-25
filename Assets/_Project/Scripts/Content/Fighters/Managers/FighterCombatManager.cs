@@ -7,5 +7,10 @@ namespace Mahou.Content.Fighters
     public class FighterCombatManager : HnSF.Fighters.FighterCombatManager
     {
 
+        public virtual void Initialize()
+        {
+            manager = GetComponent<FighterManager>();
+            hitboxManager = GetComponent<FighterHitboxManager>();
+        }
     }
 }

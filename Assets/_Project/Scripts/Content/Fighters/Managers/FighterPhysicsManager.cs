@@ -11,6 +11,11 @@ namespace Mahou.Content.Fighters
 
         protected FighterManager Manager { get { return (FighterManager)manager; } }
 
+        public virtual void Initialize()
+        {
+            manager = GetComponent<FighterManager>();
+        }
+
         public override void Tick()
         {
             Manager.cc.SetMovement(forceMovement + forcePushbox, forceDamage, forceGravity);

@@ -13,8 +13,10 @@ namespace Mahou.Content.Fighters
     public class FighterManager : FighterBase, ISimObject
     {
         public virtual FighterStatsManager StatsManager { get { return statsManager; } }
+        public virtual FighterHitboxManager HitboxManager { get { return hitboxManager; } }
 
         private FighterStatsManager statsManager;
+        private FighterHitboxManager hitboxManager;
         public NetworkIdentity netid;
         public FighterCharacterController cc;
         public IFighterDefinition definition;
@@ -26,7 +28,13 @@ namespace Mahou.Content.Fighters
         public virtual void Awake()
         {
             Initialize();
-            (InputManager as FighterInputManager).Initialize();
+            (inputManager as FighterInputManager).Initialize();
+            (stateManager as FighterStateManager).Initialize();
+            (physicsManager as FighterPhysicsManager).Initialize();
+            (combatManager as FighterCombatManager).Initialize();
+            (hurtboxManager as FighterHurtboxManager).Initialize();
+            statsManager.Initialize();
+            hitboxManager.Initialize();
             SetupStates();
             KinematicCharacterSystem.Settings.AutoSimulation = false;
             KinematicCharacterSystem.Settings.Interpolate = false;
@@ -42,7 +50,9 @@ namespace Mahou.Content.Fighters
             combatManager = GetComponent<FighterCombatManager>();
             physicsManager = GetComponent<FighterPhysicsManager>();
             hurtboxManager = GetComponent<FighterHurtboxManager>();
+            hitboxManager = GetComponent<FighterHitboxManager>();
             statsManager = GetComponent<FighterStatsManager>();
+            cc = GetComponent<FighterCharacterController>();
         }
          
         public virtual void Interpolate(PlayerSimState lastState, PlayerSimState currentState, float alpha)

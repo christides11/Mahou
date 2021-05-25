@@ -12,6 +12,11 @@ namespace Mahou.Content.Fighters
         public FighterStats CurrentStats { get { return currentStats; } }
         [SerializeField] private FighterStats currentStats = new FighterStats();
 
+        public virtual void Initialize()
+        {
+            fighterManager = GetComponent<FighterManager>();
+        }
+
         public void SetStats(FighterStatsSO statsHolder)
         {
             currentStats = new FighterStats(statsHolder.stats);

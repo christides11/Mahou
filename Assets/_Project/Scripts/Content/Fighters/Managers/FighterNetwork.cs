@@ -8,13 +8,11 @@ namespace Mahou.Content.Fighters
 {
     public class FighterNetwork : NetworkBehaviour
     {
-        [SerializeField] private FighterManager fighterManager;
-        [SerializeField] private FighterInputManager fighterInputManager;
-
         public override void OnStartAuthority()
         {
             base.OnStartAuthority();
-            HnSF.Fighters.LookHandler lookHandler = GameObject.Instantiate(GameManager.current.GameSettings.playerCamera.gameObject, transform.position, Quaternion.identity)
+            HnSF.Fighters.LookHandler lookHandler 
+                = GameObject.Instantiate(GameManager.current.GameSettings.playerCamera.gameObject, transform.position, Quaternion.identity)
                 .GetComponent<HnSF.Fighters.LookHandler>();
             GetComponent<FighterManager>().lookHandler = lookHandler;
             lookHandler.SetLookAtTarget(GetComponent<FighterManager>().visual.transform);

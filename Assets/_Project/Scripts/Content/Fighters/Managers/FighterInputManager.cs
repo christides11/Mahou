@@ -17,6 +17,7 @@ namespace Mahou.Content.Fighters
 
         public virtual void Initialize()
         {
+            manager = GetComponent<FighterManager>();
             inputRecordSize = 1024;
             InputRecord = new Mahou.Input.InputRecordItem[inputRecordSize];
         }

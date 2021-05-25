@@ -6,6 +6,9 @@ namespace Mahou.Content.Fighters
 {
     public class FighterStateManager : HnSF.Fighters.FighterStateManager
     {
-
+        public virtual void Initialize()
+        {
+            manager = GetComponent<FighterManager>();
+        }
     }
 }
