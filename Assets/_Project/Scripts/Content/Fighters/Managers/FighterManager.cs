@@ -139,6 +139,36 @@ namespace Mahou.Content.Fighters
             currentJump = 0;
         }
 
+        public virtual bool TryAttack()
+        {
+            int man = CombatManager.TryAttack();
+            if (man != -1)
+            {
+                CombatManager.SetAttack(man);
+                StateManager.ChangeState((int)FighterStates.ATTACK);
+                return true;
+            }
+            return false;
+        }
+
+        public virtual bool TryAttack(int attackIdentifier, int attackMoveset = -1, bool resetFrameCounter = true)
+        {
+            if (attackIdentifier != -1)
+            {
+                if (attackMoveset != -1)
+                {
+                    CombatManager.SetAttack(attackIdentifier, attackMoveset);
+                }
+                else
+                {
+                    CombatManager.SetAttack(attackIdentifier);
+                }
+                StateManager.ChangeState((int)FighterStates.ATTACK, resetFrameCounter ? 0 : StateManager.CurrentStateFrame);
+                return true;
+            }
+            return false;
+        }
+
         public ISimState GetSimState()
         {
             PlayerSimState simState = new PlayerSimState();

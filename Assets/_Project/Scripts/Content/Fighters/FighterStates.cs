@@ -10,6 +10,7 @@ namespace Mahou
         JUMP = 5,
         FALL = 6,
         AIR_DASH = 7,
-        AIR_JUMP = 8
+        AIR_JUMP = 8,
+        ATTACK = 9
     }
 }
