@@ -16,6 +16,8 @@ namespace Mahou.Simulation
 
         public float AdjustedInterval { get { return simulationAdjuster.AdjustedInterval; } }
 
+        public static bool IsRollbackFrame = false;
+
         protected ISimulationAdjuster simulationAdjuster = new NoopAdjuster();
 
         [SerializeField] protected int currentTick = 0;

@@ -6,17 +6,17 @@ using UnityEngine;
 
 namespace Mahou.Combat.Events
 {
-    public class ForceSet : HnSF.Combat.AttackEvent
+    public class ForceAdd : HnSF.Combat.AttackEvent
     {
-        public bool applyXZForce;
-        public bool applyYForce;
+        public bool addXZForce;
+        public bool addYForce;
 
         public Vector2 xzForce;
         public float yForce;
 
         public override string GetName()
         {
-            return "Set Forces";
+            return "Add Forces";
         }
 
         public override AttackEventReturnType Evaluate(int frame, int endFrame,
@@ -26,23 +26,23 @@ namespace Mahou.Combat.Events
             FighterPhysicsManager physicsManager = (FighterPhysicsManager)controller.PhysicsManager;
             FighterInputManager inputManager = (FighterInputManager)controller.InputManager;
             Vector3 f = Vector3.zero;
-            if (applyXZForce)
+            if (addXZForce)
             {
                 f.x = xzForce.x;
                 f.z = xzForce.y;
             }
-            if (applyYForce)
+            if (addYForce)
             {
                 f.y = yForce;
             }
 
-            if (applyYForce)
+            if (addYForce)
             {
-                physicsManager.forceGravity.y = f.y;
+                physicsManager.forceGravity.y += f.y;
             }
-            if (applyXZForce)
+            if (addXZForce)
             {
-                physicsManager.forceMovement = (f.x * inputManager.GetCameraRight()) + (f.z * inputManager.GetCameraForward());
+                physicsManager.forceMovement += (f.x * inputManager.GetCameraRight()) + (f.z * inputManager.GetCameraForward());
             }
             return AttackEventReturnType.NONE;
         }

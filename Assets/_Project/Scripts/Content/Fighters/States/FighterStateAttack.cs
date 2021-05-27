@@ -21,13 +21,6 @@ namespace Mahou.Content.Fighters
                 FighterManager.StateManager.ChangeState(currentAttack.stateOverride);
                 return;
             }
-            //charging = true;
-            /*
-            if (String.IsNullOrEmpty(currentAttack.animationName) == false)
-            {
-                (Manager as FighterManager).entityAnimator.PlayAnimation((Manager as FighterManager).GetAnimationClip(currentAttack.animationName,
-                    GetEntityManager().CombatManager.CurrentAttackMovesetIdentifier));
-            }*/
         }
 
         public override void OnUpdate()

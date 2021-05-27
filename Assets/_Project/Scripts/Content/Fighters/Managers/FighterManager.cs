@@ -25,6 +25,8 @@ namespace Mahou.Content.Fighters
         public bool jumpHold = false;
         public int currentJump = 0;
 
+        public MovesetDefinition[] movesets;
+
         public virtual void Awake()
         {
             Initialize();
@@ -38,8 +40,9 @@ namespace Mahou.Content.Fighters
             SetupStates();
             KinematicCharacterSystem.Settings.AutoSimulation = false;
             KinematicCharacterSystem.Settings.Interpolate = false;
+            movesets = definition.GetMovesets();
             CombatManager.SetMoveset(0);
-            StatsManager.SetStats(definition.GetMovesets()[0].fighterStats);
+            StatsManager.SetStats(movesets[0].fighterStats);
             (PhysicsManager as FighterPhysicsManager).OnGroundedChanged += (data) => { if (data == true) ResetGroundOptions(); };
         }
 
@@ -83,7 +86,7 @@ namespace Mahou.Content.Fighters
         /// <returns>A direction vector based on the camera's forward.</returns>
         public virtual Vector3 GetMovementVector(uint frame = 0)
         {
-            Vector2 movement = InputManager.GetAxis2D(Mahou.Input.Action.Movement_X, frame);
+            Vector2 movement = InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT, frame);
             return GetMovementVector(movement.x, movement.y);
         }
 
@@ -109,7 +112,7 @@ namespace Mahou.Content.Fighters
                 return false;
             }
             // Jump not pressed.
-            if (inputManager.GetButton(Input.Action.Jump).firstPress == false)
+            if (inputManager.GetButton((int)PlayerInputType.JUMP).firstPress == false)
             {
                 return false;
             }
@@ -182,6 +185,19 @@ namespace Mahou.Content.Fighters
             simState.currentJump = currentJump;
             simState.isGrounded = physicsManager.IsGrounded;
             simState.jumpHold = jumpHold;
+
+            // Combat Manager
+            simState.currentChargeLevel = combatManager.CurrentChargeLevel;
+            simState.currentChargeLevelCharge = combatManager.CurrentChargeLevelCharge;
+            simState.hitstop = combatManager.HitStop;
+            simState.hitstun = combatManager.HitStun;
+            simState.currentMoveset = combatManager.CurrentMovesetIdentifier;
+            simState.currentAttackMoveset = combatManager.CurrentAttackMovesetIdentifier;
+            simState.currentAttackNode = combatManager.CurrentAttackNodeIdentifier;
+
+            // Hitbox Manager
+            simState.collidedIHurtables = hitboxManager.collidedIHurtables;
+
             return simState;
         }
 
@@ -196,6 +212,16 @@ namespace Mahou.Content.Fighters
             (physicsManager as FighterPhysicsManager3D).forceMovement = pState.forceMovement;
             (physicsManager as FighterPhysicsManager3D).forceGravity = pState.forceGravity;
             (StateManager as FighterStateManager).ChangeState(pState.mainState, pState.mainStateFrame);
+
+            // Combat Manager
+            combatManager.SetChargeLevel(pState.currentChargeLevel);
+            combatManager.SetChargeLevelCharge(pState.currentChargeLevelCharge);
+            combatManager.SetHitStop(pState.hitstop);
+            combatManager.SetHitStun(pState.hitstun);
+            (combatManager as FighterCombatManager).ApplySimState(pState.currentMoveset, pState.currentAttackMoveset, pState.currentAttackNode);
+
+            // Hitbox Manager
+            hitboxManager.collidedIHurtables = pState.collidedIHurtables;
         }
     }
 }

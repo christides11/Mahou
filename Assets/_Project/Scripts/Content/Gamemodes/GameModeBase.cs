@@ -49,7 +49,7 @@ namespace Mahou.Content
         {
             if(simState == null)
             {
-                simState.gameModeState = GameModeState.INITIALIZING;
+                 SetGameModeState(GameModeState.INITIALIZING);
                 return;
             }
             SetGameModeState(simState.gameModeState);

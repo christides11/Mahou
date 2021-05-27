@@ -34,11 +34,15 @@ namespace Mahou.Content.Fighters
 
         public override bool CheckInterrupt()
         {
+            if (FighterManager.TryAttack())
+            {
+                return true;
+            }
             if (FighterManager.TryJump())
             {
                 return true;
             }
-            if (InputManager.GetButton(Input.Action.Dash, 0).firstPress)
+            if (InputManager.GetButton((int)PlayerInputType.DASH, 0).firstPress)
             {
                 StateManager.ChangeState((ushort)FighterStates.AIR_DASH);
                 return true;

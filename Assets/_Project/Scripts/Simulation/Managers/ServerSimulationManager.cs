@@ -109,7 +109,7 @@ namespace Mahou.Simulation
             foreach (int clientID in unprocessedPlayerIds)
             {
                 // If the player is not yet synchronized, this means that they haven't sent any
-                // inputs yet. Ignore them for now.
+                // inputs yet. Ignore them.
                 if (!lobbyManager.MatchManager.joinedClients.ContainsKey(clientID) ||
                     !lobbyManager.MatchManager.joinedClients[clientID].synced)
                 {

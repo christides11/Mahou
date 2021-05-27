@@ -14,7 +14,7 @@ namespace Mahou.Content.Fighters
         public override void Initialize()
         {
             base.Initialize();
-            Vector2 movementDir = InputManager.GetAxis2D(Mahou.Input.Action.Movement_X);
+            Vector2 movementDir = InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT);
             if (movementDir.magnitude < InputConstants.movementThreshold)
             {
                 movementDir = Vector2.up;
@@ -52,7 +52,7 @@ namespace Mahou.Content.Fighters
             }
             if (StateManager.CurrentStateFrame > Stats.CurrentStats.dashTime)
             {
-                Vector2 movementDir = InputManager.GetAxis2D(Mahou.Input.Action.Movement_X);
+                Vector2 movementDir = InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT);
                 if (movementDir.magnitude < InputConstants.movementThreshold)
                 {
                     StateManager.ChangeState((ushort)FighterStates.IDLE);

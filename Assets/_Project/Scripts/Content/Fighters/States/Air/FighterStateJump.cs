@@ -48,7 +48,7 @@ namespace Mahou.Content.Fighters
             }
             else if (StateManager.CurrentStateFrame > es.CurrentStats.jumpVeloMinHoldFrames)
             {
-                if (InputManager.GetButton(Input.Action.Jump).isDown == false)
+                if (InputManager.GetButton((int)PlayerInputType.JUMP).isDown == false)
                 {
                     (Manager as FighterManager).jumpHold = false;
                 }
@@ -66,7 +66,7 @@ namespace Mahou.Content.Fighters
             {
                 return true;
             }
-            if (InputManager.GetButton(Input.Action.Dash, 0).firstPress)
+            if (InputManager.GetButton((int)PlayerInputType.DASH, 0).firstPress)
             {
                 StateManager.ChangeState((ushort)FighterStates.AIR_DASH);
                 return true;

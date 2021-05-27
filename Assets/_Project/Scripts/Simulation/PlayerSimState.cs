@@ -1,6 +1,8 @@
 using KinematicCharacterController;
 using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
+using static HnSF.Combat.HitboxManager;
 
 namespace Mahou.Simulation
 {
@@ -18,5 +20,19 @@ namespace Mahou.Simulation
 
         public bool isGrounded;
         public bool jumpHold;
+
+        // Combat Manager
+        public int currentChargeLevel;
+        public int currentChargeLevelCharge;
+
+        public int currentMoveset;
+        public int currentAttackMoveset;
+        public int currentAttackNode;
+
+        public int hitstun;
+        public int hitstop;
+
+        // Hitbox Manager
+        public Dictionary<int, IDGroupCollisionInfo> collidedIHurtables;
     }
 }

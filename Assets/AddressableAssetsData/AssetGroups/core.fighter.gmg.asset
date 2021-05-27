@@ -31,12 +31,12 @@ MonoBehaviour:
       type: 3}
     m_TargetAsset: {fileID: 886669924077431813, guid: f0013c4f5f2ba1441bbd6a3e6ce81c25,
       type: 3}
-  - m_GUID: d4b0f56a17af9b74cb55ddbc84b678d4
+  - m_GUID: af255da49258d6a4a8452d03a7b964b1
     m_Address: core.fighter.gmg.moveset
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 11400000, guid: d4b0f56a17af9b74cb55ddbc84b678d4, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: d4b0f56a17af9b74cb55ddbc84b678d4, type: 2}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: fb328296379ca5b43a115408b3b67ef1
     m_Address: core.fighter.gmg.stats
     m_ReadOnly: 0

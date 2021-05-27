@@ -120,11 +120,17 @@ namespace Mahou.Content.Fighters
             InputRecordItem recordItem = new InputRecordItem();
             recordItem.cameraForward = pInput.cameraForward;
             recordItem.cameraRight = pInput.cameraRight;
-            recordItem.AddInput(Input.Action.Movement_X, new InputRecordAxis2D(pInput.movement));
-            recordItem.AddInput(Input.Action.Attack, new InputRecordButton(pInput.attack));
-            recordItem.AddInput(Input.Action.Jump, new InputRecordButton(pInput.jump));
-            recordItem.AddInput(Input.Action.Dash, new InputRecordButton(pInput.dash));
+            recordItem.AddInput((int)PlayerInputType.MOVEMENT, new InputRecordAxis2D(pInput.movement));
+            recordItem.AddInput((int)PlayerInputType.ATTACK, new InputRecordButton(pInput.attack));
+            recordItem.AddInput((int)PlayerInputType.JUMP, new InputRecordButton(pInput.jump));
+            recordItem.AddInput((int)PlayerInputType.DASH, new InputRecordButton(pInput.dash));
             return recordItem;
+        }
+
+        public override bool UsedInBuffer(int inputID, uint tick)
+        {
+            return false;
+            //return base.UsedInBuffer(inputID, tick);
         }
     }
 }

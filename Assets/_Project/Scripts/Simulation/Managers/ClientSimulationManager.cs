@@ -149,6 +149,7 @@ namespace Mahou.Simulation
             unackedInputs.Clear();
             clientWorldTickDeltas.Clear();
 
+            // Only bother up to twenty frames in the past. 
             int inputStartTick = (currentTick - lastAckedServerTick) > 20 ? currentTick - 20 : lastAckedServerTick;
             for (int tick = inputStartTick; tick <= currentTick; tick++)
             {
@@ -208,7 +209,7 @@ namespace Mahou.Simulation
                     OnClientJoin(cm);
                 }
                 clientInputSnapshots[cm.clientID][msg.serverTick % circularBufferSize] = msg.clientInputs[i].input;
-                // Server is behind us of us.
+                // We're ahead of the server, so we replace our predicted inputs with the server's authoritative inputs.
                 if(msg.serverTick <= currentTick)
                 {
                     cm.ReplaceInput(clientInputSnapshots[cm.clientID][msg.serverTick % circularBufferSize], currentTick - msg.serverTick);
@@ -337,6 +338,7 @@ namespace Mahou.Simulation
 
         private void Rollback(int startFrame)
         {
+            IsRollbackFrame = true;
             int bufidx = startFrame % circularBufferSize;
 
             // APPLY HISTORICAL STATE //
@@ -372,6 +374,7 @@ namespace Mahou.Simulation
                 // Apply inputs to the client.
                 cm.Value.SetInputFrame(0);
             }
+            IsRollbackFrame = false;
         }
         #endregion
     }

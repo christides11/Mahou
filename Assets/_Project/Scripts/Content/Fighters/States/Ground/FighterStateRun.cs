@@ -21,7 +21,11 @@ namespace Mahou.Content.Fighters
 
         public override bool CheckInterrupt()
         {
-            if ((Manager.InputManager as FighterInputManager).GetButton(Input.Action.Jump).firstPress)
+            if (FighterManager.TryAttack())
+            {
+                return true;
+            }
+            if ((Manager.InputManager as FighterInputManager).GetButton((int)PlayerInputType.JUMP).firstPress)
             {
                 StateManager.ChangeState((ushort)FighterStates.JUMP_SQUAT);
                 return true;
@@ -32,8 +36,8 @@ namespace Mahou.Content.Fighters
                 StateManager.ChangeState((ushort)FighterStates.FALL);
                 return true;
             }
-            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(0, 0);
-            if (mov.magnitude <= 0.2f)
+            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D((int)PlayerInputType.MOVEMENT, 0);
+            if (mov.magnitude < InputConstants.movementThreshold)
             {
                 StateManager.ChangeState((ushort)FighterStates.IDLE);
                 return true;

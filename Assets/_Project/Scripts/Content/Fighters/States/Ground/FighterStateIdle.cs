@@ -21,12 +21,15 @@ namespace Mahou.Content.Fighters
         public override bool CheckInterrupt()
         {
             PhysicsManager.CheckIfGrounded();
-
+            if (FighterManager.TryAttack())
+            {
+                return true;
+            }
             if (FighterManager.TryJump())
             {
                 return true;
             }
-            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D(Input.Action.Movement_X, 0);
+            Vector2 mov = (Manager.InputManager as FighterInputManager).GetAxis2D((int)PlayerInputType.MOVEMENT, 0);
             if (mov.magnitude >= InputConstants.movementThreshold)
             {
                 StateManager.ChangeState((ushort)FighterStates.WALK);

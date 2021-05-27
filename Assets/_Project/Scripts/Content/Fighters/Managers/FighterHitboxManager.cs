@@ -24,44 +24,45 @@ namespace Mahou.Content.Fighters
 
         protected override bool ShouldHurt(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox)
         {
-            /*
             if (hurtbox.Owner.TryGetComponent(out IHurtable ih))
             {
-                TDAction.Combat.TeamTypes team = (TDAction.Combat.TeamTypes)ih.GetTeam();
+                Combat.TeamTypes team = (Combat.TeamTypes)ih.GetTeam();
                 if (team == Combat.TeamTypes.FFA)
                 {
-                    // Enemy in free for all team, hurt them.
+                    // Entity is in the FFA team.
                     return true;
                 }
                 else if (team != (Combat.TeamTypes)combatManager.GetTeam())
                 {
-                    // Enemy is not in our team, hurt them.
+                    // Entity is not in our team.
                     return true;
                 }
-                // Enemy is on our team.
+                // Entity is on our team.
                 return false;
             }
             // Not hurtable. Ignore.
-            return false;*/
-            return true;
+            return false;
         }
 
         Collider[] raycastHitList = new Collider[0];
         protected override Hurtbox[] CheckBoxCollision(HitboxGroup hitboxGroup, int boxIndex)
         {
             FighterManager fm = manager as FighterManager;
-
             
             Vector3 modifiedOffset = (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).offset;
-            /*modifiedOffset = new Vector3(modifiedOffset.x * fm.FaceDirection, modifiedOffset.y, 0);
-            
-            Vector2 position = hitboxGroup.attachToEntity ? (Vector2)manager.transform.position + (Vector2)modifiedOffset
-                : (Vector2)referencePosition + (Vector2)modifiedOffset;
-            Vector2 size = (Vector2)(hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).size;
-            raycastHitList = Physics.OverlapBoxAll(position, size, 0, combatManager.hitboxLayerMask);
+            modifiedOffset = modifiedOffset.x * fm.visual.transform.right
+                + modifiedOffset.z * fm.visual.transform.forward
+                + modifiedOffset.y * Vector3.up;
+            Vector3 position = hitboxGroup.attachToEntity ? manager.visual.transform.position + modifiedOffset
+                : referencePosition + modifiedOffset;
+            Vector3 size = (hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).size;
+
+            int cldAmt = Physics.OverlapBoxNonAlloc(position, size, raycastHitList,
+                Quaternion.Euler((hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).rotation), 
+                combatManager.hitboxLayerMask);
 
             Hurtbox[] hurtboxes = new Hurtbox[raycastHitList.Length];
-            for (int i = 0; i < raycastHitList.Length; i++)
+            for (int i = 0; i < cldAmt; i++)
             {
                 Hurtbox h = raycastHitList[i].GetComponent<Hurtbox>();
                 if (h.Owner != manager.gameObject)
@@ -69,8 +70,7 @@ namespace Mahou.Content.Fighters
                     hurtboxes[i] = h;
                 }
             }
-            return hurtboxes;*/
-            return null;
+            return hurtboxes;
         }
 
         protected override HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, Hurtbox hurtbox)

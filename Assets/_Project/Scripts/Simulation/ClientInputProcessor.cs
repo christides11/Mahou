@@ -77,7 +77,7 @@ namespace Mahou.Simulation
                 int start = serverCurrentTick > cimsg.StartWorldTick
                     ? (int)(serverCurrentTick - cimsg.StartWorldTick) : 0;
 
-                // Apply those inputs.
+                // Apply the unACKed inputs.
                 for (int i = start; i < cimsg.Inputs.Length; ++i)
                 {
                     int inputWorldTick = cimsg.StartWorldTick + i;
@@ -101,7 +101,6 @@ namespace Mahou.Simulation
                     latestPlayerInput[clientConn.connectionId] = tickInput;
                 }
             }
-            // Otherwise we ignore the message.
         }
     }
 }

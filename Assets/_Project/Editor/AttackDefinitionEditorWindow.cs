@@ -75,25 +75,11 @@ namespace Mahou.Combat
                 visualFighterSceneReference.GetComponent<KinematicCharacterMotor>().CharacterController =
                     visualFighterSceneReference.GetComponent<FighterCharacterController>();
                 visualFighterSceneReference.GetComponent<KinematicCharacterMotor>().Awake();
-                /*
-                visualFighterSceneReference.GetComponent<Fighter.FighterManager>().entityDefinition.sharedAnimations.OnEnable();
-                foreach (var moveset in visualFighterSceneReference.GetComponent<Fighter.FighterManager>().entityDefinition.movesets)
-                {
-                    moveset.animations.OnEnable();
-                }
-                //visualFighterSceneReference.GetComponent<Fighter.FighterAnimator>().PlayAnimation((attack as AttackDefinition).animationName);
-                visualFighterSceneReference.GetComponent<Prime31.CharacterController2D>().Awake();*/
             }
         }
 
         protected override void MoveEntity()
         {
-            //base.MoveEntity();
-            /*Vector3 mov = visualFighterSceneReference.GetComponent<FighterPhysicsManager>().GetOverallForce();
-            mov *= Time.fixedDeltaTime;
-
-            visualFighterSceneReference.transform.position += mov;*/
-
             FighterPhysicsManager pm = visualFighterSceneReference.GetComponent<FighterPhysicsManager>();
             pm.Tick();
 

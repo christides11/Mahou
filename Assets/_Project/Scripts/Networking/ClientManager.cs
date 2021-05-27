@@ -138,7 +138,7 @@ namespace Mahou.Networking
             }
             lfrCurrentNumber = playerRequestIncrement;
             playerRequestIncrement++;
-            requestFighterRef = fighterReference;
+            requestFighterRef = new ModObjectReference(fighterReference.modIdentifier, fighterReference.objectIdentifier);
 
             // No other clients connected, just spawn the fighter.
             if (unconfirmedClients.Count == 0)
@@ -176,6 +176,10 @@ namespace Mahou.Networking
         [Server]
         private void SpawnFighter()
         {
+            if(requestFighterRef == null)
+            {
+                return;
+            }
             IFighterDefinition fighterDefinition = (IFighterDefinition)ModManager.instance.GetContentDefinition(ContentType.Fighter, requestFighterRef);
             if (fighterDefinition == null)
             {
