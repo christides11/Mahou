@@ -10,5 +10,6 @@ namespace Mahou.Content.Fighters
     public class MovesetDefinition : HnSF.Combat.MovesetDefinition
     {
         public FighterStatsSO fighterStats;
+        public HurtboxCollection hurtboxCollection;
     }
 }

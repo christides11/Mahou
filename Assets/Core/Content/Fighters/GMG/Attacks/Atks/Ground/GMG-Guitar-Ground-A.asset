@@ -19,14 +19,29 @@ MonoBehaviour:
   length: 50
   commandAttackCancelWindows: []
   chargeWindows: []
-  hitboxGroups: []
+  hitboxGroups:
+  - id: 0
   hurtboxGroups: []
   events:
-  - id: 0
+  - id: 1
   cancels: []
   references:
     version: 1
     00000000:
+      type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
+      data:
+        ID: 0
+        activeFramesStart: 1
+        activeFramesEnd: 6
+        boxes:
+        - id: 2
+        attachToEntity: 1
+        attachTo: 
+        chargeLevelNeeded: -1
+        chargeLevelMax: 1
+        hitboxHitInfo:
+          id: 3
+    00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         nickname: Clamp.Move
@@ -37,7 +52,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 1
         attackEvent:
-          id: 1
+          id: 4
         variables:
           intVars: 
           floatVars: []
@@ -54,7 +69,46 @@ MonoBehaviour:
         chargeLevelMin: 0
         chargeLevelMax: 0
         inputCheckProcessed: 0
-    00000001:
+    00000002:
+      type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        shape: 0
+        offset: {x: 0, y: 0, z: 0}
+        size: {x: 2, y: 2, z: 2}
+        rotation: {x: 0, y: 0.5, z: 0}
+        radius: 0
+        height: 0
+    00000003:
+      type: {class: HitInfo, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        hitType: 0
+        hitKills: 1
+        continuousHit: 0
+        spaceBetweenHits: 0
+        opponentResetXForce: 1
+        opponentResetYForce: 1
+        autoLink: 0
+        forceType: 0
+        forceRelation: 0
+        attackerHitstop: 4
+        hitstop: 4
+        hitstun: 60
+        airOnly: 0
+        groundOnly: 0
+        causesTumble: 0
+        knockdown: 0
+        groundBounces: 0
+        groundBounceForce: 0
+        wallBounces: 0
+        wallBounceForce: 0
+        damageOnHit: 0
+        opponentForce: {x: 0, y: 20, z: 20}
+        forceIncludeYForce: 0
+        opponentForceMultiplier: 1
+        opponentMaxMagnitude: 1
+        opponentMinMagnitude: 1
+        throwConfirm: {fileID: 0}
+    00000004:
       type: {class: ClampMovement, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
-        maxLength: 0
+        maxLength: 5

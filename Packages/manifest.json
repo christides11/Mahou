@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.christides.hack-and-slash-framework": "https://github.com/christides11/hack-and-slash-framework.git#upm",
     "com.coffee.upm-git-extension": "https://github.com/mob-sakai/UpmGitExtension.git#1.3.4",
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.2.5",
     "com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
@@ -51,7 +52,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.christides.hack-and-slash-framework": "https://github.com/christides11/Character-Action-Framework.git#upm"
+    "com.unity.modules.xr": "1.0.0"
   }
 }

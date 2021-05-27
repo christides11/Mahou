@@ -144,8 +144,9 @@ MonoBehaviour:
   cc: {fileID: 844805816179117161}
   definition: {fileID: 11400000, guid: b9110db6b096f2549b05c24b4df7b73f, type: 2}
   movSpeed: 0.5
-  fullHop: 0
+  jumpHold: 0
   currentJump: 0
+  movesets: []
   statManager: {fileID: 9161192216790614098}
 --- !u!114 &4195765052651656638
 MonoBehaviour:
@@ -209,7 +210,8 @@ MonoBehaviour:
   hitboxManager: {fileID: 7886028677784697296}
   hitboxLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  team: 0
 --- !u!114 &2320185776235978899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +225,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 5587520329024140789}
+  hurtboxPrefab: {fileID: 5374533362761696113, guid: b68ad8eb45a3deb46ac4e2394268a43b,
+    type: 3}
 --- !u!136 &1412428705586473507
 CapsuleCollider:
   m_ObjectHideFlags: 8
@@ -292,9 +296,9 @@ MonoBehaviour:
     dashTime: 0
     jumpsAvailable: 0
     jumpSquat: 0
-    shortHopVelocity:
-      baseValue: 0
-    fullHopVelocity:
+    jumpVeloMinHoldFrames: 5
+    jumpVeloMaxHoldFrames: 10
+    jumpVelocity:
       baseValue: 0
     jumpConversedMomentum:
       baseValue: 0
@@ -355,8 +359,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  fighterManager: {fileID: 5587520329024140789}
-  fighterInputManager: {fileID: 4195765052651656638}
 --- !u!114 &7886028677784697296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,6 +373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatManager: {fileID: 4468851262550792971}
   manager: {fileID: 5587520329024140789}
+  referencePosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4036104479636483958
 GameObject:
   m_ObjectHideFlags: 0

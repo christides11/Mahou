@@ -71,6 +71,7 @@ namespace Mahou.Content.Fighters
 
         public void SimUpdate()
         {
+            (hurtboxManager as FighterHurtboxManager).Reset();
             Tick();
         }
 

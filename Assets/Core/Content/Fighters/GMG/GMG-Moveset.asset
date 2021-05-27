@@ -22,6 +22,7 @@ MonoBehaviour:
   airIdleCancelListID: -1
   airAttackStartNodes: []
   fighterStats: {fileID: 11400000, guid: fb328296379ca5b43a115408b3b67ef1, type: 2}
+  hurtboxCollection: {fileID: 11400000, guid: 176c011c7c5079845b8454d5a10e874e, type: 2}
 --- !u!114 &3625158533729177270
 MonoBehaviour:
   m_ObjectHideFlags: 0

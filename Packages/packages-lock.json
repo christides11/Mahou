@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "com.christides.hack-and-slash-framework": {
-      "version": "https://github.com/christides11/Character-Action-Framework.git#upm",
+      "version": "https://github.com/christides11/hack-and-slash-framework.git#upm",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "0450bf3a53c37a0cae32c1016b9ae3607c86f106"
+      "hash": "b8e0e81bc51abe504285f1eba33b98775ca9963e"
     },
     "com.coffee.upm-git-extension": {
       "version": "https://github.com/mob-sakai/UpmGitExtension.git#1.3.4",

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HitInfo = Mahou.Combat.HitInfo;
 
 namespace Mahou.Content.Fighters
 {
@@ -40,9 +41,57 @@ namespace Mahou.Content.Fighters
         {
             if (SimulationManagerBase.IsRollbackFrame == false)
             {
-                Debug.Log("Was hit.");
+                Debug.Log($"Was hit.");
             }
-            return base.Hurt(hurtInfoBase);
+
+            FighterPhysicsManager physicsManager = (FighterPhysicsManager)manager.PhysicsManager;
+            HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
+            HitInfo hitInfo = hurtInfo.hitInfo as HitInfo;
+
+            HitReaction hitReaction = new HitReaction();
+            hitReaction.reactionType = HitReactionType.Hit;
+            // Check if the box can hit this entity.
+            if (hitInfo.groundOnly && !physicsManager.IsGrounded
+                || hitInfo.airOnly && physicsManager.IsGrounded)
+            {
+                hitReaction.reactionType = HitReactionType.Avoided;
+                return hitReaction;
+            }
+            // Got hit, apply stun, damage, and forces.
+            //LastHitBy = hInfo;
+            SetHitStop(hitInfo.hitstop);
+            SetHitStun(hitInfo.hitstun);
+
+            // Convert forces the attacker-based forward direction.
+            switch (hitInfo.forceType)
+            {
+                case HitboxForceType.SET:
+                    Vector3 forces = hitInfo.opponentForce;
+                    physicsManager.forceGravity.y = forces.y;
+                    forces.y = 0;
+                    physicsManager.forceMovement = forces;
+                    break;
+            }
+
+            if (physicsManager.forceGravity.y > 0)
+            {
+                physicsManager.SetGrounded(false);
+            }
+
+            // Change into the correct state.
+            if (hitInfo.groundBounces && physicsManager.IsGrounded)
+            {
+                //manager.StateManager.ChangeState((int)EntityStates);
+            }
+            else if (hitInfo.causesTumble)
+            {
+                //manager.StateManager.ChangeState((int)FighterStates.TUMBLE);
+            }
+            else
+            {
+                //manager.StateManager.ChangeState((ushort)(physicsManager.IsGrounded ? FighterStates.FLINCH_GROUND : FighterStates.FLINCH_AIR));
+            }
+            return hitReaction;
         }
 
         protected override bool CheckStickDirection(InputDefinition sequenceInput, uint framesBack)

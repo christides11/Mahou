@@ -27,12 +27,6 @@ namespace Mahou.Content.Fighters
         {
             FighterManager entityManager = FighterManager;
             AttackDefinition currentAttack = (AttackDefinition)entityManager.CombatManager.CurrentAttackNode.attackDefinition;
-
-            for (int i = 0; i < currentAttack.hitboxGroups.Count; i++)
-            {
-                HandleHitboxGroup(i, currentAttack.hitboxGroups[i]);
-            }
-
             
             if (TryCancelWindow(currentAttack))
             {
@@ -77,6 +71,18 @@ namespace Mahou.Content.Fighters
             if(!eventCancel)
             {
                 entityManager.StateManager.IncrementFrame();
+            }
+        }
+
+        public override void OnLateUpdate()
+        {
+            base.OnLateUpdate();
+
+            AttackDefinition currentAttack = (AttackDefinition)FighterManager.CombatManager.CurrentAttackNode.attackDefinition;
+
+            for (int i = 0; i < currentAttack.hitboxGroups.Count; i++)
+            {
+                HandleHitboxGroup(i, currentAttack.hitboxGroups[i]);
             }
         }
 
