@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 355328904e2f1ef48be147ce3e6109d7, type: 3}
-  m_Name: GMG-Guitar-Ground-A
+  m_Name: GMG-Guitar-Ground-AA
   m_EditorClassIdentifier: 
-  attackName: Ground A
+  attackName: Ground AA
   description: 
   useState: 0
   stateOverride: 0
-  length: 40
+  length: 35
   commandAttackCancelWindows: []
   chargeWindows: []
   hitboxGroups:
@@ -119,8 +119,8 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 4
-        hitstop: 4
+        attackerHitstop: 20
+        hitstop: 20
         hitstun: 60
         airOnly: 0
         groundOnly: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: 5}
+        opponentForce: {x: 0, y: 0, z: 20}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1

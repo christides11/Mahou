@@ -11,6 +11,10 @@ namespace Mahou
         FALL = 6,
         AIR_DASH = 7,
         AIR_JUMP = 8,
-        ATTACK = 9
+        ATTACK = 9,
+        FLINCH_GROUND = 10,
+        FLINCH_AIR = 11,
+        TUMBLE = 12,
+        GROUND_BOUNCE = 13
     }
 }

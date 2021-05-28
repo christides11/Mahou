@@ -81,15 +81,15 @@ namespace Mahou.Content.Fighters
             // Change into the correct state.
             if (hitInfo.groundBounces && physicsManager.IsGrounded)
             {
-                //manager.StateManager.ChangeState((int)EntityStates);
+                manager.StateManager.ChangeState((int)FighterStates.GROUND_BOUNCE);
             }
             else if (hitInfo.causesTumble)
             {
-                //manager.StateManager.ChangeState((int)FighterStates.TUMBLE);
+                manager.StateManager.ChangeState((int)FighterStates.TUMBLE);
             }
             else
             {
-                //manager.StateManager.ChangeState((ushort)(physicsManager.IsGrounded ? FighterStates.FLINCH_GROUND : FighterStates.FLINCH_AIR));
+                manager.StateManager.ChangeState((ushort)(physicsManager.IsGrounded ? FighterStates.FLINCH_GROUND : FighterStates.FLINCH_AIR));
             }
             return hitReaction;
         }

@@ -16,3 +16,6 @@ MonoBehaviour:
   - identifier: idle
     hurtboxDefinition: {fileID: 11400000, guid: 72c154a87e5a0174489a9382e5457817,
       type: 2}
+  - identifier: flinch
+    hurtboxDefinition: {fileID: 11400000, guid: 2e4f9aef955d21f4ea715884222e7f7e,
+      type: 2}

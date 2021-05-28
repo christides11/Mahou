@@ -21,6 +21,11 @@ namespace Mahou.Content.Fighters
         public override bool CheckInterrupt()
         {
             PhysicsManager.CheckIfGrounded();
+            if (PhysicsManager.IsGrounded == false)
+            {
+                StateManager.ChangeState((ushort)FighterStates.FALL);
+                return true;
+            }
             if (FighterManager.TryAttack())
             {
                 return true;

@@ -24,6 +24,10 @@ namespace Mahou.Core
             stateManager.AddState(new BAirJump(), (ushort)FighterStates.AIR_JUMP);
             stateManager.AddState(new FighterStateAttack(), (ushort)FighterStates.ATTACK);
 
+            stateManager.AddState(new FighterStateFlinchGround(), (ushort)FighterStates.FLINCH_GROUND);
+            stateManager.AddState(new FighterStateFlinchAir(), (ushort)FighterStates.FLINCH_AIR);
+            stateManager.AddState(new FighterStateTumble(), (ushort)FighterStates.TUMBLE);
+
             stateManager.ChangeState((ushort)FighterStates.FALL);
         }
     }

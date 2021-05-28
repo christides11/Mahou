@@ -198,7 +198,7 @@ MonoBehaviour:
     hitstunMaxFallSpeed:
       baseValue: 11
     hitstunFrictionXZ:
-      baseValue: 0
+      baseValue: 45
     inertiaFriction:
       baseValue: 0
     weight:
