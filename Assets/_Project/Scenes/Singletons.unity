@@ -4321,7 +4321,7 @@ MonoBehaviour:
   gameManager: {fileID: 1812465252}
   consoleReader: {fileID: 1471945004}
   consoleWindow: {fileID: 1471945002}
-  useArgs: 1
+  useArgs: 0
   args:
   - host core/bandbattle core/debugroom core/versusr
 --- !u!1 &1847963925

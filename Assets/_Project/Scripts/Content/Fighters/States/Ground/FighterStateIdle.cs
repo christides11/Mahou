@@ -15,6 +15,10 @@ namespace Mahou.Content.Fighters
         public override void OnUpdate()
         {
             PhysicsManager.ApplyMovementFriction();
+            if ((Manager as FighterManager).LockedOn)
+            {
+                (Manager as FighterManager).RotateVisual((Manager as FighterManager).LockonForward, 10);
+            }
             CheckInterrupt();
         }
 

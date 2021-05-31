@@ -15,7 +15,8 @@ MonoBehaviour:
   nodes:
   - {fileID: 3625158533729177270}
   - {fileID: 5432671773901837520}
-  nodeIDCounter: 2
+  - {fileID: 3510077099750719752}
+  nodeIDCounter: 3
   cancelLists: []
   groundIdleCancelListID: -1
   groundAttackStartNodes:
@@ -24,6 +25,60 @@ MonoBehaviour:
   airAttackStartNodes: []
   fighterStats: {fileID: 11400000, guid: fb328296379ca5b43a115408b3b67ef1, type: 2}
   hurtboxCollection: {fileID: 11400000, guid: 176c011c7c5079845b8454d5a10e874e, type: 2}
+--- !u!114 &3510077099750719752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
+  m_Name: Moveset Attack
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 376, y: -136}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: 3510077099750719752}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: nextNode 0
+        node: {fileID: 5432671773901837520}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: 3510077099750719752}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 2
+  lastNode: {fileID: 5432671773901837520}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: a1152919346f98b41b65316d4e534ca2, type: 2}
+  nextNode: []
 --- !u!114 &3625158533729177270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +163,7 @@ MonoBehaviour:
     keys:
     - lastNode
     - nextNode
+    - nextNode 0
     values:
     - _fieldName: lastNode
       _node: {fileID: 5432671773901837520}
@@ -131,6 +187,18 @@ MonoBehaviour:
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
+    - _fieldName: nextNode 0
+      _node: {fileID: 5432671773901837520}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode+nextNodeDefinition, HnSF,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: lastNode
+        node: {fileID: 3510077099750719752}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 1
   Identifier: 1
   lastNode: {fileID: 3625158533729177270}
   inputSequence:
@@ -143,4 +211,6 @@ MonoBehaviour:
     sequenceWindow: 8
     sequenceInputs: []
   attackDefinition: {fileID: 11400000, guid: fff2705cbe34b884b8203048e042439d, type: 2}
-  nextNode: []
+  nextNode:
+  - cancelWindow: {x: 10, y: 100}
+    nodeIdentifier: 2

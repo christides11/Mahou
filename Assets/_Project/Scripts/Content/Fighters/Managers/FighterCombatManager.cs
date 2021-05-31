@@ -66,7 +66,7 @@ namespace Mahou.Content.Fighters
             switch (hitInfo.forceType)
             {
                 case HitboxForceType.SET:
-                    Vector3 forces = hitInfo.opponentForce;
+                    Vector3 forces = (hitInfo.opponentForce.x * hurtInfo.right) + (hitInfo.opponentForce.z * hurtInfo.forward);
                     physicsManager.forceGravity.y = forces.y;
                     forces.y = 0;
                     physicsManager.forceMovement = forces;

@@ -40,6 +40,10 @@ namespace Mahou.Content.Fighters
                 PhysicsManager.forceMovement = PhysicsManager.forceMovement.normalized * Stats.CurrentStats.maxDashSpeed;
             }
 
+            Vector3 movement = FighterManager.GetMovementVector();
+            movement.y = 0;
+            FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.dashRotationSpeed);
+
             StateManager.IncrementFrame();
             CheckInterrupt();
         }

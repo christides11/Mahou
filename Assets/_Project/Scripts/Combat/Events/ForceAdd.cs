@@ -42,7 +42,7 @@ namespace Mahou.Combat.Events
             }
             if (addXZForce)
             {
-                physicsManager.forceMovement += (f.x * inputManager.GetCameraRight()) + (f.z * inputManager.GetCameraForward());
+                physicsManager.forceMovement += (f.x * e.visual.transform.right) + (f.z * e.visual.transform.forward);
             }
             return AttackEventReturnType.NONE;
         }

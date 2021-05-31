@@ -27,6 +27,7 @@ namespace Mahou.Content.Fighters
         public FighterStatFloat dashInitSpeed = new FighterStatFloat(0);
         public FighterStatFloat maxDashSpeed = new FighterStatFloat(0);
         public FighterStatFloat dashAcceleration = new FighterStatFloat(0);
+        public FighterStatFloat dashRotationSpeed = new FighterStatFloat(0);
 
         public int dashTime;
 
@@ -98,6 +99,7 @@ namespace Mahou.Content.Fighters
             dashInitSpeed.UpdateBaseValue(source.dashInitSpeed);
             maxDashSpeed.UpdateBaseValue(source.maxDashSpeed);
             dashAcceleration.UpdateBaseValue(source.dashAcceleration);
+            dashRotationSpeed.UpdateBaseValue(source.dashRotationSpeed);
             dashTime = source.dashTime;
 
             // Jump

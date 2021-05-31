@@ -43,6 +43,7 @@ namespace Mahou.Content.Fighters
             pinput.attack = p.GetButton(Action.Attack);
             pinput.jump = p.GetButton(Action.Jump);
             pinput.dash = p.GetButton(Action.Dash);
+            pinput.lockon = p.GetButton(Action.Lockon);
             return pinput;
         }
 
@@ -124,6 +125,7 @@ namespace Mahou.Content.Fighters
             recordItem.AddInput((int)PlayerInputType.ATTACK, new InputRecordButton(pInput.attack));
             recordItem.AddInput((int)PlayerInputType.JUMP, new InputRecordButton(pInput.jump));
             recordItem.AddInput((int)PlayerInputType.DASH, new InputRecordButton(pInput.dash));
+            recordItem.AddInput((int)PlayerInputType.LOCKON, new InputRecordButton(pInput.lockon));
             return recordItem;
         }
 

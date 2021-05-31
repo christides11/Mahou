@@ -15,6 +15,15 @@ namespace Mahou.Content.Fighters
                 FighterManager.StatsManager.CurrentStats.groundFriction, FighterManager.StatsManager.CurrentStats.maxWalkSpeed, 
                 FighterManager.StatsManager.CurrentStats.walkAccelFromDot);
 
+            Vector3 movement = FighterManager.GetMovementVector();
+            movement.y = 0;
+            if (FighterManager.LockedOn) {
+                FighterManager.RotateVisual(FighterManager.LockonForward, 10);
+            }
+            else {
+                FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.walkRotationSpeed);
+            }
+
             CheckInterrupt();
         }
 

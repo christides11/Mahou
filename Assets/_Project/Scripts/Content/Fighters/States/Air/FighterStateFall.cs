@@ -23,6 +23,17 @@ namespace Mahou.Content.Fighters
                 es.CurrentStats.maxAirSpeed, es.CurrentStats.accelFromDotProduct);
             PhysicsManager.HandleGravity();
 
+            Vector3 movement = FighterManager.GetMovementVector();
+            movement.y = 0;
+            if (FighterManager.LockedOn)
+            {
+                FighterManager.RotateVisual(FighterManager.LockonForward, 10);
+            }
+            else
+            {
+                FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.walkRotationSpeed);
+            }
+
             CheckInterrupt();
         }
 

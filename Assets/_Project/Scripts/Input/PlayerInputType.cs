@@ -6,6 +6,7 @@ namespace Mahou
         CAMERA = 1,
         JUMP = 2,
         ATTACK = 3,
-        DASH = 4
+        DASH = 4,
+        LOCKON = 5
     }
 }

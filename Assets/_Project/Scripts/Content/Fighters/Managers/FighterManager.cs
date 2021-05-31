@@ -7,11 +7,17 @@ using Mirror;
 using KinematicCharacterController;
 using Mahou.Networking;
 using Mahou.Managers;
+using HnSF.Input;
+using HnSF.Combat;
 
 namespace Mahou.Content.Fighters
 {
     public class FighterManager : FighterBase, ISimObject
     {
+        public GameObject LockonTarget { get; protected set; } = null;
+        public bool LockedOn { get; protected set; } = false;
+        public Vector3 LockonForward { get; protected set; } = Vector3.forward;
+
         public virtual FighterStatsManager StatsManager { get { return statsManager; } }
         public virtual FighterHitboxManager HitboxManager { get { return hitboxManager; } }
 
@@ -20,12 +26,22 @@ namespace Mahou.Content.Fighters
         public NetworkIdentity netid;
         public FighterCharacterController cc;
         public IFighterDefinition definition;
+        public Collider coll;
         public float movSpeed = 0.5f;
 
         public bool jumpHold = false;
         public int currentJump = 0;
 
         public MovesetDefinition[] movesets;
+
+        [Header("Lock On")]
+        public float softLockonRadius;
+        public float lockonRadius;
+        public float lockonFudging = 0.1f;
+        public LayerMask lockonLayerMask;
+        public LayerMask lockonVisibilityLayerMask;
+
+        private Vector3 size;
 
         public virtual void Awake()
         {
@@ -44,6 +60,7 @@ namespace Mahou.Content.Fighters
             CombatManager.SetMoveset(0);
             StatsManager.SetStats(movesets[0].fighterStats);
             (PhysicsManager as FighterPhysicsManager).OnGroundedChanged += (data) => { if (data == true) ResetGroundOptions(); };
+            size = coll.bounds.size;
         }
 
         public virtual void Initialize()
@@ -57,11 +74,12 @@ namespace Mahou.Content.Fighters
             statsManager = GetComponent<FighterStatsManager>();
             cc = GetComponent<FighterCharacterController>();
         }
-         
+
+        public Vector3 visualOffset;
         public virtual void Interpolate(PlayerSimState lastState, PlayerSimState currentState, float alpha)
         {
-            visual.transform.position = currentState.motorState.Position * alpha
-                + lastState.motorState.Position * (1.0f - alpha);
+            visual.transform.position = (currentState.motorState.Position * alpha
+                + lastState.motorState.Position * (1.0f - alpha)) + visualOffset;
         }
 
         public virtual void SetupStates()
@@ -78,6 +96,160 @@ namespace Mahou.Content.Fighters
         public void SimLateUpdate()
         {
             LateTick();
+        }
+
+        public virtual Vector3 GetCenter()
+        {
+            return transform.position + new Vector3(0, size.y / 2.0f, 0);
+        }
+
+        protected override void HandleLockon()
+        {
+            InputRecordButton lockonButton = InputManager.GetButton((int)PlayerInputType.LOCKON);
+
+            LockedOn = false;
+            if (lockonButton.released)
+            {
+                //lookHandler.SetLockOnTarget(null);
+            }
+            if (!lockonButton.isDown)
+            {
+                return;
+            }
+            LockedOn = true;
+
+            if (lockonButton.firstPress)
+            {
+                PickLockonTarget();
+                // No target but holding down lock on menas you lock the visuals rotation.
+                LockonForward = visual.transform.forward;
+                //lookHandler.SetLockOnTarget(LockonTarget?.GetComponent<EntityManager>());
+            }
+
+            // No target.
+            if (LockonTarget == null)
+            {
+                return;
+            }
+
+            // Target out of range.
+            if (Vector3.Distance(transform.position, LockonTarget.transform.position) > lockonRadius)
+            {
+                LockonTarget = null;
+                //lookHandler.SetLockOnTarget(null);
+                return;
+            }
+
+            // We have a target and they're in range, set our wanted forward direction.
+            Vector3 dir = (LockonTarget.transform.position - transform.position);
+            dir.y = 0;
+            LockonForward = dir.normalized;
+        }
+
+        /// <summary>
+        /// Picks the best soft lockon target based on distance.
+        /// </summary>
+        public void PickSoftlockTarget()
+        {
+            // If we're Hard Lockoning or looking in a specific direction, don't pick a target.
+            if (LockedOn || InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT).magnitude >= InputConstants.movementThreshold)
+            {
+                return;
+            }
+            LockonTarget = null;
+            Collider[] list = Physics.OverlapSphere(transform.position, softLockonRadius, lockonLayerMask);
+
+            float closestDistance = softLockonRadius;
+            foreach (Collider c in list)
+            {
+                // Ignore self.
+                if (c.gameObject == gameObject)
+                {
+                    continue;
+                }
+                // Only objects with ILockonable can be locked on to.
+                if (c.TryGetComponent(out ITargetable lockonComponent))
+                {
+                    if (Vector3.Distance(transform.position, c.transform.position) < closestDistance)
+                    {
+                        LockonTarget = c.gameObject;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Picks the best lockon target based on stick direction.
+        /// </summary>
+        private void PickLockonTarget()
+        {
+            LockonTarget = null;
+            Collider[] list = Physics.OverlapSphere(GetCenter(), lockonRadius, lockonLayerMask);
+            // The direction of the lockon defaults to the forward of the camera.
+            Vector3 referenceDirection = GetMovementVector(0, 1);
+            // If the movement stick is pointing in a direction, then our lockon should
+            // be based on that angle instead.
+            Vector2 movementDir = InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT);
+            if (movementDir.magnitude >= InputConstants.movementThreshold)
+            {
+                referenceDirection = GetMovementVector(movementDir.x, movementDir.y);
+            }
+
+            // Loop through all targets and find the one that matches the angle the best.
+            GameObject closestTarget = null;
+            float closestAngle = -1.1f;
+            float closestDistance = Mathf.Infinity;
+            foreach (Collider c in list)
+            {
+                // Ignore self.
+                if (c.gameObject == gameObject)
+                {
+                    continue;
+                }
+
+                // Only objects with ILockonable can be locked on to.
+                if (c.TryGetComponent(out ITargetable targetLockonComponent))
+                {
+                    // The target can not be locked on to right now.
+                    if (!targetLockonComponent.Targetable)
+                    {
+                        continue;
+                    }
+                    Vector3 targetDistance = targetLockonComponent.GetGameObject().GetComponent<FighterManager>().GetCenter() - GetCenter();
+                    // If we can't see the target, it can not be locked on to.
+                    if (Physics.Raycast(GetCenter(), targetDistance.normalized, out RaycastHit h, targetDistance.magnitude, lockonVisibilityLayerMask))
+                    {
+                        continue;
+                    }
+
+                    targetDistance.y = 0;
+                    float currAngle = Vector3.Dot(referenceDirection, targetDistance.normalized);
+                    bool withinFudging = Mathf.Abs(currAngle - closestAngle) <= lockonFudging;
+                    // Targets have similar positions, choose the closer one.
+                    if (withinFudging)
+                    {
+                        if (targetDistance.sqrMagnitude < closestDistance)
+                        {
+                            closestTarget = c.gameObject;
+                            closestAngle = currAngle;
+                            closestDistance = targetDistance.sqrMagnitude;
+                        }
+                    }
+                    // Target is closer to the angle than the last one, this is the new target.
+                    else if (currAngle > closestAngle)
+                    {
+                        closestTarget = c.gameObject;
+                        closestAngle = currAngle;
+                        closestDistance = targetDistance.sqrMagnitude;
+                    }
+                }
+            }
+
+            if (closestTarget != null)
+            {
+                LockonTarget = closestTarget;
+            }
+
         }
 
         /// <summary>
@@ -173,9 +345,15 @@ namespace Mahou.Content.Fighters
             return false;
         }
 
+        public override void RotateVisual(Vector3 direction, float speed)
+        {
+            base.RotateVisual(direction, speed * Time.fixedDeltaTime);
+        }
+
         public ISimState GetSimState()
         {
             PlayerSimState simState = new PlayerSimState();
+            simState.visualRotation = visual.transform.eulerAngles;
             simState.netID = netid;
             simState.motorState = cc.Motor.GetState();
             simState.forceMovement = (physicsManager as FighterPhysicsManager3D).forceMovement;
@@ -186,6 +364,10 @@ namespace Mahou.Content.Fighters
             simState.currentJump = currentJump;
             simState.isGrounded = physicsManager.IsGrounded;
             simState.jumpHold = jumpHold;
+
+            simState.lockedOn = LockedOn;
+            simState.lockonForward = LockonForward;
+            simState.lockOnTarget = LockonTarget;
 
             // Combat Manager
             simState.currentChargeLevel = combatManager.CurrentChargeLevel;
@@ -205,6 +387,7 @@ namespace Mahou.Content.Fighters
         public void ApplySimState(ISimState state)
         {
             PlayerSimState pState = (PlayerSimState)state;
+            visual.transform.eulerAngles = pState.visualRotation;
             cc.Motor.ApplyState(pState.motorState);
             physicsManager.SetGrounded(pState.isGrounded);
             currentJump = pState.currentJump;
@@ -213,6 +396,10 @@ namespace Mahou.Content.Fighters
             (physicsManager as FighterPhysicsManager3D).forceMovement = pState.forceMovement;
             (physicsManager as FighterPhysicsManager3D).forceGravity = pState.forceGravity;
             (StateManager as FighterStateManager).ChangeState(pState.mainState, pState.mainStateFrame);
+
+            LockedOn = pState.lockedOn;
+            LockonForward = pState.lockonForward;
+            LockonTarget = pState.lockOnTarget;
 
             // Combat Manager
             combatManager.SetChargeLevel(pState.currentChargeLevel);

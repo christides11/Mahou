@@ -54,6 +54,17 @@ namespace Mahou.Content.Fighters
                 }
             }
 
+            Vector3 movement = FighterManager.GetMovementVector();
+            movement.y = 0;
+            if (FighterManager.LockedOn)
+            {
+                FighterManager.RotateVisual(FighterManager.LockonForward, 10);
+            }
+            else
+            {
+                FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.walkRotationSpeed);
+            }
+
             if (CheckInterrupt() == false)
             {
                 StateManager.IncrementFrame();

@@ -10,6 +10,8 @@ namespace Mahou.Simulation
     {
         public NetworkIdentity netID;
 
+        public Vector3 visualRotation;
+
         public Vector3 forceMovement;
         public Vector3 forceGravity;
         public KinematicCharacterMotorState motorState;
@@ -20,6 +22,10 @@ namespace Mahou.Simulation
 
         public bool isGrounded;
         public bool jumpHold;
+
+        public bool lockedOn;
+        public Vector3 lockonForward;
+        public GameObject lockOnTarget;
 
         // Combat Manager
         public int currentChargeLevel;

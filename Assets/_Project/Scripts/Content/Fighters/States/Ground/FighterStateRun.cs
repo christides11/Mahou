@@ -16,6 +16,10 @@ namespace Mahou.Content.Fighters
             physicsManager.HandleMovement(m.StatsManager.CurrentStats.runBaseAccel, m.StatsManager.CurrentStats.runAcceleration,
                 m.StatsManager.CurrentStats.groundFriction, m.StatsManager.CurrentStats.maxRunSpeed, m.StatsManager.CurrentStats.runAccelFromDot);
 
+            Vector3 movement = FighterManager.GetMovementVector();
+            movement.y = 0;
+            FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.runRotationSpeed);
+
             CheckInterrupt();
         }
 

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 355328904e2f1ef48be147ce3e6109d7, type: 3}
-  m_Name: GMG-Guitar-Ground-AA
+  m_Name: GMG-Guitar-Ground-AAA
   m_EditorClassIdentifier: 
-  attackName: Ground AA
+  attackName: Ground AAA
   description: 
   useState: 0
   stateOverride: 0
@@ -177,9 +177,9 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 4
-        hitstop: 4
-        hitstun: 60
+        attackerHitstop: 8
+        hitstop: 8
+        hitstun: 45
         airOnly: 0
         groundOnly: 0
         causesTumble: 0
@@ -189,7 +189,7 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: 5}
+        opponentForce: {x: 0, y: 0, z: 25}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
@@ -204,7 +204,7 @@ MonoBehaviour:
       data:
         useXZFriction: 1
         useYFriction: 0
-        xzFriction: 12
+        xzFriction: 25
         yFriction: 0
     00000009:
       type: {class: SoftLockOn, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
@@ -215,5 +215,5 @@ MonoBehaviour:
       data:
         addXZForce: 1
         addYForce: 0
-        xzForce: {x: 0, y: 5}
+        xzForce: {x: 0, y: 10}
         yForce: 0

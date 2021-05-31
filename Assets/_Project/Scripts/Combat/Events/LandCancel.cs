@@ -4,7 +4,7 @@ using HnSF.Combat;
 using Mahou;
 using Mahou.Content.Fighters;
 
-namespace TDAction.Combat.Events
+namespace Mahou.Combat.Events
 {
     public class LandCancel : AttackEvent
     {

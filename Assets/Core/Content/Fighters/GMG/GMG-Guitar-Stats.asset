@@ -24,7 +24,7 @@ MonoBehaviour:
     walkAcceleration:
       baseValue: 18
     walkRotationSpeed:
-      baseValue: 5
+      baseValue: 12
     walkAccelFromDot:
       serializedVersion: 2
       m_Curve:
