@@ -23,6 +23,7 @@ namespace Mahou.Content.Fighters
 
         private FighterStatsManager statsManager;
         private FighterHitboxManager hitboxManager;
+        public FighterAnimator fighterAnimator;
         public NetworkIdentity netid;
         public FighterCharacterController cc;
         public IFighterDefinition definition;
@@ -348,6 +349,28 @@ namespace Mahou.Content.Fighters
         public override void RotateVisual(Vector3 direction, float speed)
         {
             base.RotateVisual(direction, speed * Time.fixedDeltaTime);
+        }
+
+        public AnimationClip GetAnimationClip(string animationName, int movesetIdentifier = -1)
+        {
+            if (movesetIdentifier == -1)
+            {
+                return null;
+                //return definition.sharedAnimations.GetAnimation(animationName);
+            }
+            else
+            {
+                if (movesets.Length <= movesetIdentifier)
+                {
+                    return null;
+                }
+                if (movesets[movesetIdentifier].animationCollection.TryGetAnimation(animationName, out AnimationClip movesetClip))
+                {
+                    return movesetClip;
+                }
+                return null;
+                //return entityDefinition.sharedAnimations.GetAnimation(animationName);
+            }
         }
 
         public ISimState GetSimState()

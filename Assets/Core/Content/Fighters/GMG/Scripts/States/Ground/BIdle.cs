@@ -5,6 +5,12 @@ namespace Mahou.Core
 {
     public class BIdle : FighterStateIdle
     {
+        public override void Initialize()
+        {
+            base.Initialize();
+            (Manager as FighterManager).fighterAnimator
+                .PlayAnimation((Manager as FighterManager).GetAnimationClip("idle", Manager.CombatManager.CurrentMovesetIdentifier));
+        }
 
         public override void OnUpdate()
         {
@@ -12,6 +18,8 @@ namespace Mahou.Core
             (FighterManager.HurtboxManager as FighterHurtboxManager).CreateHurtboxes(
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
                 StateManager.CurrentStateFrame);
+            (Manager as FighterManager).fighterAnimator.SetFrame((int)Manager.StateManager.CurrentStateFrame);
+            Manager.StateManager.IncrementFrame();
         }
     }
 }

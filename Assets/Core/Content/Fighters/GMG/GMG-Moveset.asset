@@ -25,6 +25,8 @@ MonoBehaviour:
   airAttackStartNodes: []
   fighterStats: {fileID: 11400000, guid: fb328296379ca5b43a115408b3b67ef1, type: 2}
   hurtboxCollection: {fileID: 11400000, guid: 176c011c7c5079845b8454d5a10e874e, type: 2}
+  animationCollection: {fileID: 11400000, guid: a212e7f0f94f2ca4aa4370562f33f502,
+    type: 2}
 --- !u!114 &3510077099750719752
 MonoBehaviour:
   m_ObjectHideFlags: 0

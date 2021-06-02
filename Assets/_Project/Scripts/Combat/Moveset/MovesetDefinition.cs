@@ -11,5 +11,6 @@ namespace Mahou.Content.Fighters
     {
         public FighterStatsSO fighterStats;
         public HurtboxCollection hurtboxCollection;
+        public AnimationReferenceHolder animationCollection;
     }
 }
