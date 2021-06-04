@@ -24,18 +24,18 @@ namespace Mahou.Content.Fighters
                 }
             }
             hurtboxGroups.Clear();
-            currentHurtboxDefinition = null;
+            hurtboxDefinition = null;
         }
 
-        public virtual void CreateHurtboxes(StateHurtboxDefinition hurtboxDefinition, uint frame)
+        public override void CreateHurtboxes(HnSF.Combat.StateHurtboxDefinition hurtboxDefinition, uint frame)
         {
-            this.currentHurtboxDefinition = hurtboxDefinition;
-            CreateHurtboxes(frame);
+            this.hurtboxDefinition = hurtboxDefinition;
+            base.CreateHurtboxes(hurtboxDefinition, frame);
         }
 
         protected override void SetHurtboxInfo(int groupID, int hurtboxIndex)
         {
-            BoxDefinition bd = (BoxDefinition)currentHurtboxDefinition.hurtboxGroups[groupID].boxes[hurtboxIndex];
+            BoxDefinition bd = (BoxDefinition)hurtboxDefinition.hurtboxGroups[groupID].boxes[hurtboxIndex];
             BoxCollider bc = hurtboxGroups[groupID][hurtboxIndex].GetComponent<BoxCollider>();
             bc.size = bd.size;
             bc.transform.localPosition = bd.offset;
@@ -53,7 +53,6 @@ namespace Mahou.Content.Fighters
             else
             {
                 hurtbox = GameObject.Instantiate(hurtboxPrefab, gameObject.transform, false);
-                hurtbox.Owner = gameObject;
             }
             hurtbox.gameObject.SetActive(false);
             return hurtbox;

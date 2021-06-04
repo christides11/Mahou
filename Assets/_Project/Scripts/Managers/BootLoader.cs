@@ -23,6 +23,7 @@ namespace Mahou
         private void Awake()
         {
             consoleWindow.Init();
+            NetworkFighterSpawnManager.Initialize();
             gameManager.Initialize();
         }
 

@@ -52,7 +52,6 @@ namespace Mahou.Networking
         public override void OnStartServer()
         {
             base.OnStartServer();
-            ModManager.OnFighterRequestMsgResult += OnClientConfirmedLoad;
         }
 
         public override void OnStartAuthority()
@@ -90,8 +89,6 @@ namespace Mahou.Networking
         }
 
         #region Spawn Player
-        ModObjectReference requestFighterRef;
-        List<int> unconfirmedClients = new List<int>();
         [Command]
         public async void CmdFighterSpawnRequest(ModObjectReference fighterReference)
         {
@@ -100,87 +97,25 @@ namespace Mahou.Networking
                 return;
             }
 
-            // In the middle of loading the last request from the client.
-            if (unconfirmedClients.Count > 0)
-            {
-                return;
-            }
-            unconfirmedClients.Clear();
+            bool loadResult = await NetworkFighterSpawnManager.ServerRequestFighterLoad(fighterReference);
 
-            if((await ModManager.instance.LoadContentDefinition(ContentType.Fighter, fighterReference)) == false)
+            if(loadResult == false)
             {
-                Debug.Log($"Failed to load the fighter definition for player {networkIdentity.connectionToClient.connectionId}. {fighterReference}");
-                return;
-            }
-            IFighterDefinition fighter = (IFighterDefinition)ModManager.instance.GetContentDefinition(ContentType.Fighter, fighterReference);
-            if((await fighter.LoadFighter()) == false)
-            {
-                Debug.Log($"Failed to load the fighter for player {networkIdentity.connectionToClient.connectionId}.");
+                Debug.Log($"SERVER: Failed loading {fighterReference} for {networkIdentity.connectionToClient.connectionId}.");
                 return;
             }
 
-            // Tell all clients to try loading the fighter.
-            foreach (var c in NetworkServer.connections)
-            {
-                // Ignore host.
-                if(NetworkServer.localClientActive
-                    && NetworkServer.localConnection.connectionId == c.Value.connectionId)
-                {
-                    continue;
-                }
-                c.Value.Send(new LoadFighterRequestMessage()
-                {
-                    requestID = playerRequestIncrement,
-                    fighterReference = fighterReference,
-                    requestType = LoadFighterRequestMessage.RequestType.INITREQUEST
-                });
-                unconfirmedClients.Add(c.Value.connectionId);
-            }
-            lfrCurrentNumber = playerRequestIncrement;
-            playerRequestIncrement++;
-            requestFighterRef = new ModObjectReference(fighterReference.modIdentifier, fighterReference.objectIdentifier);
-
-            // No other clients connected, just spawn the fighter.
-            if (unconfirmedClients.Count == 0)
-            {
-                SpawnFighter();
-                return;
-            }
-        }
-
-        int lfrCurrentNumber;
-        [Server]
-        private void OnClientConfirmedLoad(NetworkConnection conn, LoadFighterRequestMessage msg)
-        {
-            if(msg.requestID != lfrCurrentNumber)
-            {
-                return;
-            }
-            Debug.Log($"Got confirmation. {conn.connectionId}, {msg.requestType.ToString()}");
-
-            unconfirmedClients.Remove(conn.connectionId);
-
-            // Client could not load the fighter, disconnect them.
-            if (msg.requestType == LoadFighterRequestMessage.RequestType.FAILED)
-            {
-                conn.Disconnect();
-            }
-
-            // All clients have confirmed the load, spawn the fighter.
-            if(unconfirmedClients.Count == 0)
-            {
-                SpawnFighter();
-            }
+            SpawnPlayerFighter(fighterReference);
         }
 
         [Server]
-        private void SpawnFighter()
+        private void SpawnPlayerFighter(ModObjectReference requestFighterRef)
         {
             if(requestFighterRef == null)
             {
                 return;
             }
-            IFighterDefinition fighterDefinition = (IFighterDefinition)ModManager.instance.GetContentDefinition(ContentType.Fighter, requestFighterRef);
+            IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, requestFighterRef);
             if (fighterDefinition == null)
             {
                 return;
@@ -305,19 +240,18 @@ namespace Mahou.Networking
         [Header("Error Checking")]
         public bool showPositions = false;
         public float positionDivergence = 0.001f;
-        public bool SimComparePositions(ClientSimState serverSimState, ClientSimState localSimState, out Vector3 err)
+        public float rotationDivergence = 0.001f;
+        public bool CompareSimulationStates(ClientSimState serverSimState, ClientSimState localSimState)
         {
-            err = Vector3.zero;
             if (localSimState.playersStates == null)
             {
-                err = Vector3.zero;
                 return false;
             }
 
             for (int i = 0; i < localSimState.playersStates.Count; i++)
             {
-                Vector3 error = serverSimState.playersStates[i].motorState.Position - localSimState.playersStates[i].motorState.Position;
-                if (error.sqrMagnitude > positionDivergence)
+                Vector3 posError = serverSimState.playersStates[i].motorState.Position - localSimState.playersStates[i].motorState.Position;
+                if (posError.sqrMagnitude > positionDivergence)
                 {
                     if (showPositions)
                     {
@@ -326,7 +260,11 @@ namespace Mahou.Networking
                         ExtDebug.DrawBox(localSimState.playersStates[i].motorState.Position + Vector3.up,
                             new Vector3(0.5f, 1, 0.5f), localSimState.playersStates[i].motorState.Rotation, Color.green, 1.0f);
                     }
-                    err = error;
+                    return true;
+                }
+                float rotError = Vector3.Angle(serverSimState.playersStates[i].visualRotation, localSimState.playersStates[i].visualRotation);
+                if(rotError > rotationDivergence)
+                {
                     return true;
                 }
             }

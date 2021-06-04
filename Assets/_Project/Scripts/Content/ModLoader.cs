@@ -16,8 +16,10 @@ namespace Mahou.Content
     /// currently installed.
     /// </summary>
     [System.Serializable]
-    public class ModLoader
+    public class ModLoader : MonoBehaviour
     {
+        public static ModLoader instance;
+
         public static string modsLoadedFileName = "LoadedMods.json";
         /// <summary>
         /// A list of all mods in the Mods folder.
@@ -34,13 +36,12 @@ namespace Mahou.Content
         private ModDirectory modDirectory = null;
 
         protected bool inited;
-        private GameManager gameManager;
-        private ModManager modManager;
+        [SerializeField] private GameManager gameManager;
+        [SerializeField] private ContentManager modManager;
 
-        public virtual void Init(ModManager modManager, GameManager gameManager)
+        public virtual void Initialize()
         {
-            this.gameManager = gameManager;
-            this.modManager = modManager;
+            instance = this;
             modInstallPath = Path.Combine(Application.persistentDataPath, "Mods");
             Directory.CreateDirectory(modInstallPath);
             modDirectory = new ModDirectory(modInstallPath, true, false);

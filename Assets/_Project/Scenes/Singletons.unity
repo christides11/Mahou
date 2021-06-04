@@ -2516,6 +2516,7 @@ GameObject:
   m_Component:
   - component: {fileID: 863555611}
   - component: {fileID: 863555612}
+  - component: {fileID: 863555613}
   m_Layer: 0
   m_Name: Modding
   m_TagString: Untagged
@@ -2551,8 +2552,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1812465252}
   networkManager: {fileID: 461990868}
-  modLoader:
-    modList: []
+  modLoader: {fileID: 863555613}
+--- !u!114 &863555613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863555610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4563d1e28cae1b4c962f7688e5e9ea7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modList: []
+  gameManager: {fileID: 1812465252}
+  modManager: {fileID: 863555612}
 --- !u!1 &883967523
 GameObject:
   m_ObjectHideFlags: 0
@@ -4270,6 +4285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameSettings: {fileID: 11400000, guid: 2b2b0f5e8ea4c7c49b9d1c22ee382658, type: 2}
   modManager: {fileID: 863555612}
+  modLoader: {fileID: 863555613}
   networkManager: {fileID: 461990868}
   lobbyManager: {fileID: 1696627695}
   coreMod: {fileID: 11400000, guid: b885a7ff933960a4f861a70655b74d39, type: 2}
@@ -4321,9 +4337,9 @@ MonoBehaviour:
   gameManager: {fileID: 1812465252}
   consoleReader: {fileID: 1471945004}
   consoleWindow: {fileID: 1471945002}
-  useArgs: 1
+  useArgs: 0
   args:
-  - host core/bandbattle core/debugroom core/versusr
+  - host core/training core/debugroom core/versusr
 --- !u!1 &1847963925
 GameObject:
   m_ObjectHideFlags: 0

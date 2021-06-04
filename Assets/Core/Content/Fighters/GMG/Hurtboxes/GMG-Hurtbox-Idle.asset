@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2d6707a247737643a7bd6e502f646ef, type: 3}
+  m_Script: {fileID: 11500000, guid: f1bce94995de11342802ce5258863c88, type: 3}
   m_Name: GMG-Hurtbox-Idle
   m_EditorClassIdentifier: 
   hurtboxGroups:
@@ -17,17 +17,19 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: HurtboxGroup, ns: HnSF.Combat, asm: HnSF}
+      type: {class: HurtboxGroup, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         ID: 0
         activeFramesStart: -1
-        activeFramesEnd: 60
+        activeFramesEnd: -1
         boxes:
         - id: 1
         attachToEntity: 1
         attachTo: 
+        invincibility: 0
+        armor: 0
     00000001:
-      type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
+      type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         shape: 0
         offset: {x: 0, y: 1, z: 0}

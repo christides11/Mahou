@@ -87,7 +87,7 @@ namespace Mahou.Content
         #region Content
         public async UniTask<bool> LoadContentDefinition(ContentType contentType, string contentIdentifier)
         {
-            ModHost modHost = ModManager.instance.ModLoader.loadedMods[modNamespace.reference.modIdentifier].host;
+            ModHost modHost = ModLoader.instance.loadedMods[modNamespace.reference.modIdentifier].host;
             switch (contentType)
             {
                 case ContentType.Fighter:
@@ -109,7 +109,7 @@ namespace Mahou.Content
 
         public async UniTask<bool> LoadContentDefinitions(ContentType contentType)
         {
-            ModHost modHost = ModManager.instance.ModLoader.loadedMods[modNamespace.reference.modIdentifier].host;
+            ModHost modHost = ModLoader.instance.loadedMods[modNamespace.reference.modIdentifier].host;
             switch (contentType)
             {
                 case ContentType.Fighter:

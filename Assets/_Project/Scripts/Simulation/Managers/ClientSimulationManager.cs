@@ -290,9 +290,8 @@ namespace Mahou.Simulation
                     ClientSimState c = worldState.worldSnapshot.clientStates[i];
                     ClientManager cm = c.networkIdentity.GetComponent<ClientManager>();
                     // CHECK FOR ERROR //
-                    bool correctPositions = cm.SimComparePositions(c, clientStateSnapshots[cm.clientID][bufidx],
-                                out Vector3 err);
-                    if (correctPositions)
+                    bool simulationDiverged = cm.CompareSimulationStates(c, clientStateSnapshots[cm.clientID][bufidx]);
+                    if (simulationDiverged)
                     {
                         correctSimulation = true;
                         break;
@@ -338,8 +337,9 @@ namespace Mahou.Simulation
 
         private void Rollback(int startFrame)
         {
+            currentRollbackTick = startFrame;
             IsRollbackFrame = true;
-            int bufidx = startFrame % circularBufferSize;
+            int bufidx = currentRollbackTick % circularBufferSize;
 
             // APPLY HISTORICAL STATE //
             gameManager.GameMode.ApplySimState(gameModeSimStateSnapshots[bufidx]);
@@ -349,16 +349,16 @@ namespace Mahou.Simulation
             }
 
             // ADVANCE FORWARD //
-            while (startFrame < currentTick)
+            while (currentRollbackTick < currentTick)
             {
-                bufidx = startFrame % circularBufferSize;
+                bufidx = currentRollbackTick % circularBufferSize;
 
                 // APPLY STATE & INPUT //
                 gameManager.GameMode.ApplySimState(gameModeSimStateSnapshots[bufidx]);
                 foreach (var cm in ClientManager.clientManagers)
                 {
                     // Apply inputs to the client.
-                    cm.Value.SetInputFrame(currentTick - startFrame);
+                    cm.Value.SetInputFrame(currentTick - currentRollbackTick);
 
                     // Rewrite the historical state snapshot.
                     clientStateSnapshots[cm.Key][bufidx] = cm.Value.GetClientSimState();
@@ -366,7 +366,7 @@ namespace Mahou.Simulation
 
                 // SIMULATE //
                 SimulateWorld(simulationTickInterval);
-                startFrame++;
+                currentRollbackTick++;
             }
 
             foreach (var cm in ClientManager.clientManagers)

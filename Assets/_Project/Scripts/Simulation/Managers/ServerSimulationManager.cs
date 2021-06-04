@@ -15,14 +15,15 @@ namespace Mahou.Simulation
         // Handles storing inputs received by clients.
         private ClientInputProcessor clientInputProcessor;
 
-        // Reusable hash set for players whose input we've checked each frame.
-        private HashSet<int> unprocessedPlayerIds = new HashSet<int>();
-
         /// <summary>
         /// This timer handles when the server should send the world state to the clients.
         /// This is independent of the simulation rate, so it needs it's own timer.
         /// </summary>
         [SerializeField] private FixedTimer worldStateBroadcastTimer;
+
+        // CLIENTS //
+        // Reusable hash set for players whose input we've checked each frame.
+        private HashSet<int> unprocessedPlayerIds = new HashSet<int>();
 
         /// <summary>
         /// Snapshots of player states. Index is each player's connection ID.
@@ -148,6 +149,25 @@ namespace Mahou.Simulation
             // BROADCAST WORLD STATE //
             worldStateBroadcastTimer.Update(dt);
         }
+
+        #region Simulation Objects
+        public override bool RegisterSimulationObject(NetworkIdentity networkIdentity)
+        {
+            if(networkIdentity.TryGetComponent(out ISimObject so))
+            {
+                simulationObjectReferences.Add(networkIdentity, so);
+                simulationObjectSnapshots.Add(networkIdentity, new ISimState[circularBufferSize]);
+                return true;
+            }
+            return false;
+        }
+
+        public override void UnregisterSimulationObject(NetworkIdentity networkIdentity)
+        {
+            simulationObjectReferences.Remove(networkIdentity);
+            simulationObjectSnapshots.Remove(networkIdentity);
+        }
+        #endregion
 
         #region Input
         private void HandleHostInput()

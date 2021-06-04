@@ -45,7 +45,7 @@ namespace Mahou.Content.Fighters
         }
 
         Collider[] raycastHitList = new Collider[3];
-        protected override HnSF.Combat.Hurtbox[] CheckBoxCollision(HitboxGroup hitboxGroup, int boxIndex)
+        protected override void CheckBoxCollision(HitboxGroup hitboxGroup, int boxIndex)
         {
             FighterManager fm = manager as FighterManager;
             
@@ -68,7 +68,10 @@ namespace Mahou.Content.Fighters
                     break;
             }
 
-            Hurtbox[] hurtboxes = new Hurtbox[cldAmt];
+            if (hurtboxes.Count < raycastHitList.Length)
+            {
+                hurtboxes.AddRange(new Hurtbox[raycastHitList.Length - hurtboxes.Count]);
+            }
             for (int i = 0; i < cldAmt; i++)
             {
                 Hurtbox h = raycastHitList[i].GetComponent<Hurtbox>();
@@ -77,32 +80,37 @@ namespace Mahou.Content.Fighters
                     hurtboxes[i] = h;
                 }
             }
-            return hurtboxes;
         }
 
         protected override HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, HnSF.Combat.Hurtbox hurtbox)
         {
             HurtInfo hurtInfo;
-            //FighterManager fm = manager as FighterManager;
+            Hurtbox realHurtbox = hurtbox as Hurtbox;
+            switch (((Mahou.Combat.HurtboxGroup)hurtbox.HurtboxGroup).armor)
+            {
+                case ArmorType.GUARD_POINT:
+                    combatManager.AddHitStop(10);
+                    break;
+            }
             switch (hitboxGroup.hitboxHitInfo.forceRelation)
             {
                 case HitboxForceRelation.ATTACKER:
-                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, transform.position, manager.visual.transform.forward,
-                        manager.visual.transform.right);
+                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup, 
+                        transform.position, manager.visual.transform.forward, manager.visual.transform.right);
                     break;
                 case HitboxForceRelation.HITBOX:
                     Vector3 position = hitboxGroup.attachToEntity ? manager.transform.position + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset
                 : referencePosition + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset;
-                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, position, manager.visual.transform.forward,
-                        manager.visual.transform.right);
+                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
+                        position,  manager.visual.transform.forward, manager.visual.transform.right);
                     break;
                 case HitboxForceRelation.WORLD:
-                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, transform.position, Vector3.forward,
-                        Vector3.right);
+                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
+                        transform.position, Vector3.forward, Vector3.right);
                     break;
                 default:
-                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, transform.position, manager.visual.transform.forward,
-                        manager.visual.transform.right);
+                    hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
+                        transform.position, manager.visual.transform.forward, manager.visual.transform.right);
                     break;
             }
             return hurtInfo;

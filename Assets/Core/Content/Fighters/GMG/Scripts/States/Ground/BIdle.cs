@@ -18,7 +18,11 @@ namespace Mahou.Core
             (FighterManager.HurtboxManager as FighterHurtboxManager).CreateHurtboxes(
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
                 StateManager.CurrentStateFrame);
-            (Manager as FighterManager).fighterAnimator.SetFrame((int)Manager.StateManager.CurrentStateFrame);
+            if (Simulation.SimulationManagerBase.IsRollbackFrame == false
+                || Simulation.SimulationManagerBase.instance.CurrentRollbackTick == Simulation.SimulationManagerBase.instance.CurrentTick-1)
+            {
+                (Manager as FighterManager).fighterAnimator.SetFrame((int)Manager.StateManager.CurrentStateFrame);
+            }
             Manager.StateManager.IncrementFrame();
         }
     }

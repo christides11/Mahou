@@ -39,17 +39,16 @@ namespace Mahou.Content.Fighters
 
         public override HitReaction Hurt(HurtInfoBase hurtInfoBase)
         {
-            if (SimulationManagerBase.IsRollbackFrame == false)
-            {
-                Debug.Log($"Was hit.");
-            }
-
             FighterPhysicsManager physicsManager = (FighterPhysicsManager)manager.PhysicsManager;
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
             HitInfo hitInfo = hurtInfo.hitInfo as HitInfo;
-
             HitReaction hitReaction = new HitReaction();
             hitReaction.reactionType = HitReactionType.Hit;
+            if(hurtInfo.hurtboxGroupHit.armor == ArmorType.PARRY)
+            {
+                hitReaction.reactionType = HitReactionType.Blocked;
+                return hitReaction;
+            }
             // Check if the box can hit this entity.
             if (hitInfo.groundOnly && !physicsManager.IsGrounded
                 || hitInfo.airOnly && physicsManager.IsGrounded)

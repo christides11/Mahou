@@ -11,14 +11,9 @@ using NetworkManager = Mahou.Networking.NetworkManager;
 
 namespace Mahou.Managers
 {
-    public class ModManager : MonoBehaviour
+    public class ContentManager : MonoBehaviour
     {
-        public delegate void FighterRequestMsgAction(NetworkConnection c, LoadFighterRequestMessage msg);
-        public static event FighterRequestMsgAction OnFighterRequestMsgResult;
-
-        public static ModManager instance;
-
-        public ModLoader ModLoader { get { return modLoader; } }
+        public static ContentManager instance;
 
         [SerializeField] private GameManager gameManager;
         [SerializeField] private NetworkManager networkManager;
@@ -27,82 +22,9 @@ namespace Mahou.Managers
         public void Initialize()
         {
             instance = this;
-            modLoader.Init(this, gameManager);
-            NetworkServer.RegisterHandler<LoadFighterRequestMessage>(ServerLoadFighterRequestHandler);
-            NetworkClient.RegisterHandler<LoadFighterRequestMessage>(ClientLoadFighterRequestHandler);
         }
 
-        private void ServerLoadFighterRequestHandler(NetworkConnection arg1, LoadFighterRequestMessage arg2)
-        {
-            OnFighterRequestMsgResult?.Invoke(arg1, arg2);
-        }
-
-        private async void ClientLoadFighterRequestHandler(LoadFighterRequestMessage arg2)
-        {
-            OnFighterRequestMsgResult?.Invoke(NetworkClient.connection, arg2);
-
-            await LoadContentDefinition(ContentType.Fighter, arg2.fighterReference);
-            IFighterDefinition fighterDefinition = (IFighterDefinition)GetContentDefinition(ContentType.Fighter, arg2.fighterReference);
-            if(fighterDefinition == null)
-            {
-                NetworkClient.Send(new LoadFighterRequestMessage()
-                {
-                    requestID = arg2.requestID,
-                    fighterReference = arg2.fighterReference,
-                    requestType = LoadFighterRequestMessage.RequestType.FAILED
-                });
-                return;
-            }
-            if((await fighterDefinition.LoadFighter()) == false)
-            {
-                Debug.Log($"Failed loading fighter. {arg2.fighterReference}");
-                NetworkClient.Send(new LoadFighterRequestMessage()
-                {
-                    requestID = arg2.requestID,
-                    fighterReference = arg2.fighterReference,
-                    requestType = LoadFighterRequestMessage.RequestType.FAILED
-                });
-                return;
-            }
-            GameObject fighterGameobject = fighterDefinition.GetFighter();
-            if(fighterGameobject == null)
-            {
-                Debug.Log($"Failed getting fighter object. {arg2.fighterReference}");
-                NetworkClient.Send(new LoadFighterRequestMessage()
-                {
-                    requestID = arg2.requestID,
-                    fighterReference = arg2.fighterReference,
-                    requestType = LoadFighterRequestMessage.RequestType.FAILED
-                });
-                return;
-            }
-            NetworkClient.RegisterPrefab(fighterGameobject, new System.Guid(fighterDefinition.GetFighterGUID()));
-            NetworkClient.Send(new LoadFighterRequestMessage()
-            {
-                requestID = arg2.requestID,
-                fighterReference = arg2.fighterReference,
-                requestType = LoadFighterRequestMessage.RequestType.SUCCESS
-            });
-        }
-
-        public async UniTask<bool> LoadMap(ModObjectReference map)
-        {
-            if (!modLoader.loadedMods.TryGetValue(map.modIdentifier, out LoadedModDefinition mod))
-            {
-                return false;
-            }
-
-            IMapDefinition sd = (IMapDefinition)mod.definition.GetContentDefinition(ContentType.Map, map.objectIdentifier);
-            if (sd == null)
-            {
-                return false;
-            }
-
-            await sd.LoadMap();
-            return true;
-        }
-
-        #region Content
+        #region General
         public async UniTask<bool> LoadContentDefinitions(ContentType contentType)
         {
             foreach(string m in modLoader.loadedMods.Keys)
@@ -190,6 +112,25 @@ namespace Mahou.Managers
                 return;
             }
             modLoader.loadedMods[modIdentifier].definition.UnloadContentDefinitions(contentType);
+        }
+        #endregion
+
+        #region Stages
+        public async UniTask<bool> LoadMap(ModObjectReference map)
+        {
+            if (!modLoader.loadedMods.TryGetValue(map.modIdentifier, out LoadedModDefinition mod))
+            {
+                return false;
+            }
+
+            IMapDefinition sd = (IMapDefinition)mod.definition.GetContentDefinition(ContentType.Map, map.objectIdentifier);
+            if (sd == null)
+            {
+                return false;
+            }
+
+            await sd.LoadMap();
+            return true;
         }
         #endregion
     }

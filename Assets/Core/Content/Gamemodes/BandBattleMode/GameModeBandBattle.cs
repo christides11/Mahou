@@ -25,7 +25,7 @@ namespace Mahou.Core
         {
             base.Initialize(battleDefinition);
 
-            GameObject gmGameObjectPrefab = ((IGameModeComponentDefinition)ModManager.instance
+            GameObject gmGameObjectPrefab = ((IGameModeComponentDefinition)ContentManager.instance
                 .GetContentDefinition(ContentType.GamemodeComponent, new ModObjectReference("core", "musicmeter")))
                 .GetGamemodeComponent();
 

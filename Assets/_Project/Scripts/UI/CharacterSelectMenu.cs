@@ -45,9 +45,9 @@ namespace Mahou.Menus
                 GameObject.Destroy(child.gameObject);
             }
 
-            ModManager modManager = ModManager.instance;
+            ContentManager modManager = ContentManager.instance;
 
-            foreach(var mod in modManager.ModLoader.loadedMods)
+            foreach(var mod in ModLoader.instance.loadedMods)
             {
                 GameObject go = GameObject.Instantiate(textContentItem, modContentHolder, false);
                 go.GetComponent<TextMeshProUGUI>().text = mod.Key;
@@ -63,7 +63,7 @@ namespace Mahou.Menus
                 GameObject.Destroy(child.gameObject);
             }
 
-            ModManager modManager = ModManager.instance;
+            ContentManager modManager = ContentManager.instance;
             await modManager.LoadContentDefinitions(ContentType.Fighter, modIdentifier);
             List<ModObjectReference> fighters = modManager.GetContentDefinitionReferences(ContentType.Fighter, modIdentifier);
 

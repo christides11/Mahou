@@ -21,10 +21,9 @@ namespace Mahou.Content.Fighters
         {
             FighterManager e = FighterManager;
             (FighterManager.HurtboxManager as FighterHurtboxManager).CreateHurtboxes(
-                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
+                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch"),
                 StateManager.CurrentStateFrame);
 
-            //e.PhysicsManager.ApplyMovementFriction(e.statManager.CurrentStats.hitstunFrictionGround.GetCurrentValue());
             PhysicsManager.ApplyMovementFriction(e.StatsManager.CurrentStats.hitstunFrictionXZ.GetCurrentValue());
             e.StateManager.IncrementFrame();
 

@@ -1,6 +1,7 @@
 using KinematicCharacterController;
 using Mahou.Managers;
 using Mahou.Networking;
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +10,13 @@ namespace Mahou.Simulation
 {
     public abstract class SimulationManagerBase
     {
+        public static SimulationManagerBase instance;
+
         /// <summary>
         /// Current tick of the simulation.
         /// </summary>
         public int CurrentTick { get { return currentTick; } }
+        public int CurrentRollbackTick { get { return currentRollbackTick; } }
 
         public float AdjustedInterval { get { return simulationAdjuster.AdjustedInterval; } }
 
@@ -21,17 +25,15 @@ namespace Mahou.Simulation
         protected ISimulationAdjuster simulationAdjuster = new NoopAdjuster();
 
         [SerializeField] protected int currentTick = 0;
+        [SerializeField] protected int currentRollbackTick = 0;
 
         protected float maximumAllowedTimestep = 0.25f;
         protected float simulationTickInterval = 1.0f / 60.0f;
         protected int circularBufferSize = 1024;
 
-        /// <summary>
-        /// A list of all objects in the simulation.
-        /// </summary>
-        protected List<ISimObject> simObjects = new List<ISimObject>();
         protected float accumulator;
         protected LobbyManager lobbyManager;
+        protected GameManager gameManager;
 
         public delegate void PostUpdateAction();
         public static event PostUpdateAction OnPostUpdate;
@@ -39,9 +41,15 @@ namespace Mahou.Simulation
 
         public bool interpolate = true;
 
+        // SIMULATION OBJECTS //
+        protected Dictionary<NetworkIdentity, ISimObject> simulationObjectReferences = new Dictionary<NetworkIdentity, ISimObject>();
+        protected Dictionary<NetworkIdentity, ISimState[]> simulationObjectSnapshots = new Dictionary<NetworkIdentity, ISimState[]>();
+
         protected SimulationManagerBase(LobbyManager lobbyManager)
         {
+            instance = this;
             this.lobbyManager = lobbyManager;
+            this.gameManager = GameManager.current;
             this.simulationTickInterval = 1.0f / (float)GameManager.current.GameSettings.simulationRate;
             this.circularBufferSize = 1024;
         }
@@ -55,6 +63,7 @@ namespace Mahou.Simulation
 
             accumulator += deltaTime;
             var adjustedTickInterval = simulationTickInterval * simulationAdjuster.AdjustedInterval;
+            gameManager.GameMode.Update();
             while (accumulator >= adjustedTickInterval)
             {
                 // Although we can run the simulation at different speeds, the actual tick processing is
@@ -87,9 +96,12 @@ namespace Mahou.Simulation
 
         protected virtual void SimulateWorld(float dt)
         {
+            gameManager.GameMode.Tick();
             SimulatePlayersUpdate(dt);
+            SimulateObjectsUpdate(dt);
             SimulatePhysics(dt);
             SimulatePlayersLateUpdate(dt);
+            SimulateObjectsLateUpdate(dt);
         }
 
         /// <summary>
@@ -108,30 +120,46 @@ namespace Mahou.Simulation
             ClientManager.GetClients().ForEach(c => c.SimulatePlayersUpdate(dt));
         }
 
+        protected virtual void SimulateObjectsUpdate(float dt)
+        {
+            foreach(var v in simulationObjectReferences)
+            {
+                v.Value.SimUpdate();
+            }
+        }
+
         protected virtual void SimulatePlayersLateUpdate(float dt)
         {
             ClientManager.GetClients().ForEach(c => c.SimulatePlayersLateUpdate(dt));
+        }
+
+        protected virtual void SimulateObjectsLateUpdate(float dt)
+        {
+            foreach (var v in simulationObjectReferences)
+            {
+                v.Value.SimLateUpdate();
+            }
         }
 
         /// <summary>
         /// Registers an object to the simulation.
         /// </summary>
         /// <param name="simObject">The object to register to the simulation.</param>
-        public virtual void RegisterObject(ISimObject simObject)
+        public virtual bool RegisterSimulationObject(NetworkIdentity networkIdentity)
         {
-            if (simObjects.Contains(simObject))
+            if (networkIdentity.TryGetComponent(out ISimObject so))
             {
-                return;
+                simulationObjectReferences.Add(networkIdentity, so);
+                simulationObjectSnapshots.Add(networkIdentity, new ISimState[circularBufferSize]);
+                return true;
             }
-            simObjects.Add(simObject);
+            return false;
         }
 
-        public void RemoveObjectFromSimulation(ISimObject simObject)
+        public virtual void UnregisterSimulationObject(NetworkIdentity networkIdentity)
         {
-            if (simObjects.Contains(simObject))
-            {
-                simObjects.Remove(simObject);
-            }
+            simulationObjectReferences.Remove(networkIdentity);
+            simulationObjectSnapshots.Remove(networkIdentity);
         }
     }
 }

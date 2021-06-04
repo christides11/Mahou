@@ -85,7 +85,22 @@ namespace Mahou.Content.Fighters
 
         public virtual void SetupStates()
         {
+            stateManager.AddState(new FighterStateIdle(), (ushort)FighterStates.IDLE);
+            stateManager.AddState(new FighterStateWalk(), (ushort)FighterStates.WALK);
+            stateManager.AddState(new FighterStateDash(), (ushort)FighterStates.DASH);
+            stateManager.AddState(new FighterStateRun(), (ushort)FighterStates.RUN);
+            stateManager.AddState(new FighterStateFall(), (ushort)FighterStates.FALL);
+            stateManager.AddState(new FighterStateJumpSquat(), (ushort)FighterStates.JUMP_SQUAT);
+            stateManager.AddState(new FighterStateJump(), (ushort)FighterStates.JUMP);
+            stateManager.AddState(new FighterStateAirDash(), (ushort)FighterStates.AIR_DASH);
+            stateManager.AddState(new FighterStateAirJump(), (ushort)FighterStates.AIR_JUMP);
+            stateManager.AddState(new FighterStateAttack(), (ushort)FighterStates.ATTACK);
 
+            stateManager.AddState(new FighterStateFlinchGround(), (ushort)FighterStates.FLINCH_GROUND);
+            stateManager.AddState(new FighterStateFlinchAir(), (ushort)FighterStates.FLINCH_AIR);
+            stateManager.AddState(new FighterStateTumble(), (ushort)FighterStates.TUMBLE);
+
+            stateManager.ChangeState((ushort)FighterStates.FALL);
         }
 
         public void SimUpdate()

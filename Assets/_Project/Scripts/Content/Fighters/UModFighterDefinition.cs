@@ -34,7 +34,7 @@ namespace Mahou.Content.Fighters
 
         public override async UniTask<bool> LoadFighter()
         {
-            ModHost modHost = ModManager.instance.ModLoader.loadedMods[modNamespace.reference.modIdentifier].host;
+            ModHost modHost = ModLoader.instance.loadedMods[modNamespace.reference.modIdentifier].host;
             
             // Load fighter.
             if (modHost.Assets.Exists(fighterPath) == false)

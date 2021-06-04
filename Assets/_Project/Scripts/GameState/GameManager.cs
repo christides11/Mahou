@@ -16,13 +16,14 @@ namespace Mahou.Managers
         public LobbyManager LobbyManager { get { return lobbyManager; } }
         public NetworkManager NetworkManager { get { return networkManager; } }
         public GameSettings GameSettings { get { return gameSettings; } }
-        public ModManager ModManager { get { return modManager; } }
+        public ContentManager ModManager { get { return modManager; } }
 
         public IGameModeDefinition CurrentGamemode { get; protected set; } = null;
         public GameModeBase GameMode { get; protected set; } = null;
 
         [SerializeField] private GameSettings gameSettings;
-        [SerializeField] private ModManager modManager;
+        [SerializeField] private ContentManager modManager;
+        [SerializeField] private ModLoader modLoader;
         [SerializeField] private NetworkManager networkManager;
         [SerializeField] private LobbyManager lobbyManager;
 
@@ -33,8 +34,9 @@ namespace Mahou.Managers
             current = this;
             HnSF.Input.GlobalInputManager.instance = new Mahou.Input.GlobalInputManager();
             modManager.Initialize();
-            modManager.ModLoader.loadedMods.Add("core", new LoadedModDefinition(null, coreMod));
+            modLoader.Initialize();
             lobbyManager.Initialize();
+            modLoader.loadedMods.Add("core", new LoadedModDefinition(null, coreMod));
         }
 
         private void Update()
