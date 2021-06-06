@@ -20,7 +20,8 @@ namespace Mahou.Content.Fighters
             }
 
             // Air jump force.
-            PhysicsManager.forceGravity.y = (Manager as FighterManager).StatsManager.CurrentStats.airJumpVelocity[FighterManager.currentJump - 2];
+            Debug.Log((Manager as FighterManager).StatsManager.CurrentStats.airJumpVelocity[FighterManager.currentJump - 2].GetCurrentValue());
+            PhysicsManager.forceGravity.y = (Manager as FighterManager).StatsManager.CurrentStats.airJumpVelocity[FighterManager.currentJump - 2].GetCurrentValue();
         }
 
         public override void OnUpdate()

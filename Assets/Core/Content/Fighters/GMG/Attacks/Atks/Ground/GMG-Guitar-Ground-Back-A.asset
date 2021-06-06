@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 355328904e2f1ef48be147ce3e6109d7, type: 3}
-  m_Name: GMG-Guitar-Ground-A
+  m_Name: GMG-Guitar-Ground-Back-A
   m_EditorClassIdentifier: 
-  attackName: Ground A
+  attackName: Ground Back+A
   description: 
   useState: 0
   stateOverride: 0
@@ -26,16 +26,16 @@ MonoBehaviour:
   - id: 1
   - id: 2
   - id: 3
-  cancels:
   - id: 4
+  cancels: []
   references:
     version: 1
     00000000:
       type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
       data:
         ID: 0
-        activeFramesStart: 6
-        activeFramesEnd: 9
+        activeFramesStart: 7
+        activeFramesEnd: 10
         boxes:
         - id: 5
         attachToEntity: 1
@@ -129,17 +129,39 @@ MonoBehaviour:
         chargeLevelMax: 0
         inputCheckProcessed: 0
     00000004:
-      type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        startFrame: 10
+        nickname: Jump Cancel
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 8
         endFrame: 25
-        cancelListID: 0
+        attackEvent:
+          id: 10
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
     00000005:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 0
-        offset: {x: 0, y: 0.9, z: 0.5}
-        size: {x: 2.25, y: 1.8, z: 2}
+        offset: {x: 0, y: 0.9, z: 0.75}
+        size: {x: 1.4, y: 1.8, z: 2}
         rotation: {x: 0, y: 0, z: 0}
         radius: 0
         height: 0
@@ -167,7 +189,7 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: 5}
+        opponentForce: {x: 0, y: 15, z: 0}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
@@ -188,3 +210,5 @@ MonoBehaviour:
       type: {class: SoftLockOn, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
         rotSpeed: 25
+    0000000A:
+      type: {class: JumpCancel, ns: Mahou.Combat.Events, asm: Mahou_CSharp}

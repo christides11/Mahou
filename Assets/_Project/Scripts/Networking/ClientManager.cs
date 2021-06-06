@@ -22,8 +22,6 @@ namespace Mahou.Networking
 
         public static ClientManager local;
 
-        public int InputDelay { get; protected set; } = 0;
-
         public NetworkIdentity networkIdentity;
 
         public static Dictionary<int, ClientManager> clientManagers = new Dictionary<int, ClientManager>();

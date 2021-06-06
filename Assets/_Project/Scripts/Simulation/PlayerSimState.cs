@@ -40,5 +40,8 @@ namespace Mahou.Simulation
 
         // Hitbox Manager
         public Dictionary<int, IDGroupCollisionInfo> collidedIHurtables;
+
+        // State
+        public PlayerStateSimState stateSimState;
     }
 }

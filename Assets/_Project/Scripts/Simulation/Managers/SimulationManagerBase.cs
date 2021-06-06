@@ -11,21 +11,22 @@ namespace Mahou.Simulation
     public abstract class SimulationManagerBase
     {
         public static SimulationManagerBase instance;
+        public static bool IsRollbackFrame = false;
 
         /// <summary>
         /// Current tick of the simulation.
         /// </summary>
         public int CurrentTick { get { return currentTick; } }
         public int CurrentRollbackTick { get { return currentRollbackTick; } }
-
+        public int LatestConfirmedFrame { get { return latestConfirmedFrame; } }
         public float AdjustedInterval { get { return simulationAdjuster.AdjustedInterval; } }
 
-        public static bool IsRollbackFrame = false;
 
         protected ISimulationAdjuster simulationAdjuster = new NoopAdjuster();
 
         [SerializeField] protected int currentTick = 0;
         [SerializeField] protected int currentRollbackTick = 0;
+        [SerializeField] protected int latestConfirmedFrame = 0;
 
         protected float maximumAllowedTimestep = 0.25f;
         protected float simulationTickInterval = 1.0f / 60.0f;
@@ -52,6 +53,7 @@ namespace Mahou.Simulation
             this.gameManager = GameManager.current;
             this.simulationTickInterval = 1.0f / (float)GameManager.current.GameSettings.simulationRate;
             this.circularBufferSize = 1024;
+            this.latestConfirmedFrame = 0;
         }
 
         public virtual void Update(float deltaTime)
@@ -73,6 +75,7 @@ namespace Mahou.Simulation
                 accumulator -= adjustedTickInterval;
                 OnPostTick?.Invoke();
             }
+            SimulationAudioManager.Cleanup();
 
             if (interpolate)
             {

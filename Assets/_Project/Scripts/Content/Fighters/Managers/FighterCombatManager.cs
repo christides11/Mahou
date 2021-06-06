@@ -66,8 +66,7 @@ namespace Mahou.Content.Fighters
             {
                 case HitboxForceType.SET:
                     Vector3 forces = (hitInfo.opponentForce.x * hurtInfo.right) + (hitInfo.opponentForce.z * hurtInfo.forward);
-                    physicsManager.forceGravity.y = forces.y;
-                    forces.y = 0;
+                    physicsManager.forceGravity.y = hitInfo.opponentForce.y;
                     physicsManager.forceMovement = forces;
                     break;
             }
@@ -95,13 +94,16 @@ namespace Mahou.Content.Fighters
 
         protected override bool CheckStickDirection(InputDefinition sequenceInput, uint framesBack)
         {
-            Vector2 stickDir = manager.InputManager.GetAxis2D(Input.Action.Movement_X, framesBack);
+            Vector2 stickDir = manager.InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT, framesBack);
             if (stickDir.magnitude < InputConstants.movementThreshold)
             {
                 return false;
             }
 
-            if (Vector2.Dot(stickDir, sequenceInput.stickDirection) >= sequenceInput.directionDeviation)
+            Vector3 wantedDir = manager.GetVisualBasedDirection(new Vector3(sequenceInput.stickDirection.x, 0, sequenceInput.stickDirection.y)).normalized;
+            Vector3 currentDirection = manager.GetMovementVector(stickDir.x, stickDir.y).normalized;
+
+            if (Vector3.Dot(wantedDir, currentDirection) >= sequenceInput.directionDeviation)
             {
                 return true;
             }

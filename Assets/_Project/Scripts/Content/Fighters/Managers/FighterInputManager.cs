@@ -134,5 +134,10 @@ namespace Mahou.Content.Fighters
             return false;
             //return base.UsedInBuffer(inputID, tick);
         }
+
+        public override void ClearBuffer(int inputID)
+        {
+            base.ClearBuffer(inputID);
+        }
     }
 }

@@ -1,5 +1,119 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5044094681593864790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
+  m_Name: Ground-Back+A
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -152, y: -600}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: -5044094681593864790}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: -5044094681593864790}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 3
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    - inputType: 1
+      buttonID: 3
+      stickDirection: {x: 0, y: -1}
+      directionDeviation: 0.85
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: 13b157aa3baca2c42b35de2ed580f401, type: 2}
+  nextNode: []
+--- !u!114 &-1183580482968015825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
+  m_Name: Ground-Back,Forward+A
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 120, y: -648}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: -1183580482968015825}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: -1183580482968015825}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 4
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 3
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    - inputType: 1
+      buttonID: 3
+      stickDirection: {x: 0, y: 1}
+      directionDeviation: 0.85
+    sequenceWindow: 8
+    sequenceInputs:
+    - inputType: 1
+      buttonID: 0
+      stickDirection: {x: 0, y: -1}
+      directionDeviation: 0.85
+  attackDefinition: {fileID: 11400000, guid: 51a770d0d86f61d48afd1e8b8c9fba00, type: 2}
+  nextNode: []
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16,9 +130,14 @@ MonoBehaviour:
   - {fileID: 3625158533729177270}
   - {fileID: 5432671773901837520}
   - {fileID: 3510077099750719752}
-  nodeIDCounter: 3
-  cancelLists: []
-  groundIdleCancelListID: -1
+  - {fileID: -5044094681593864790}
+  - {fileID: -1183580482968015825}
+  - {fileID: 5322195893892021952}
+  nodeIDCounter: 6
+  cancelLists:
+  - ID: 0
+    list: {fileID: 11400000, guid: 8005483bb6855244686a435ec57e6c12, type: 2}
+  groundIdleCancelListID: 0
   groundAttackStartNodes:
   - {fileID: 3625158533729177270}
   airIdleCancelListID: -1
@@ -37,7 +156,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
-  m_Name: Moveset Attack
+  m_Name: Ground AAA
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
   position: {x: 376, y: -136}
@@ -147,6 +266,53 @@ MonoBehaviour:
   nextNode:
   - cancelWindow: {x: 10, y: 100}
     nodeIdentifier: 1
+--- !u!114 &5322195893892021952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
+  m_Name: Ground-BF+A-Strong
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 392, y: -600}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: 5322195893892021952}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: 5322195893892021952}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 5
+  lastNode: {fileID: 0}
+  inputSequence:
+    executeWindow: 3
+    executeInputs: []
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: a1152919346f98b41b65316d4e534ca2, type: 2}
+  nextNode: []
 --- !u!114 &5432671773901837520
 MonoBehaviour:
   m_ObjectHideFlags: 0

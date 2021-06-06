@@ -15,6 +15,7 @@ namespace Mahou.Content.Fighters
         public virtual void Initialize()
         {
             fighterManager = GetComponent<FighterManager>();
+            FighterStat<float>.debugMode = false;
         }
 
         public void SetStats(FighterStatsSO statsHolder)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Mahou.Content.Fighters
 {
@@ -11,16 +12,19 @@ namespace Mahou.Content.Fighters
 
         [SerializeField] public T baseValue;
         protected T calculatedValue;
-        [System.NonSerialized] protected bool isDirty = true;
+        [NonSerialized] protected bool isDirty = true;
 
         public FighterStat(T baseValue)
         {
             this.baseValue = baseValue;
+            this.calculatedValue = baseValue;
+            isDirty = true;
         }
 
         public void UpdateBaseValue(T value)
         {
             baseValue = value;
+            calculatedValue = baseValue;
             isDirty = true;
         }
 

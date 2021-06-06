@@ -24,7 +24,7 @@ namespace Mahou.Content.Fighters
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch-air"),
                 StateManager.CurrentStateFrame);
 
-            PhysicsManager.ApplyMovementFriction(e.StatsManager.CurrentStats.hitstunFrictionXZ.GetCurrentValue());
+            PhysicsManager.ApplyMovementFriction(e.StatsManager.CurrentStats.hitstunGroundFriction.GetCurrentValue());
             PhysicsManager.HandleGravity(
                 e.StatsManager.CurrentStats.hitstunMaxFallSpeed, 
                 e.StatsManager.CurrentStats.hitstunGravity.GetCurrentValue(),

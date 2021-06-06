@@ -1,4 +1,5 @@
 using Mahou.Combat;
+using Mahou.Simulation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,9 +9,29 @@ namespace Mahou.Content.Fighters
 {
     public class FighterStateAttack : FighterState
     {
+        public class AttackSimStateVars : PlayerStateSimState
+        {
+            public Dictionary<int, bool> eventInputThing = new Dictionary<int, bool>();
+        }
+
         public override string GetName()
         {
             return "Attack";
+        }
+
+        public override PlayerStateSimState GetSimState()
+        {
+            return new AttackSimStateVars()
+            {
+                eventInputThing = new Dictionary<int, bool>(eventInputThing)
+            };
+        }
+
+        public override void ApplySimState(PlayerStateSimState simState)
+        {
+            AttackSimStateVars assv = simState as AttackSimStateVars;
+            eventInputThing = new Dictionary<int, bool>(assv.eventInputThing);
+
         }
 
         public override void Initialize()
@@ -38,7 +59,7 @@ namespace Mahou.Content.Fighters
             bool cleanup = false;
             for (int i = 0; i < currentAttack.events.Count; i++)
             {
-                switch (HandleEvents(currentAttack, currentAttack.events[i]))
+                switch (HandleEvents(i, currentAttack, currentAttack.events[i]))
                 {
                     case HnSF.Combat.AttackEventReturnType.STALL:
                         // Event wants us to stall on the current frame.
@@ -51,6 +72,10 @@ namespace Mahou.Content.Fighters
                     case HnSF.Combat.AttackEventReturnType.INTERRUPT_NO_CLEANUP:
                         interrupted = true;
                         break;
+                }
+                if(interrupted == true)
+                {
+                    break;
                 }
             }
 
@@ -106,18 +131,25 @@ namespace Mahou.Content.Fighters
             return false;
         }
 
+        public Dictionary<int, bool> eventInputThing = new Dictionary<int, bool>();
         /// <summary>
         /// Handles the lifetime of events.
         /// </summary>
         /// <param name="currentEvent">The event being processed.</param>
         /// <returns>True if the current attack state was canceled by the event.</returns>
-        protected virtual HnSF.Combat.AttackEventReturnType HandleEvents(AttackDefinition currentAttack, HnSF.Combat.AttackEventDefinition currentEvent)
+        protected virtual HnSF.Combat.AttackEventReturnType HandleEvents(int eventIndex, AttackDefinition currentAttack, HnSF.Combat.AttackEventDefinition currentEvent)
         {
             if (!currentEvent.active)
             {
                 return HnSF.Combat.AttackEventReturnType.NONE;
             }
             FighterManager e = FighterManager;
+
+            if (currentEvent.inputCheckTiming != HnSF.Combat.AttackEventInputCheckTiming.NONE
+                && eventInputThing.ContainsKey(eventIndex) == false)
+            {
+                eventInputThing.Add(eventIndex, false);
+            }
 
             // Input Checking.
             if (e.StateManager.CurrentStateFrame >= currentEvent.inputCheckStartFrame
@@ -130,17 +162,16 @@ namespace Mahou.Content.Fighters
                         {
                             break;
                         }
-                        currentEvent.inputCheckProcessed = e.CombatManager.CheckForInputSequence(currentEvent.input);
-                        Debug.Log($"?{currentEvent.inputCheckProcessed}, ({currentEvent.input.executeInputs.Count})");
+                        eventInputThing[eventIndex] = e.CombatManager.CheckForInputSequence(currentEvent.input);
                         break;
                     case HnSF.Combat.AttackEventInputCheckTiming.CONTINUOUS:
-                        currentEvent.inputCheckProcessed = e.CombatManager.CheckForInputSequence(currentEvent.input, 0, true, true);
+                        eventInputThing[eventIndex] = e.CombatManager.CheckForInputSequence(currentEvent.input, 0, true, true);
                         break;
                 }
             }
 
             if (currentEvent.inputCheckTiming != HnSF.Combat.AttackEventInputCheckTiming.NONE
-                && !currentEvent.inputCheckProcessed)
+                && eventInputThing[eventIndex] == false)
             {
                 return HnSF.Combat.AttackEventReturnType.NONE;
             }

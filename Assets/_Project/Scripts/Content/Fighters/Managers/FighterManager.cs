@@ -419,6 +419,9 @@ namespace Mahou.Content.Fighters
             // Hitbox Manager
             simState.collidedIHurtables = hitboxManager.collidedIHurtables;
 
+            // State
+            simState.stateSimState = (StateManager.GetState(StateManager.CurrentState) as FighterState).GetSimState();
+
             return simState;
         }
 
@@ -448,6 +451,9 @@ namespace Mahou.Content.Fighters
 
             // Hitbox Manager
             hitboxManager.collidedIHurtables = pState.collidedIHurtables;
+
+            // State
+            (StateManager.GetState(StateManager.CurrentState) as FighterState).ApplySimState(pState.stateSimState);
         }
     }
 }

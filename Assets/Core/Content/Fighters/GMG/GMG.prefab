@@ -161,6 +161,7 @@ MonoBehaviour:
     m_Bits: 64
   visualOffset: {x: 0, y: 0, z: 0}
   statManager: {fileID: 9161192216790614098}
+  testAudioClip: {fileID: 8300000, guid: 1657e13ce23651842a99257f388bd5f7, type: 3}
 --- !u!114 &4195765052651656638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +355,7 @@ MonoBehaviour:
       baseValue: 0
     hitstunMaxFallSpeed:
       baseValue: 0
-    hitstunFrictionXZ:
+    hitstunGroundFriction:
       baseValue: 0
     inertiaFriction:
       baseValue: 0

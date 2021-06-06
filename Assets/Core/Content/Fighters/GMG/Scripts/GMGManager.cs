@@ -11,6 +11,8 @@ namespace Mahou.Core
 
         public GMGStatsManager statManager;
 
+        public AudioClip testAudioClip;
+
         public override void SetupStates()
         {
             stateManager.AddState(new BIdle(), (ushort)FighterStates.IDLE);

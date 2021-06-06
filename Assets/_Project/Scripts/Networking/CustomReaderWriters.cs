@@ -18,7 +18,7 @@ namespace Mahou
             }
         }
 
-        public static Dictionary<int, IDGroupCollisionInfo> ReadMyType(this NetworkReader reader)
+        public static Dictionary<int, IDGroupCollisionInfo> ReadHitboxDictionaryType(this NetworkReader reader)
         {
             Dictionary<int, IDGroupCollisionInfo> d = new Dictionary<int, IDGroupCollisionInfo>();
             int valueCount = reader.ReadInt32();
@@ -27,6 +27,27 @@ namespace Mahou
                 int key = reader.ReadInt32();
                 IDGroupCollisionInfo value = reader.Read<IDGroupCollisionInfo>();
                 d.Add(key, value);
+            }
+            return d;
+        }
+
+        public static void WriteIntBoolDictionaryType(this NetworkWriter writer, Dictionary<int, bool> value)
+        {
+            writer.WriteInt32(value.Count);
+            foreach(var v in value)
+            {
+                writer.WriteInt32(v.Key);
+                writer.WriteBoolean(v.Value);
+            }
+        }
+
+        public static Dictionary<int, bool> ReadIntBoolDictionary(this NetworkReader reader)
+        {
+            Dictionary<int, bool> d = new Dictionary<int, bool>();
+            int valueCount = reader.ReadInt32();
+            for (int i = 0; i < valueCount; i++)
+            {
+                d.Add(reader.ReadInt32(), reader.ReadBoolean());
             }
             return d;
         }

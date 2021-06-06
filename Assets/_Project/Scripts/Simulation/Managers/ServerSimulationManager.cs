@@ -130,6 +130,7 @@ namespace Mahou.Simulation
                     Debug.Log($"No inputs for player #{clientID} and no history to replay.");
                 }
             }
+            latestConfirmedFrame = currentTick;
 
             // BROADCAST INPUTS //
             BroadcastInputs();
@@ -175,10 +176,10 @@ namespace Mahou.Simulation
             if (NetworkServer.localClientActive
                 && NetworkServer.localConnection.identity)
             {
-                int inputDelay = ClientManager.local ? ClientManager.local.InputDelay : 0;
+                //int inputDelay = ClientManager.local ? ClientManager.local.InputDelay : 0;
                 ClientInputMessage cim = new ClientInputMessage();
                 cim.ClientWorldTickDeltas = new short[1] { 0 };
-                cim.StartWorldTick = currentTick + inputDelay;
+                cim.StartWorldTick = currentTick;
                 cim.Inputs = new Input.ClientInput[] { ClientManager.local ? ClientManager.local.GetInputs() : new Input.ClientInput() };
                 clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentTick);
             }

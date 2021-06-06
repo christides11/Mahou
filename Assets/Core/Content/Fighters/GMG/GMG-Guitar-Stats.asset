@@ -96,6 +96,8 @@ MonoBehaviour:
       baseValue: 15
     dashAcceleration:
       baseValue: 25
+    dashRotationSpeed:
+      baseValue: 0
     dashTime: 10
     jumpsAvailable: 2
     jumpSquat: 4
@@ -108,7 +110,7 @@ MonoBehaviour:
     jumpInitHozVelo:
       baseValue: 3
     airJumpConversedMomentum:
-      baseValue: 0
+      baseValue: 0.5
     airJumpHozVelo:
       baseValue: 6
     airJumpVelocity:
@@ -194,10 +196,10 @@ MonoBehaviour:
     airDashGravityAfter: 15
     airDashLength: 20
     hitstunGravity:
-      baseValue: 0.7
+      baseValue: 50
     hitstunMaxFallSpeed:
-      baseValue: 11
-    hitstunFrictionXZ:
+      baseValue: 17
+    hitstunGroundFriction:
       baseValue: 45
     inertiaFriction:
       baseValue: 0

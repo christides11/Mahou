@@ -64,7 +64,7 @@ namespace Mahou.Content.Fighters
         [Header("Hitstun")]
         public FighterStatFloat hitstunGravity = new FighterStatFloat(0); //Gravity while in hitstun.
         public FighterStatFloat hitstunMaxFallSpeed = new FighterStatFloat(0);
-        public FighterStatFloat hitstunFrictionXZ = new FighterStatFloat(0);
+        public FighterStatFloat hitstunGroundFriction = new FighterStatFloat(0);
         public FighterStatFloat inertiaFriction = new FighterStatFloat(0);
         public FighterStatFloat weight = new FighterStatFloat(0);
 
@@ -117,7 +117,7 @@ namespace Mahou.Content.Fighters
             airJumpVelocity = new FighterStatFloat[source.airJumpVelocity.Length];
             for(int i = 0; i < airJumpVelocity.Length; i++)
             {
-                airJumpVelocity[i] = source.airJumpVelocity[i];
+                airJumpVelocity[i] = new FighterStatFloat(source.airJumpVelocity[i].baseValue);
             }
 
             // Gravity
@@ -132,18 +132,14 @@ namespace Mahou.Content.Fighters
             maxAirSpeed.UpdateBaseValue(source.maxAirSpeed);
 
             // Air Dash
-            //airDashPreFrames = source.airDashPreFrames;
-            //airDashInitVelo.UpdateBaseValue(source.airDashInitVelo);
             airDashVelocityCurve = new AnimationCurve(source.airDashVelocityCurve.keys);
-            //airDashFriction.UpdateBaseValue(source.airDashFriction);
-            //airDashFrictionAfter = source.airDashFrictionAfter;
             airDashGravityAfter = source.airDashGravityAfter;
             airDashLength = source.airDashLength;
 
             // Hitstun
             hitstunGravity.UpdateBaseValue(source.hitstunGravity);
             hitstunMaxFallSpeed.UpdateBaseValue(source.hitstunMaxFallSpeed);
-            hitstunFrictionXZ.UpdateBaseValue(source.hitstunFrictionXZ);
+            hitstunGroundFriction.UpdateBaseValue(source.hitstunGroundFriction);
             inertiaFriction.UpdateBaseValue(source.inertiaFriction);
             weight.UpdateBaseValue(source.weight);
         }

@@ -50,6 +50,10 @@ namespace Mahou.Input
                 {
                     return true;
                 }
+                if(other.playerInputs[i].jump != source.playerInputs[i].jump)
+                {
+                    return true;
+                }
             }
             return false;
         }
