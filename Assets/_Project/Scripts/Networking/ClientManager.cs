@@ -65,6 +65,10 @@ namespace Mahou.Networking
         {
             if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
             {
+                if(characterSelect == null)
+                {
+                    return;
+                }
                 if (characterSelect.gameObject.activeInHierarchy)
                 {
                     characterSelect.CloseMenu();
@@ -130,6 +134,15 @@ namespace Mahou.Networking
         #endregion
 
         #region Clients
+        public static ClientManager GetClient(int clientID)
+        {
+            if (clientManagers.TryGetValue(clientID, out ClientManager cm))
+            {
+                return cm;
+            }
+            return null;
+        }
+
         public static List<ClientManager> GetClients()
         {
             List<ClientManager> cManagers = new List<ClientManager>();
@@ -153,39 +166,19 @@ namespace Mahou.Networking
             return new ClientInput(iri);
         }
 
-        public void AddInput(ClientInput cInputs)
+        public void SetInput(int tick, ClientInput clientInput)
         {
-            if(cInputs.playerInputs == null)
+            if(clientInput.playerInputs == null)
             {
+                for (int i = 0; i < players.Count; i++)
+                {
+                    players[i].GetComponent<FighterInputManager>().AddInput(tick, new PlayerInput());
+                }
                 return;
             }
-            for(int i = 0; i < cInputs.playerInputs.Count; i++)
+            for (int i = 0; i < clientInput.playerInputs.Count; i++)
             {
-                players[i].GetComponent<FighterInputManager>().AddInput(cInputs.playerInputs[i]);
-            }
-        }
-
-        public void ReplaceInput(ClientInput cInputs, int offset)
-        {
-            if (cInputs.playerInputs == null)
-            {
-                return;
-            }
-            if(offset < 0)
-            {
-                return;
-            }
-            for(int i = 0; i < cInputs.playerInputs.Count; i++)
-            {
-                players[i].GetComponent<FighterInputManager>().ReplaceInput(offset, cInputs.playerInputs[i]);
-            }
-        }
-
-        public void SetInputFrame(int offset)
-        {
-            for (int i = 0; i < players.Count; i++)
-            {
-                players[i].GetComponent<FighterInputManager>().baseOffset = offset;
+                players[i].GetComponent<FighterInputManager>().AddInput(tick, clientInput.playerInputs[i]);
             }
         }
         #endregion
@@ -237,8 +230,8 @@ namespace Mahou.Networking
         #region Error Checking
         [Header("Error Checking")]
         public bool showPositions = false;
-        public float positionDivergence = 0.001f;
-        public float rotationDivergence = 0.001f;
+        public float positionDivergence = 0.01f;
+        public float rotationDivergence = 0.01f;
         public bool CompareSimulationStates(ClientSimState serverSimState, ClientSimState localSimState)
         {
             if (localSimState.playersStates == null)

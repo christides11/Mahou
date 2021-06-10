@@ -6,6 +6,11 @@ namespace Mahou.Combat
 {
     public class HitInfo : HnSF.Combat.HitInfo
     {
+        public HitInfo() : base()
+        {
+
+        }
+
         public HitInfo(HnSF.Combat.HitInfoBase other) : base(other)
         {
 

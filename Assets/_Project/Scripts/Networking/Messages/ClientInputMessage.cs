@@ -17,4 +17,10 @@ namespace Mahou.Networking
         // this will give us 100% accuracy over lag compensation.
         public short[] ClientWorldTickDeltas;
     }
+
+    public struct ServerClientInputMessage : NetworkMessage
+    {
+        public NetworkIdentity clientManagerIdentity;
+        public ClientInputMessage inputMessage;
+    }
 }

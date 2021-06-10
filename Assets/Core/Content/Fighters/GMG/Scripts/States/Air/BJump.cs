@@ -10,16 +10,12 @@ namespace Mahou.Core
         public override void Initialize()
         {
             base.Initialize();
+            Simulation.SimulationAudioManager.Play((Manager as GMGManager).testAudioClip, Manager.transform.position, Simulation.AudioPlayMode.ROLLBACK);
         }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
-
-            if(StateManager.CurrentStateFrame == 5)
-            {
-                Simulation.SimulationAudioManager.Play((Manager as GMGManager).testAudioClip, Manager.transform.position, Simulation.AudioPlayMode.ROLLBACK);
-            }
         }
     }
 }

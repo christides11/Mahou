@@ -6,6 +6,7 @@ using UnityEngine;
 using Player = Rewired.Player;
 using HnSF.Input;
 using InputRecordItem = Mahou.Input.InputRecordItem;
+using Mahou.Simulation;
 
 namespace Mahou.Content.Fighters
 {
@@ -13,12 +14,10 @@ namespace Mahou.Content.Fighters
     {
         Player p = null;
 
-        public int baseOffset = 0;
-
         public virtual void Initialize()
         {
             manager = GetComponent<FighterManager>();
-            inputRecordSize = 1024;
+            inputRecordSize = (uint)GameConstants.gameStateBufferSize;
             InputRecord = new Mahou.Input.InputRecordItem[inputRecordSize];
         }
 
@@ -44,49 +43,12 @@ namespace Mahou.Content.Fighters
             pinput.jump = p.GetButton(Action.Jump);
             pinput.dash = p.GetButton(Action.Dash);
             pinput.lockon = p.GetButton(Action.Lockon);
+            pinput.parry = p.GetButton(Action.Parry);
             return pinput;
-        }
-
-        public override Vector2 GetAxis2D(int axis2DID, uint frameOffset = 0)
-        {
-            return base.GetAxis2D(axis2DID, (uint)(baseOffset + frameOffset));
-        }
-
-        public override InputRecordButton GetButton(int buttonID, out uint gotOffset, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
-        {
-            return base.GetButton(buttonID, out gotOffset, (uint)(baseOffset + frameOffset), checkBuffer, bufferFrames);
-        }
-
-        public override InputRecordButton GetButton(int buttonID, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
-        {
-            return base.GetButton(buttonID, (uint)(baseOffset + frameOffset), checkBuffer, bufferFrames);
-        }
-
-        public virtual Vector3 GetCameraForward(int frameOffset = 0)
-        {
-            if(inputTick <= frameOffset)
-            {
-                return Vector3.forward;
-            }
-            return (InputRecord[(inputTick - 1 - frameOffset) % inputRecordSize] as InputRecordItem).cameraForward;
-        }
-
-        public virtual Vector3 GetCameraRight(int frameOffset = 0)
-        {
-            if (inputTick <= frameOffset)
-            {
-                return Vector3.right;
-            }
-            return (InputRecord[(inputTick - 1 - frameOffset) % inputRecordSize] as InputRecordItem).cameraRight;
         }
 
         public virtual void ProcessInput(int tick)
         {
-            if(tick <= 1)
-            {
-                return;
-            }
-
             if (InputRecord[ExtDebug.mod(tick - 1, (int)inputRecordSize)] == null)
             {
                 return;
@@ -103,17 +65,10 @@ namespace Mahou.Content.Fighters
             }
         }
 
-        public void AddInput(PlayerInput pInput)
+        public void AddInput(int tick, PlayerInput pInput)
         {
-            InputRecord[inputTick % inputRecordSize] = BuildRecordItem(pInput);
-            ProcessInput((int)inputTick);
-            inputTick++;
-        }
-
-        public void ReplaceInput(int offset, PlayerInput pInput)
-        {
-            InputRecord[ExtDebug.mod(((int)inputTick)-1-offset, (int)inputRecordSize)] = BuildRecordItem(pInput);
-            ProcessInput(((int)inputTick)-1-offset);
+            InputRecord[tick % inputRecordSize] = BuildRecordItem(pInput);
+            ProcessInput((int)tick);
         }
 
         private InputRecordItem BuildRecordItem(PlayerInput pInput)
@@ -126,18 +81,103 @@ namespace Mahou.Content.Fighters
             recordItem.AddInput((int)PlayerInputType.JUMP, new InputRecordButton(pInput.jump));
             recordItem.AddInput((int)PlayerInputType.DASH, new InputRecordButton(pInput.dash));
             recordItem.AddInput((int)PlayerInputType.LOCKON, new InputRecordButton(pInput.lockon));
+            recordItem.AddInput((int)PlayerInputType.PARRY, new InputRecordButton(pInput.parry));
             return recordItem;
         }
 
-        public override bool UsedInBuffer(int inputID, uint tick)
+        public override void ClearBuffer()
         {
-            return false;
-            //return base.UsedInBuffer(inputID, tick);
+            inputBufferTick = (uint)SimulationManagerBase.instance.CurrentTick;
         }
 
-        public override void ClearBuffer(int inputID)
+        public virtual void SetBufferTick(uint inputBufferTick)
         {
-            base.ClearBuffer(inputID);
+            this.inputBufferTick = inputBufferTick;
         }
+
+        #region Buttons
+        public override float GetAxis(int axis, uint frameOffset = 0)
+        {
+            int index = (SimulationManagerBase.instance.CurrentTick - (int)frameOffset) % (int)inputRecordSize;
+            if (InputRecord[index] == null)
+            {
+                return 0;
+            }
+            return ((InputRecordAxis)InputRecord[index].inputs[axis]).axis;
+        }
+
+        public override Vector2 GetAxis2D(int axis2DID, uint frameOffset = 0)
+        {
+            int index = (SimulationManagerBase.instance.CurrentTick - (int)frameOffset) % (int)inputRecordSize;
+            if (InputRecord[index] == null)
+            {
+                return Vector2.zero;
+            }
+            return ((InputRecordAxis2D)InputRecord[index].inputs[axis2DID]).axis2D;
+        }
+
+        public override InputRecordButton GetButton(int buttonID, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
+        {
+            return GetButton(buttonID, out uint go, frameOffset, checkBuffer, bufferFrames);
+        }
+
+        public override InputRecordButton GetButton(int buttonID, out uint gotOffset, uint frameOffset = 0, bool checkBuffer = false, uint bufferFrames = 3)
+        {
+            int index = (SimulationManagerBase.instance.CurrentTick - (int)frameOffset) % (int)inputRecordSize;
+            gotOffset = frameOffset;
+
+            if (InputRecord[index] == null)
+            {
+                return new InputRecordButton();
+            }
+            if (checkBuffer)
+            {
+                for (uint i = 0; i < bufferFrames; i++)
+                {
+                    int bufferRealTick = SimulationManagerBase.instance.CurrentTick - (int)(frameOffset + i);
+                    int bufferIndex = bufferRealTick % (int)inputRecordSize;
+                    // Nothing past here.
+                    if(InputRecord[bufferIndex] == null)
+                    {
+                        break;
+                    }
+                    InputRecordButton b = ((InputRecordButton)InputRecord[bufferIndex].inputs[buttonID]);
+                    //Can't go further, already used buffer past here.
+                    if (inputBufferTick >= bufferRealTick)
+                    {
+                        break;
+                    }
+                    if (b.firstPress)
+                    {
+                        gotOffset = frameOffset + i;
+                        return b;
+                    }
+                }
+            }
+            return (InputRecordButton)InputRecord[index].inputs[buttonID];
+        }
+
+        public virtual Vector3 GetCameraForward(int frameOffset = 0)
+        {
+            int index = (SimulationManagerBase.instance.CurrentTick - (int)frameOffset) % (int)inputRecordSize;
+
+            if (InputRecord[index] == null)
+            {
+                return Vector3.forward;
+            }
+            return (InputRecord[index] as InputRecordItem).cameraForward;
+        }
+
+        public virtual Vector3 GetCameraRight(int frameOffset = 0)
+        {
+            int index = (SimulationManagerBase.instance.CurrentTick - (int)frameOffset) % (int)inputRecordSize;
+
+            if (InputRecord[index] == null)
+            {
+                return Vector3.right;
+            }
+            return (InputRecord[index] as InputRecordItem).cameraRight;
+        }
+        #endregion
     }
 }

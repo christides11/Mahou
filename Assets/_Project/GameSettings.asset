@@ -18,7 +18,6 @@ MonoBehaviour:
     type: 3}
   thirdPersonVirtualCamera: {fileID: 1711892356888182199, guid: c6528856911e79e459bd18c635c888a5,
     type: 3}
-  useClientInterpolation: 1
-  clientTickRate: 60
-  serverTickRate: 60
+  serverWorldStateSendRate: 20
   simulationRate: 60
+  maxRollbackFrames: 20

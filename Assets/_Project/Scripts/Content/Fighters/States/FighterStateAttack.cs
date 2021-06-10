@@ -29,13 +29,23 @@ namespace Mahou.Content.Fighters
 
         public override void ApplySimState(PlayerStateSimState simState)
         {
+            if(simState == null)
+            {
+                return;
+            }
             AttackSimStateVars assv = simState as AttackSimStateVars;
+            if(assv == null)
+            {
+                return;
+            }
             eventInputThing = new Dictionary<int, bool>(assv.eventInputThing);
-
         }
 
+        public Dictionary<int, bool> eventInputThing = new Dictionary<int, bool>();
         public override void Initialize()
         {
+            eventInputThing.Clear();
+            (Manager.HurtboxManager as FighterHurtboxManager).Reset();
             AttackDefinition currentAttack = (AttackDefinition)FighterManager.CombatManager.CurrentAttackNode.attackDefinition;
             if (currentAttack.useState)
             {
@@ -48,6 +58,12 @@ namespace Mahou.Content.Fighters
         {
             FighterManager entityManager = FighterManager;
             AttackDefinition currentAttack = (AttackDefinition)entityManager.CombatManager.CurrentAttackNode.attackDefinition;
+            if (currentAttack.hurtboxDefinition)
+            {
+                (FighterManager.HurtboxManager as FighterHurtboxManager).CreateHurtboxes(
+                    currentAttack.hurtboxDefinition,
+                    StateManager.CurrentStateFrame);
+            }
             
             if (TryCancelWindow(currentAttack))
             {
@@ -59,6 +75,10 @@ namespace Mahou.Content.Fighters
             bool cleanup = false;
             for (int i = 0; i < currentAttack.events.Count; i++)
             {
+                if (currentAttack.events[i].CheckConditions(Manager) == false)
+                {
+                    continue;
+                }
                 switch (HandleEvents(i, currentAttack, currentAttack.events[i]))
                 {
                     case HnSF.Combat.AttackEventReturnType.STALL:
@@ -131,7 +151,6 @@ namespace Mahou.Content.Fighters
             return false;
         }
 
-        public Dictionary<int, bool> eventInputThing = new Dictionary<int, bool>();
         /// <summary>
         /// Handles the lifetime of events.
         /// </summary>

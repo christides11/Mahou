@@ -9,14 +9,8 @@ namespace Mahou
         public CharacterSelectMenu characterSelectMenu;
         public PlayerCamera playerCamera;
         public GameObject thirdPersonVirtualCamera;
-        /// <summary>
-        /// How often the client sends updates to the server.
-        /// </summary>
-        public int clientTickRate = 60;
-        /// <summary>
-        /// How often the server sends updates to the client.
-        /// </summary>
-        public int serverTickRate = 60;
+        public int serverWorldStateSendRate = 60;
         public int simulationRate = 60;
+        public int maxRollbackFrames = 20;
     }
 }

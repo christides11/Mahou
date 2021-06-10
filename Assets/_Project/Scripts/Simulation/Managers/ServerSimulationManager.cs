@@ -1,6 +1,7 @@
 using Mahou.Managers;
 using Mahou.Networking;
 using Mirror;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Mahou.Simulation
 {
     public class ServerSimulationManager : SimulationManagerBase
     {
-        private GameManager gameManager;
+        public override int CurrentTick { get { return currentRealTick; } }
 
         // Handles storing inputs received by clients.
         private ClientInputProcessor clientInputProcessor;
@@ -42,10 +43,20 @@ namespace Mahou.Simulation
 
             Mahou.Networking.NetworkManager.OnServerClientReady += InitializePlayerState;
             Mahou.Networking.NetworkManager.OnServerClientDisconnected += HandleClientDisconnect;
-            NetworkServer.RegisterHandler<ClientInputMessage>(EnqueuePlayerInput);
+            NetworkServer.RegisterHandler<ClientInputMessage>(ReceiveClientInput);
 
             // Initialize timers.
-            worldStateBroadcastTimer = new FixedTimer((float)gameManager.GameSettings.serverTickRate, BroadcastWorldState);
+            SetWorldStateBroadcastTimer((float)gameManager.GameSettings.serverWorldStateSendRate);
+        }
+
+        public virtual void SetWorldStateBroadcastTimer(float worldStateSendRate)
+        {
+            if(worldStateBroadcastTimer != null)
+            {
+                worldStateBroadcastTimer.Stop();
+            }
+            // Initialize timers.
+            worldStateBroadcastTimer = new FixedTimer(worldStateSendRate, BroadcastWorldState);
             worldStateBroadcastTimer.Start();
         }
 
@@ -53,12 +64,12 @@ namespace Mahou.Simulation
         {
             foreach (ClientManager cm in ClientManager.GetClients())
             {
-                if (clientStateSnapshots[cm.clientID][(CurrentTick - 1) % circularBufferSize].Equals(default(ClientSimState)))
+                if (clientStateSnapshots[cm.clientID][(CurrentRealTick - 1) % circularBufferSize].Equals(default(ClientSimState)))
                 {
                     continue;
                 }
-                cm.Interpolate(clientStateSnapshots[cm.clientID][(CurrentTick - 1) % circularBufferSize],
-                    clientStateSnapshots[cm.clientID][CurrentTick % circularBufferSize], accumulator / simulationTickInterval);
+                cm.Interpolate(clientStateSnapshots[cm.clientID][(CurrentRealTick - 1) % circularBufferSize],
+                    clientStateSnapshots[cm.clientID][CurrentRealTick % circularBufferSize], accumulator / simulationTickInterval);
             }
         }
 
@@ -67,88 +78,91 @@ namespace Mahou.Simulation
 
         }
 
-        private void EnqueuePlayerInput(NetworkConnection arg1, ClientInputMessage arg2)
+        private void ReceiveClientInput(NetworkConnection arg1, ClientInputMessage arg2)
         {
             if (arg2.Inputs.Count() > 0)
             {
                 // Enqueue input for player.
-                clientInputProcessor.EnqueueInput(arg2, arg1, currentTick);
+                clientInputProcessor.EnqueueInput(arg2, arg1, currentRealTick);
             }
 
             // Update the latest input tick that we have for that client.
-            //if (lobbyManager.MatchManager.clientConnectionInfo[arg1.connectionId].latestInputTick < arg2.StartWorldTick-1)
-            //{
-                lobbyManager.MatchManager.joinedClients[arg1.connectionId].latestInputTick =
-                    arg2.StartWorldTick + arg2.Inputs.Length - 1;
-            //}
+            int messageInputTick = arg2.StartWorldTick + arg2.Inputs.Length - 1;
+            if (lobbyManager.MatchManager.joinedClients[arg1.connectionId].latestestAckedInput < messageInputTick)
+            {
+                lobbyManager.MatchManager.joinedClients[arg1.connectionId].latestestAckedInput = messageInputTick;
+            }
+
+            // Send input to all clients.
+            ServerClientInputMessage scInputMsg = new ServerClientInputMessage()
+            {
+                clientManagerIdentity = lobbyManager.MatchManager.joinedClients[arg1.connectionId].clientManager.networkIdentity,
+                inputMessage = arg2
+            };
+            foreach (var v in lobbyManager.MatchManager.joinedClients)
+            {
+                if(v.Value.clientManager.networkIdentity.connectionToClient.connectionId == arg1.connectionId)
+                {
+                    continue;
+                }
+                v.Value.clientManager.networkIdentity.connectionToClient.Send(scInputMsg, 0);
+            }
         }
 
         protected override void Tick(float dt)
         {
-            HandleHostInput();
-
-            // GET CLIENTS TICK INPUT //
-            unprocessedPlayerIds.Clear();
-            unprocessedPlayerIds.UnionWith(ClientManager.clientIDs);
-            var tickInputs = clientInputProcessor.DequeueInputsForTick(currentTick);
-
-            // Apply the inputs we got for this frame for all clients.
-            foreach (TickInput tickInput in tickInputs)
-            {
-                ClientManager player = tickInput.client.GetComponent<ClientManager>();
-                clientCurrentInput[player.clientID] = tickInput;
-                player.AddInput(clientCurrentInput[player.clientID].input);
-
-                unprocessedPlayerIds.Remove(player.clientID);
-
-                // Mark the player as synchronized.
-                lobbyManager.MatchManager.joinedClients[player.clientID].synced = true;
-            }
-
-            // Any remaining players without inputs have their latest input command repeated,
-            // but we notify them that they need to fast-forward their simulation to improve buffering.
-            foreach (int clientID in unprocessedPlayerIds)
-            {
-                // If the player is not yet synchronized, this means that they haven't sent any
-                // inputs yet. Ignore them.
-                if (!lobbyManager.MatchManager.joinedClients.ContainsKey(clientID) ||
-                    !lobbyManager.MatchManager.joinedClients[clientID].synced)
-                {
-                    continue;
-                }
-
-                ClientManager cManager = ClientManager.clientManagers[clientID];
-
-                TickInput latestInput;
-                if (clientInputProcessor.TryGetLatestInput(clientID, out latestInput))
-                {
-                    clientCurrentInput[clientID] = latestInput;
-                    cManager.AddInput(latestInput.input);
-                }
-                else
-                {
-                    Debug.Log($"No inputs for player #{clientID} and no history to replay.");
-                }
-            }
-            latestConfirmedFrame = currentTick;
-
-            // BROADCAST INPUTS //
-            BroadcastInputs();
-
-            // ADVANCE SIMULATION //
+            HandleLocalInput();
+            ApplyClientInputs();
+            BroadcastUnackedInputs();
+            ChangeInputDelay();
             SimulateWorld(dt);
-            ++currentTick;
+            currentRealTick++;
 
-
-            // SNAPSHOT WORLD STATE //
-            int bufidx = CurrentTick % circularBufferSize;
-            foreach(ClientManager cm in ClientManager.GetClients())
-            {
-                clientStateSnapshots[cm.clientID][bufidx] = cm.GetClientSimState();
-            }
+            SnapshotWorld();
 
             // BROADCAST WORLD STATE //
             worldStateBroadcastTimer.Update(dt);
+        }
+
+        private void ChangeInputDelay()
+        {
+            if(requestedInputDelay == inputDelay)
+            {
+                return;
+            }
+            if(requestedInputDelay > inputDelay)
+            {
+                for(int i = inputDelay+1; i <= requestedInputDelay; i++)
+                {
+                    ClientInputMessage cim = new ClientInputMessage();
+                    cim.ClientWorldTickDeltas = new short[1] { 0 };
+                    cim.StartWorldTick = currentRealTick + i;
+                    cim.Inputs = new Input.ClientInput[] { new Input.ClientInput() };
+                    clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentRealTick + i);
+
+                    NetworkServer.SendToAll(new ServerClientInputMessage()
+                    {
+                        clientManagerIdentity = ClientManager.local.networkIdentity,
+                        inputMessage = cim
+                    }, 0);
+                }
+
+                lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput = currentRealTick + requestedInputDelay;
+            }
+            else
+            {
+
+            }
+            inputDelay = requestedInputDelay;
+        }
+
+        private void SnapshotWorld()
+        {
+            int bufidx = currentRealTick % circularBufferSize;
+            foreach (ClientManager cm in ClientManager.GetClients())
+            {
+                clientStateSnapshots[cm.clientID][bufidx] = cm.GetClientSimState();
+            }
         }
 
         #region Simulation Objects
@@ -171,31 +185,112 @@ namespace Mahou.Simulation
         #endregion
 
         #region Input
-        private void HandleHostInput()
+        private void HandleLocalInput()
         {
-            if (NetworkServer.localClientActive
-                && NetworkServer.localConnection.identity)
+            if (NetworkServer.localClientActive == false || NetworkServer.localConnection.identity == null)
             {
-                //int inputDelay = ClientManager.local ? ClientManager.local.InputDelay : 0;
-                ClientInputMessage cim = new ClientInputMessage();
-                cim.ClientWorldTickDeltas = new short[1] { 0 };
-                cim.StartWorldTick = currentTick;
-                cim.Inputs = new Input.ClientInput[] { ClientManager.local ? ClientManager.local.GetInputs() : new Input.ClientInput() };
-                clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentTick);
+                return;
+            }
+            // For when the input delay is set lower.
+            if (lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput > currentRealTick + inputDelay)
+            {
+                return;
+            }
+            ClientInputMessage cim = new ClientInputMessage();
+            cim.ClientWorldTickDeltas = new short[1] { 0 };
+            cim.StartWorldTick = currentRealTick+inputDelay;
+            cim.Inputs = new Input.ClientInput[] { ClientManager.local ? ClientManager.local.GetInputs() : new Input.ClientInput() };
+            clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentRealTick+inputDelay);
+
+            lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput = currentRealTick + inputDelay;
+
+            NetworkServer.SendToAll(new ServerClientInputMessage()
+            {
+                clientManagerIdentity = ClientManager.local.networkIdentity,
+                inputMessage = cim
+            }, 0);
+        }
+
+        public override void RequestInputDelayChange(int newInputDelay)
+        {
+            requestedInputDelay = newInputDelay;
+        }
+
+        private void ApplyClientInputs()
+        {
+            unprocessedPlayerIds.Clear();
+            unprocessedPlayerIds.UnionWith(ClientManager.clientIDs);
+            var tickInputs = clientInputProcessor.DequeueInputsForTick(currentRealTick);
+
+            // Apply the inputs we got for this frame for all clients.
+            foreach (TickInput tickInput in tickInputs)
+            {
+                ClientManager player = tickInput.client.GetComponent<ClientManager>();
+                clientCurrentInput[player.clientID] = tickInput;
+                player.SetInput(currentRealTick, clientCurrentInput[player.clientID].input);
+
+                unprocessedPlayerIds.Remove(player.clientID);
+
+                // Mark the player as synchronized.
+                lobbyManager.MatchManager.joinedClients[player.clientID].synced = true;
+            }
+
+            // Any remaining players without inputs have their latest input command repeated,
+            // but we notify them that they need to fast-forward their simulation to improve buffering.
+            foreach (int clientID in unprocessedPlayerIds)
+            {
+                // If the player is not yet synchronized, this means that they haven't sent any
+                // inputs yet. Ignore them.
+                if (!lobbyManager.MatchManager.joinedClients.ContainsKey(clientID) ||
+                    !lobbyManager.MatchManager.joinedClients[clientID].synced)
+                {
+                    continue;
+                }
+
+                ClientManager cManager = ClientManager.GetClient(clientID);
+                if(cManager == null)
+                {
+                    continue;
+                }
+
+                TickInput latestInput;
+                if (clientInputProcessor.TryGetLatestInput(clientID, out latestInput))
+                {
+                    clientCurrentInput[clientID] = latestInput;
+                    cManager.SetInput(currentRealTick, latestInput.input);
+                }
+                else
+                {
+                    Debug.Log($"No inputs for player #{clientID} and no history to replay.");
+                }
+                lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput = currentRealTick - 1;
             }
         }
 
-        private void BroadcastInputs()
+        private void BroadcastUnackedInputs()
         {
-            List<TickInput> tInputs = new List<TickInput>();
-
-            foreach (var k in clientCurrentInput.Keys)
+            foreach (var v in lobbyManager.MatchManager.joinedClients)
             {
-                tInputs.Add(clientCurrentInput[k]);
+                if(v.Value.synced == false)
+                {
+                    continue;
+                }
+                // Client was behind on inputs, so we need to tell all clients the server's decided input.
+                if (v.Value.latestestAckedInput < currentRealTick)
+                {
+                    v.Value.latestestAckedInput = currentRealTick;
+                    ClientInputMessage cim = new ClientInputMessage()
+                    {
+                        ClientWorldTickDeltas = null,
+                        Inputs = new Input.ClientInput[1] { clientCurrentInput[v.Value.clientManager.clientID].input },
+                        StartWorldTick = currentRealTick
+                    };
+                    NetworkServer.SendToAll(
+                        new ServerClientInputMessage() { clientManagerIdentity = v.Value.clientManager.networkIdentity, inputMessage = cim }, 
+                        0, 
+                        true);
+                }
             }
-
-            ServerStateInputMessage serverInputMsg = new ServerStateInputMessage(currentTick, tInputs);
-            NetworkServer.SendToAll(serverInputMsg, 0, true);
         }
         #endregion
 
@@ -224,19 +319,18 @@ namespace Mahou.Simulation
             List<ClientSimState> clientStates = new List<ClientSimState>();
             foreach(ClientManager cm in ClientManager.clientManagers.Values)
             {
-                clientStates.Add(cm.GetClientSimState());
+                clientStates.Add(clientStateSnapshots[cm.clientID][currentRealTick % circularBufferSize]); //cm.GetClientSimState());
             }
 
-            WorldSnapshot snapshot = new WorldSnapshot()
+            serverStateMsg.worldSnapshot = new WorldSnapshot()
             {
                 gameModeSimState = gameManager.GameMode.GetSimState(),
                 clientStates = clientStates,
-                currentTick = currentTick
+                currentTick = currentRealTick
             };
-            serverStateMsg.worldSnapshot = snapshot;
 
             // Send Message
-            foreach(var v in lobbyManager.MatchManager.joinedClients)
+            foreach (var v in lobbyManager.MatchManager.joinedClients)
             {
                 // Ignore the host.
                 if (NetworkServer.localClientActive
@@ -245,7 +339,7 @@ namespace Mahou.Simulation
                     continue;
                 }
 
-                serverStateMsg.latestAckedInput = v.Value.latestInputTick;
+                serverStateMsg.clientLatestAckedInput = v.Value.latestestAckedInput;
 
                 v.Value.clientManager.networkIdentity.connectionToClient.Send(serverStateMsg, 1);
             }

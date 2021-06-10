@@ -7,6 +7,7 @@ namespace Mahou
         JUMP = 2,
         ATTACK = 3,
         DASH = 4,
-        LOCKON = 5
+        LOCKON = 5,
+        PARRY = 6
     }
 }

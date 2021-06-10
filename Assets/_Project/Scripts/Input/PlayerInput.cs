@@ -12,5 +12,6 @@ namespace Mahou.Input
         public bool attack;
         public bool shoot;
         public bool dash;
+        public bool parry;
     }
 }

@@ -27,6 +27,9 @@ namespace Mahou.Simulation
         public Vector3 lockonForward;
         public GameObject lockOnTarget;
 
+        // Input Manager
+        public uint inputBufferTick;
+
         // Combat Manager
         public int currentChargeLevel;
         public int currentChargeLevelCharge;
@@ -40,6 +43,9 @@ namespace Mahou.Simulation
 
         // Hitbox Manager
         public Dictionary<int, IDGroupCollisionInfo> collidedIHurtables;
+
+        // Hurtbox Manager
+        public Dictionary<int, int> hurtboxHitCount;
 
         // State
         public PlayerStateSimState stateSimState;

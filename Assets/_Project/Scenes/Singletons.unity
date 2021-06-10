@@ -1398,6 +1398,17 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 14
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 108
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps: []
     customControllerMaps: []
     customControllers: []
@@ -1514,6 +1525,7 @@ MonoBehaviour:
   Port: 7777
   NoDelay: 1
   Interval: 10
+  Timeout: 10000
   FastResend: 2
   CongestionWindow: 0
   SendWindowSize: 4096
@@ -4337,7 +4349,7 @@ MonoBehaviour:
   gameManager: {fileID: 1812465252}
   consoleReader: {fileID: 1471945004}
   consoleWindow: {fileID: 1471945002}
-  useArgs: 0
+  useArgs: 1
   args:
   - host core/training core/debugroom core/versusr
 --- !u!1 &1847963925

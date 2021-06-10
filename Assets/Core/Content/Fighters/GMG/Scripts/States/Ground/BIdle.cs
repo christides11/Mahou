@@ -8,8 +8,8 @@ namespace Mahou.Core
         public override void Initialize()
         {
             base.Initialize();
-            (Manager as FighterManager).fighterAnimator
-                .PlayAnimation((Manager as FighterManager).GetAnimationClip("idle", Manager.CombatManager.CurrentMovesetIdentifier));
+            //(Manager as FighterManager).fighterAnimator
+            //    .PlayAnimation((Manager as FighterManager).GetAnimationClip("idle", Manager.CombatManager.CurrentMovesetIdentifier));
         }
 
         public override void OnUpdate()
@@ -19,9 +19,9 @@ namespace Mahou.Core
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
                 StateManager.CurrentStateFrame);
             if (Simulation.SimulationManagerBase.IsRollbackFrame == false
-                || Simulation.SimulationManagerBase.instance.CurrentRollbackTick == Simulation.SimulationManagerBase.instance.CurrentTick-1)
+                || Simulation.SimulationManagerBase.instance.CurrentRollbackTick == Simulation.SimulationManagerBase.instance.CurrentRealTick-1)
             {
-                (Manager as FighterManager).fighterAnimator.SetFrame((int)Manager.StateManager.CurrentStateFrame);
+                //(Manager as FighterManager).fighterAnimator.SetFrame((int)Manager.StateManager.CurrentStateFrame);
             }
             Manager.StateManager.IncrementFrame();
         }

@@ -19,44 +19,48 @@ namespace Mahou.Simulation
         {
             if (SimulationManagerBase.IsRollbackFrame == false)
             {
-                return CreateAudioSource(SimulationManagerBase.instance.CurrentTick, clip, position, 0.0f);
+                //Debug.Log($"Played on frame {SimulationManagerBase.instance.CurrentRealTick}.");
+                return CreateAudioSource(SimulationManagerBase.instance.CurrentRealTick, clip, position, 0.0f);
             }
             else
             {
-                Debug.Log("ROLLBACK AUDIO");
+                //Debug.Log($"ATTEMPTED play on ROLLBACK frame {SimulationManagerBase.instance.CurrentRollbackTick} ({SimulationManagerBase.instance.CurrentTick})." +
+                //    $"Last confirmed server tick was {(SimulationManagerBase.instance as ClientSimulationManager).latestAckedServerWorldStateTick}");
+
+                // Check if the clip was played before.
                 for(int i = 0; i < currentPlayingAudio.Count; i++)
                 {
-                    if (currentPlayingAudio[i].clip == clip && Vector3.Distance(currentPlayingAudio[i].position, position) < 0.1f){
-                        Debug.Log($"Similar clip and position. {currentPlayingAudio[i].frameCreated} vs {SimulationManagerBase.instance.CurrentRollbackTick}");
-                        if (currentPlayingAudio[i].frameCreated == SimulationManagerBase.instance.CurrentRollbackTick)
+                    if (currentPlayingAudio[i].clip == clip 
+                            && currentPlayingAudio[i].frameCreated == SimulationManagerBase.instance.CurrentRollbackTick 
+                            && Vector3.Distance(currentPlayingAudio[i].position, position) < 0.1f){
+                        // Confirm the audio if needed.
+                        if(currentPlayingAudio[i].frameConfirmed != SimulationManagerBase.instance.CurrentRealTick)
                         {
-                            if (currentPlayingAudio[i].confirmed == false
-                                && (SimulationManagerBase.instance as ClientSimulationManager).lastAckedServerTick >= currentPlayingAudio[i].frameCreated)
+                            currentPlayingAudio[i] = new SimAudioDefinition()
                             {
-                                currentPlayingAudio[i] = new SimAudioDefinition()
-                                {
-                                    frameCreated = currentPlayingAudio[i].frameCreated,
-                                    confirmed = true,
-                                    position = currentPlayingAudio[i].position,
-                                    clip = currentPlayingAudio[i].clip,
-                                    source = currentPlayingAudio[i].source
-                                };
-                                Debug.Log($"Audio confirmed {currentPlayingAudio[i].confirmed}. {currentPlayingAudio[i].frameCreated} while the latest confirmed frame is " +
-                                    $"{(SimulationManagerBase.instance as ClientSimulationManager).lastAckedServerTick}.");
-                            }
-                            return currentPlayingAudio[i].source;
+                                frameCreated = currentPlayingAudio[i].frameCreated,
+                                frameConfirmed = SimulationManagerBase.instance.CurrentRealTick,
+                                position = currentPlayingAudio[i].position,
+                                clip = currentPlayingAudio[i].clip,
+                                source = currentPlayingAudio[i].source
+                            };
+                            /*Debug.Log($"SUCCESSFUL confirm {currentPlayingAudio[i].frameConfirmed}. " +
+                                $"{currentPlayingAudio[i].frameCreated} while the latest confirmed frame is " +
+                                $"{(SimulationManagerBase.instance as ClientSimulationManager).latestAckedServerWorldStateTick}.");*/
                         }
+                        return currentPlayingAudio[i].source;
                     }
                 }
+
                 return CreateAudioSource(
                     SimulationManagerBase.instance.CurrentRollbackTick,
                     clip, 
                     position, 
-                    ((float)SimulationManagerBase.instance.CurrentTick-(float)SimulationManagerBase.instance.CurrentRollbackTick)/60.0f);
+                    ((float)SimulationManagerBase.instance.CurrentRealTick-(float)SimulationManagerBase.instance.CurrentRollbackTick)/60.0f, true);
             }
         }
 
-        private static AudioSource CreateAudioSource(int frame, AudioClip clip, Vector3 position, float audioTime = 0.0f)
+        private static AudioSource CreateAudioSource(int frame, AudioClip clip, Vector3 position, float audioTime = 0.0f, bool autoconfirm = false)
         {
             AudioSource audioSource = new GameObject(audioSourceName, new System.Type[] { typeof(AudioSource) }).GetComponent<AudioSource>();
             audioSource.clip = clip;
@@ -67,7 +71,7 @@ namespace Mahou.Simulation
                 currentPlayingAudio.Add(new SimAudioDefinition()
                 {
                     frameCreated = frame,
-                    confirmed = false,
+                    frameConfirmed = autoconfirm ? SimulationManagerBase.instance.CurrentRealTick : frame,
                     position = position,
                     clip = clip,
                     source = audioSource
@@ -78,24 +82,22 @@ namespace Mahou.Simulation
 
         public static void Cleanup()
         {
-            for(int i = currentPlayingAudio.Count-1; i >= 0; i--)
+            for (int i = currentPlayingAudio.Count - 1; i >= 0; i--)
             {
-                if(currentPlayingAudio[i].confirmed == false 
-                    && (SimulationManagerBase.instance as ClientSimulationManager).lastAckedServerTick > currentPlayingAudio[i].frameCreated)
+                if (currentPlayingAudio[i].frameConfirmed != SimulationManagerBase.instance.CurrentRealTick
+                    && currentPlayingAudio[i].frameCreated >= (SimulationManagerBase.instance as ClientSimulationManager).latestAckedServerWorldStateTick)
                 {
-                    Debug.Log($"Audio was not confirmed. {currentPlayingAudio[i].frameCreated} but already acked " +
-                        $"{(SimulationManagerBase.instance as ClientSimulationManager).lastAckedServerTick}.");
-                    //currentPlayingAudio[i].source.Stop();
-                    //GameObject.Destroy(currentPlayingAudio[i].source.gameObject);
+                    //Debug.Log($"Audio was not confirmed. {currentPlayingAudio[i].frameCreated} but already acked " +
+                    //    $"{(SimulationManagerBase.instance as ClientSimulationManager).latestAckedServerWorldStateTick}.");
+                    currentPlayingAudio[i].source.Stop();
+                    GameObject.Destroy(currentPlayingAudio[i].source.gameObject);
                     currentPlayingAudio.RemoveAt(i);
                     continue;
                 }
 
-                if(currentPlayingAudio[i].confirmed == true
-                    && (SimulationManagerBase.instance.CurrentTick - currentPlayingAudio[i].frameCreated) > 20)
+                if((SimulationManagerBase.instance as ClientSimulationManager).latestAckedServerWorldStateTick > currentPlayingAudio[i].frameCreated)
                 {
                     currentPlayingAudio.RemoveAt(i);
-                    continue;
                 }
             }
         }
@@ -104,7 +106,7 @@ namespace Mahou.Simulation
     public struct SimAudioDefinition
     {
         public int frameCreated;
-        public bool confirmed;
+        public int frameConfirmed;
         public Vector3 position;
         public AudioClip clip;
         public AudioSource source;

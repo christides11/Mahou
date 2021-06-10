@@ -40,9 +40,18 @@ namespace Mahou.Content.Fighters
         public override HitReaction Hurt(HurtInfoBase hurtInfoBase)
         {
             FighterPhysicsManager physicsManager = (FighterPhysicsManager)manager.PhysicsManager;
+            FighterHurtboxManager hurtboxManager = manager.HurtboxManager as FighterHurtboxManager;
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
             HitInfo hitInfo = hurtInfo.hitInfo as HitInfo;
             HitReaction hitReaction = new HitReaction();
+            
+            int indexOfHurtboxGroup = hurtboxManager.GetHurtboxDefinition().hurtboxGroups.IndexOf(hurtInfo.hurtboxGroupHit);
+            if (hurtboxManager.hurtboxHitCount.ContainsKey(indexOfHurtboxGroup) == false)
+            {
+                hurtboxManager.hurtboxHitCount.Add(indexOfHurtboxGroup, 0);
+            }
+            hurtboxManager.hurtboxHitCount[indexOfHurtboxGroup] += 1;
+
             hitReaction.reactionType = HitReactionType.Hit;
             if(hurtInfo.hurtboxGroupHit.armor == ArmorType.PARRY)
             {

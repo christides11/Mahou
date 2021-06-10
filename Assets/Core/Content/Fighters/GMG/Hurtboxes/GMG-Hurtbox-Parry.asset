@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hurtboxGroups:
   - id: 0
-  - id: 1
   references:
     version: 1
     00000000:
@@ -22,25 +21,14 @@ MonoBehaviour:
       data:
         ID: 0
         activeFramesStart: 1
-        activeFramesEnd: 4
+        activeFramesEnd: 60
         boxes:
-        - id: 2
+        - id: 1
         attachToEntity: 1
         attachTo: 
         invincibility: 0
         armor: 4
     00000001:
-      type: {class: HurtboxGroup, ns: Mahou.Combat, asm: Mahou_CSharp}
-      data:
-        ID: 0
-        activeFramesStart: 5
-        activeFramesEnd: 60
-        boxes: []
-        attachToEntity: 1
-        attachTo: 
-        invincibility: 0
-        armor: 0
-    00000002:
       type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         shape: 0

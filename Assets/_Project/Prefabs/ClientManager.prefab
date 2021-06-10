@@ -65,4 +65,6 @@ MonoBehaviour:
   syncInterval: 0
   networkIdentity: {fileID: 7987110652908911887}
   clientID: 0
-  positionDivergence: 0.0001
+  showPositions: 0
+  positionDivergence: 0.001
+  rotationDivergence: 0.001

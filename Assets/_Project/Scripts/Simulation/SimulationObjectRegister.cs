@@ -14,6 +14,10 @@ namespace Mahou.Simulation
 
         public override void OnStartClient()
         {
+            if (NetworkServer.active)
+            {
+                return;
+            }
             SimulationManagerBase.instance.RegisterSimulationObject(netIdentity);
         }
     }

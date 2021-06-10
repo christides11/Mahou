@@ -105,7 +105,7 @@ namespace Mahou.Content.Fighters
 
         public void SimUpdate()
         {
-            (hurtboxManager as FighterHurtboxManager).Reset();
+            (hurtboxManager as FighterHurtboxManager).Cleanup();
             Tick();
         }
 
@@ -407,6 +407,9 @@ namespace Mahou.Content.Fighters
             simState.lockonForward = LockonForward;
             simState.lockOnTarget = LockonTarget;
 
+            // Input Manager
+            simState.inputBufferTick = inputManager.inputBufferTick;
+
             // Combat Manager
             simState.currentChargeLevel = combatManager.CurrentChargeLevel;
             simState.currentChargeLevelCharge = combatManager.CurrentChargeLevelCharge;
@@ -418,6 +421,9 @@ namespace Mahou.Content.Fighters
 
             // Hitbox Manager
             simState.collidedIHurtables = hitboxManager.collidedIHurtables;
+
+            // Hurtbox Manager
+            simState.hurtboxHitCount = (hurtboxManager as FighterHurtboxManager).hurtboxHitCount;
 
             // State
             simState.stateSimState = (StateManager.GetState(StateManager.CurrentState) as FighterState).GetSimState();
@@ -442,6 +448,9 @@ namespace Mahou.Content.Fighters
             LockonForward = pState.lockonForward;
             LockonTarget = pState.lockOnTarget;
 
+            // Input Manager
+            (inputManager as FighterInputManager).SetBufferTick(pState.inputBufferTick);
+
             // Combat Manager
             combatManager.SetChargeLevel(pState.currentChargeLevel);
             combatManager.SetChargeLevelCharge(pState.currentChargeLevelCharge);
@@ -451,6 +460,9 @@ namespace Mahou.Content.Fighters
 
             // Hitbox Manager
             hitboxManager.collidedIHurtables = pState.collidedIHurtables;
+
+            // Hurtbox Manager
+            (hurtboxManager as FighterHurtboxManager).hurtboxHitCount = pState.hurtboxHitCount;
 
             // State
             (StateManager.GetState(StateManager.CurrentState) as FighterState).ApplySimState(pState.stateSimState);

@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Mahou.Simulation
 {
+    [System.Serializable]
     public class PlayerStateSimState
     {
 

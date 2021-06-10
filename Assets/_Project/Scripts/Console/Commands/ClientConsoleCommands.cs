@@ -16,5 +16,26 @@ namespace Mahou.Debugging
             NetworkManager networkManager = GameManager.current.NetworkManager;
             networkManager.JoinGame(ip);
         }
+
+        [Command("inputdelay", "Sets the client's input delay.")]
+        public static void SetInputDelay(int newInputDelay)
+        {
+            if(newInputDelay < 0)
+            {
+                return;
+            }
+            if (Simulation.SimulationManagerBase.instance == null)
+            {
+                return;
+            }
+            /*Simulation.ClientSimulationManager ssm = Simulation.SimulationManagerBase.instance as Simulation.ClientSimulationManager;
+            if (ssm == null)
+            {
+                return;
+            }
+            ssm.SetInputDelay(newInputDelay);*/
+            Simulation.SimulationManagerBase.instance.RequestInputDelayChange(newInputDelay);
+            ConsoleWindow.current.WriteLine($"Input delay set to {newInputDelay}.");
+        }
     }
 }

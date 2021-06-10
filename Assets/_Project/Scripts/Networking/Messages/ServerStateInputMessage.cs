@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Mahou.Networking
 {
+    /*
     public struct ServerStateInputMessage : NetworkMessage
     {
         public int serverTick;
@@ -14,5 +15,5 @@ namespace Mahou.Networking
             this.serverTick = serverTick;
             this.clientInputs = clientInputs;
         }
-    }
+    }*/
 }

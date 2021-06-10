@@ -83,7 +83,7 @@ namespace Mahou.Debugging
                 leadLocalText.text = csm.localTickLead.ToString();
             }
 
-            int currentTick = lobbyManager.MatchManager.SimulationManager.CurrentTick;
+            int currentTick = lobbyManager.MatchManager.SimulationManager.CurrentRealTick;
             frameText.text = currentTick.ToString();
             adjText.text = lobbyManager.MatchManager.SimulationManager.AdjustedInterval.ToString();
         }

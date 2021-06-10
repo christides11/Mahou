@@ -45,7 +45,7 @@ namespace Mahou.Managers
             {
                 return;
             }
-            clientConnection.Send(new MatchInitMessage(matchManager.SimulationManager.CurrentTick));
+            clientConnection.Send(new MatchInitMessage(matchManager.SimulationManager.CurrentRealTick));
         }
 
         private void OnReceivedMatchInitRequest(MatchInitMessage arg2)

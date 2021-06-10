@@ -9,12 +9,14 @@ namespace Mahou.Content.Fighters
     {
         [SerializeField] protected Hurtbox hurtboxPrefab;
 
+        public Dictionary<int, int> hurtboxHitCount = new Dictionary<int, int>();
+
         public virtual void Initialize()
         {
             manager = GetComponent<FighterManager>();
         }
 
-        public virtual void Reset()
+        public virtual void Cleanup()
         {
             foreach (int id in hurtboxGroups.Keys)
             {
@@ -25,6 +27,11 @@ namespace Mahou.Content.Fighters
             }
             hurtboxGroups.Clear();
             hurtboxDefinition = null;
+        }
+
+        public virtual void Reset()
+        {
+            hurtboxHitCount.Clear();
         }
 
         public override void CreateHurtboxes(HnSF.Combat.StateHurtboxDefinition hurtboxDefinition, uint frame)
@@ -56,6 +63,11 @@ namespace Mahou.Content.Fighters
             }
             hurtbox.gameObject.SetActive(false);
             return hurtbox;
+        }
+
+        public StateHurtboxDefinition GetHurtboxDefinition()
+        {
+            return (StateHurtboxDefinition)hurtboxDefinition;
         }
     }
 }
