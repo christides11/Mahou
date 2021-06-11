@@ -37,13 +37,13 @@ namespace Mahou.Content.Fighters
             return (int)team;
         }
 
-        public override HitReaction Hurt(HurtInfoBase hurtInfoBase)
+        public override HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             FighterPhysicsManager physicsManager = (FighterPhysicsManager)manager.PhysicsManager;
             FighterHurtboxManager hurtboxManager = manager.HurtboxManager as FighterHurtboxManager;
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
             HitInfo hitInfo = hurtInfo.hitInfo as HitInfo;
-            HitReaction hitReaction = new HitReaction();
+            HitReactionBase HitReactionBase = new HitReactionBase();
             
             int indexOfHurtboxGroup = hurtboxManager.GetHurtboxDefinition().hurtboxGroups.IndexOf(hurtInfo.hurtboxGroupHit);
             if (hurtboxManager.hurtboxHitCount.ContainsKey(indexOfHurtboxGroup) == false)
@@ -52,18 +52,17 @@ namespace Mahou.Content.Fighters
             }
             hurtboxManager.hurtboxHitCount[indexOfHurtboxGroup] += 1;
 
-            hitReaction.reactionType = HitReactionType.Hit;
+            //HitReactionBase.reactionType = HitReactionBaseType.Hit;
             if(hurtInfo.hurtboxGroupHit.armor == ArmorType.PARRY)
             {
-                hitReaction.reactionType = HitReactionType.Blocked;
-                return hitReaction;
+                return HitReactionBase;
             }
             // Check if the box can hit this entity.
             if (hitInfo.groundOnly && !physicsManager.IsGrounded
                 || hitInfo.airOnly && physicsManager.IsGrounded)
             {
-                hitReaction.reactionType = HitReactionType.Avoided;
-                return hitReaction;
+                //HitReactionBase.reactionType = HitReactionBaseType.Avoided;
+                return HitReactionBase;
             }
             // Got hit, apply stun, damage, and forces.
             //LastHitBy = hInfo;
@@ -98,7 +97,7 @@ namespace Mahou.Content.Fighters
             {
                 manager.StateManager.ChangeState((ushort)(physicsManager.IsGrounded ? FighterStates.FLINCH_GROUND : FighterStates.FLINCH_AIR));
             }
-            return hitReaction;
+            return HitReactionBase;
         }
 
         protected override bool CheckStickDirection(InputDefinition sequenceInput, uint framesBack)

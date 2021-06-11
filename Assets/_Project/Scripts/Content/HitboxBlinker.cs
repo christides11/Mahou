@@ -33,7 +33,7 @@ namespace Mahou
             hitboxManager.OnHitHurtbox += onHitHurtbox;
         }
 
-        private void onHitHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, HnSF.Combat.Hurtbox hurtbox)
+        private void onHitHurtbox(HitboxGroup hitboxGroup, int hitboxIndex, HnSF.Combat.Hurtbox hurtbox, HitReactionBase hitReactionBase)
         {
             hitstop = (hitboxGroup.hitboxHitInfo as Mahou.Combat.HitInfo).attackerHitstop;
         }

@@ -2,11 +2,12 @@ using UnityEngine;
 
 namespace Mahou.Content
 {
-    [CreateAssetMenu(fileName = "Song", menuName = "Mahou/Content/Song")]
+    [CreateAssetMenu(fileName = "Song", menuName = "Mahou/Content/Song/Definition")]
     public class Song : ScriptableObject
     {
-        public float bpm;
-        public float firstBeatOffset;
-        public AudioClip song;
+        public SongPiece introduction;
+        public SongPiece verse;
+        public SongPiece[] choruses = new SongPiece[0];
+        public SongPiece outro;
     }
 }

@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d834d721e7c177d49800a851b38cb247, type: 3}
-  m_Name: VersusR.PhaseOne.Song
+  m_Script: {fileID: 11500000, guid: 4f939757af33fd54f8f5b884dc3f0017, type: 3}
+  m_Name: VersusR.PhaseOne.Intro
   m_EditorClassIdentifier: 
-  bpm: 160
-  firstBeatOffset: 0
-  song: {fileID: 8300000, guid: 4bf1d311e3451b74d9269afc6318b229, type: 3}

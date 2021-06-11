@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1e207a981cb82541890f31c55e71fe1, type: 3}
-  m_Name: VersusR.PhaseOne.Definition
+  m_Script: {fileID: 11500000, guid: d834d721e7c177d49800a851b38cb247, type: 3}
+  m_Name: VersusR.PhaseOne
   m_EditorClassIdentifier: 
-  songName: VersusR (Phase 1)
-  description: 
-  songReference:
-    m_AssetGUID: 79cf4fd5698299340b9eba7cea649ed1
-    m_SubObjectName: 
-    m_SubObjectType: 
+  introduction: {fileID: 11400000, guid: dc51a0667fba6bb4eacdf7c1862028c6, type: 2}
+  verse: {fileID: 0}
+  choruses: []
+  outro: {fileID: 0}

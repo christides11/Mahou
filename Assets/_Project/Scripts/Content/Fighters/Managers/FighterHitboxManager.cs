@@ -61,7 +61,7 @@ namespace Mahou.Content.Fighters
             switch (hitboxGroup.boxes[boxIndex].shape)
             {
                 case BoxShape.Rectangle:
-                    cldAmt = Physics.OverlapBoxNonAlloc(position, size, raycastHitList,
+                    cldAmt = Physics.OverlapBoxNonAlloc(position, size/2.0f, raycastHitList,
                         Quaternion.Euler((hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).rotation),
                         combatManager.hitboxLayerMask);
                     //ExtDebug.DrawBox(position, size, Quaternion.Euler((hitboxGroup.boxes[boxIndex] as HnSF.Combat.BoxDefinition).rotation), Color.red, 1);
