@@ -10,5 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f939757af33fd54f8f5b884dc3f0017, type: 3}
-  m_Name: VersusR.PhaseOne.Intro
+  m_Name: VersusR.PhaseOne.Intro.LeadChart
   m_EditorClassIdentifier: 
+  notes: []

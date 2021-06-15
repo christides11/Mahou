@@ -16,6 +16,8 @@ namespace Mahou.Content.Fighters
 
         public TeamTypes team;
 
+        public float autoLinkForcePercentage = 1.0f;
+
         public virtual void Initialize()
         {
             manager = GetComponent<FighterManager>();
@@ -30,6 +32,15 @@ namespace Mahou.Content.Fighters
         public override HnSF.Combat.MovesetDefinition GetMoveset(int index)
         {
             return (manager as FighterManager).movesets[index];
+        }
+
+        protected override bool CheckAttackNodeConditions(HnSF.Combat.MovesetAttackNode node)
+        {
+            if ((node as Mahou.Combat.MovesetAttackNode).lockonRequired == true && (manager as FighterManager).LockedOn == false)
+            {
+                return false;
+            }
+            return true;
         }
 
         public override int GetTeam()
@@ -77,6 +88,12 @@ namespace Mahou.Content.Fighters
                     physicsManager.forceGravity.y = hitInfo.opponentForce.y;
                     physicsManager.forceMovement = forces;
                     break;
+            }
+
+            if (hitInfo.autoLink)
+            {
+                physicsManager.forceMovement.x += hurtInfo.attackerVelocity.x * autoLinkForcePercentage;
+                physicsManager.forceMovement.z += hurtInfo.attackerVelocity.z * autoLinkForcePercentage;
             }
 
             if (physicsManager.forceGravity.y > 0)

@@ -65,6 +65,7 @@ namespace Mahou.Content.Fighters
                 FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.walkRotationSpeed);
             }
 
+            //(Manager as FighterManager).jumpTotalLength++;
             if (CheckInterrupt() == false)
             {
                 StateManager.IncrementFrame();
@@ -73,6 +74,10 @@ namespace Mahou.Content.Fighters
 
         public override bool CheckInterrupt()
         {
+            if (FighterManager.TryAttack())
+            {
+                return true;
+            }
             if (FighterManager.TryJump())
             {
                 return true;

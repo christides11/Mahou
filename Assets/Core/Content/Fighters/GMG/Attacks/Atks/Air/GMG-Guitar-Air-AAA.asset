@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 355328904e2f1ef48be147ce3e6109d7, type: 3}
-  m_Name: GMG-Guitar-Ground-AA
+  m_Name: GMG-Guitar-Air-AAA
   m_EditorClassIdentifier: 
-  attackName: Ground AA
+  attackName: Air AA
   description: 
   useState: 0
   stateOverride: 0
-  length: 50
+  length: 25
   hurtboxDefinition: {fileID: 0}
   commandAttackCancelWindows: []
   chargeWindows: []
@@ -27,36 +27,37 @@ MonoBehaviour:
   - id: 2
   - id: 3
   - id: 4
-  cancels:
   - id: 5
+  - id: 6
+  cancels: []
   references:
     version: 1
     00000000:
       type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
       data:
         ID: 0
-        activeFramesStart: 5
+        activeFramesStart: 6
         activeFramesEnd: 9
         boxes:
-        - id: 6
+        - id: 7
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 7
+          id: 8
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Clamp.Move
+        nickname: Soft Lockon
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
         startFrame: 1
-        endFrame: 1
+        endFrame: 4
         attackEvent:
-          id: 8
+          id: 9
         conditions: []
         variables:
           intVars: 
@@ -77,15 +78,15 @@ MonoBehaviour:
     00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: XZ.Friction
+        nickname: Clamp.Move
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 3
-        endFrame: 40
+        startFrame: 1
+        endFrame: 1
         attackEvent:
-          id: 9
+          id: 10
         conditions: []
         variables:
           intVars: 
@@ -106,36 +107,7 @@ MonoBehaviour:
     00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Soft Lockon
-        active: 1
-        onHitCheck: 0
-        onHitHitboxGroup: 0
-        onHitIDGroup: 0
-        startFrame: 1
-        endFrame: 3
-        attackEvent:
-          id: 10
-        conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
-        inputCheckTiming: 0
-        inputCheckStartFrame: 1
-        inputCheckEndFrame: 1
-        input:
-          executeWindow: 3
-          executeInputs: []
-          sequenceWindow: 8
-          sequenceInputs: []
-        chargeLevelMin: 0
-        chargeLevelMax: 0
-        inputCheckProcessed: 0
-    00000004:
-      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
-      data:
-        nickname: F.Force
+        nickname: Clamp.Gravity
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
@@ -161,22 +133,103 @@ MonoBehaviour:
         chargeLevelMin: 0
         chargeLevelMax: 0
         inputCheckProcessed: 0
-    00000005:
-      type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
+    00000004:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        startFrame: 10
-        endFrame: 50
-        cancelListID: 0
+        nickname: XZ.Friction
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 3
+        endFrame: 40
+        attackEvent:
+          id: 12
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000005:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Gravity
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 8
+        endFrame: 25
+        attackEvent:
+          id: 13
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
     00000006:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Soft Lockon
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 1
+        attackEvent:
+          id: 14
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000007:
       type: {class: BoxDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         shape: 0
-        offset: {x: 0, y: 0, z: 0}
-        size: {x: 2, y: 2, z: 2}
-        rotation: {x: 0, y: 0.5, z: 0}
+        offset: {x: 0, y: 0.9, z: 0.5}
+        size: {x: 2.25, y: 1.8, z: 2}
+        rotation: {x: 0, y: 0, z: 0}
         radius: 0
         height: 0
-    00000007:
+    00000008:
       type: {class: HitInfo, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         hitType: 0
@@ -200,31 +253,59 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: 5}
+        opponentForce: {x: 0, y: -15, z: 15}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
         throwConfirm: {fileID: 0}
-    00000008:
+    00000009:
+      type: {class: SoftLockOn, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
+      data:
+        rotSpeed: 25
+    0000000A:
       type: {class: ClampMovement, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
-        maxLength: 5
-    00000009:
+        maxLength: 7
+    0000000B:
+      type: {class: ClampGravity, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
+      data:
+        maxLength: 2
+    0000000C:
       type: {class: ApplyFriction, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
         useXZFriction: 1
         useYFriction: 0
-        xzFriction: 12
+        xzFriction: 10
         yFriction: 0
-    0000000A:
+    0000000D:
+      type: {class: ApplyGravity, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
+      data:
+        useEntityMaxFallSpeed: 1
+        useEntityGravity: 1
+        useEntityGravityScale: 1
+        gravityCurveMultiplier: 1
+        gravityCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        gravityScaleCurveMultiplier: 1
+        gravityScaleCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        maxFallSpeedCurveMultiplier: 1
+        maxFallSpeedCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    0000000E:
       type: {class: SoftLockOn, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
         rotSpeed: 25
-    0000000B:
-      type: {class: ForceAdd, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
-      data:
-        addXZForce: 1
-        addYForce: 0
-        xzForce: {x: 0, y: 5}
-        yForce: 0

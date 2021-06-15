@@ -9,7 +9,6 @@ namespace Mahou.Content.Fighters
         public override void Initialize()
         {
             base.Initialize();
-            PhysicsManager.ApplyMovementFriction((Manager as FighterManager).StatsManager.CurrentStats.jumpSquatFriction);
             /*if (controller.LockedOn)
             {
                 controller.SetVisualRotation(controller.LockonForward);
@@ -21,6 +20,7 @@ namespace Mahou.Content.Fighters
             {
                 Manager.SetVisualRotation(lookVector);
             }*/
+            //(Manager as FighterManager).jumpTotalLength = 0;
         }
 
         public override void OnUpdate()
@@ -37,6 +37,7 @@ namespace Mahou.Content.Fighters
         {
             if (Manager.StateManager.CurrentStateFrame >= (Manager as FighterManager).StatsManager.CurrentStats.jumpSquat)
             {
+                PhysicsManager.ApplyMovementFriction((Manager as FighterManager).StatsManager.CurrentStats.jumpSquatFriction);
                 Manager.StateManager.ChangeState((int)FighterStates.JUMP);
                 return true;
             }

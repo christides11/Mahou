@@ -25,16 +25,21 @@ namespace Mahou.Content.Fighters
                 StateManager.CurrentStateFrame);
 
             PhysicsManager.ApplyMovementFriction(e.StatsManager.CurrentStats.hitstunGroundFriction.GetCurrentValue());
-            PhysicsManager.HandleGravity(
-                e.StatsManager.CurrentStats.hitstunMaxFallSpeed, 
-                e.StatsManager.CurrentStats.hitstunGravity.GetCurrentValue(),
-                PhysicsManager.GravityScale);
-            e.StateManager.IncrementFrame();
 
+            if (StateManager.CurrentStateFrame > e.StatsManager.CurrentStats.hitstunHoldPositionFor
+                || PhysicsManager.forceGravity.y != 0) {
+                PhysicsManager.HandleGravity(
+                    e.StatsManager.CurrentStats.hitstunMaxFallSpeed,
+                    e.StatsManager.CurrentStats.hitstunGravity.GetCurrentValue(),
+                    PhysicsManager.GravityScale);
+            }
             //float f = (((float)e.StateManager.CurrentStateFrame / (float)e.CombatManager.HitStun) * 10.0f);
             //(Manager as FighterManager).entityAnimator.SetFrame((int)f);
 
-            CheckInterrupt();
+            if (CheckInterrupt() == false)
+            {
+                StateManager.IncrementFrame();
+            }
         }
 
         public override bool CheckInterrupt()

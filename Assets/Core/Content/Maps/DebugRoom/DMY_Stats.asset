@@ -101,10 +101,10 @@ MonoBehaviour:
     dashTime: 10
     jumpsAvailable: 2
     jumpSquat: 4
-    jumpVeloMinHoldFrames: 1
-    jumpVeloMaxHoldFrames: 6
+    jumpVeloMinHoldFrames: 5
+    jumpVeloMaxHoldFrames: 15
     jumpVelocity:
-      baseValue: 13
+      baseValue: 10.6
     jumpConversedMomentum:
       baseValue: 0.5
     jumpInitHozVelo:
@@ -114,11 +114,11 @@ MonoBehaviour:
     airJumpHozVelo:
       baseValue: 6
     airJumpVelocity:
-    - baseValue: 15
+    - baseValue: 20
     gravity:
       baseValue: 50
     maxFallSpeed:
-      baseValue: 17
+      baseValue: 50
     accelFromDotProduct:
       serializedVersion: 2
       m_Curve:
@@ -195,12 +195,13 @@ MonoBehaviour:
       m_RotationOrder: 4
     airDashGravityAfter: 15
     airDashLength: 20
+    hitstunHoldPositionFor: 10
     hitstunGravity:
       baseValue: 0.7
     hitstunMaxFallSpeed:
       baseValue: 11
-    hitstunFrictionXZ:
-      baseValue: 45
+    hitstunGroundFriction:
+      baseValue: 0
     inertiaFriction:
       baseValue: 0
     weight:

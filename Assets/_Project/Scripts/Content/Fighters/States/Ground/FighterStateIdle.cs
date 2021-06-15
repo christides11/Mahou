@@ -10,6 +10,7 @@ namespace Mahou.Content.Fighters
         {
             base.Initialize();
             PhysicsManager.forceGravity = Vector3.zero;
+            //Debug.Log((Manager as FighterManager).jumpTotalLength);
         }
 
         public override void OnUpdate()

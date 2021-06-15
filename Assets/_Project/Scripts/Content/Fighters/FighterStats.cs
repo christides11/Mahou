@@ -62,6 +62,7 @@ namespace Mahou.Content.Fighters
         public int airDashLength;
 
         [Header("Hitstun")]
+        public int hitstunHoldPositionFor = 10;
         public FighterStatFloat hitstunGravity = new FighterStatFloat(0); //Gravity while in hitstun.
         public FighterStatFloat hitstunMaxFallSpeed = new FighterStatFloat(0);
         public FighterStatFloat hitstunGroundFriction = new FighterStatFloat(0);
@@ -137,6 +138,7 @@ namespace Mahou.Content.Fighters
             airDashLength = source.airDashLength;
 
             // Hitstun
+            hitstunHoldPositionFor = source.hitstunHoldPositionFor;
             hitstunGravity.UpdateBaseValue(source.hitstunGravity);
             hitstunMaxFallSpeed.UpdateBaseValue(source.hitstunMaxFallSpeed);
             hitstunGroundFriction.UpdateBaseValue(source.hitstunGroundFriction);

@@ -44,6 +44,8 @@ namespace Mahou.Content.Fighters
 
         private Vector3 size;
 
+        //public int jumpTotalLength = 0;
+
         public virtual void Awake()
         {
             Initialize();
@@ -363,7 +365,9 @@ namespace Mahou.Content.Fighters
 
         public override void RotateVisual(Vector3 direction, float speed)
         {
-            base.RotateVisual(direction, speed * Time.fixedDeltaTime);
+            Vector3 newDirection = Vector3.RotateTowards(visual.transform.forward, direction, speed * Time.fixedDeltaTime, 0.0f);
+            visual.transform.rotation = Quaternion.LookRotation(newDirection);
+            //base.RotateVisual(direction, speed * Time.fixedDeltaTime);
         }
 
         public AnimationClip GetAnimationClip(string animationName, int movesetIdentifier = -1)
@@ -388,7 +392,7 @@ namespace Mahou.Content.Fighters
             }
         }
 
-        public ISimState GetSimState()
+        public virtual ISimState GetSimState()
         {
             PlayerSimState simState = new PlayerSimState();
             simState.visualRotation = visual.transform.eulerAngles;
@@ -431,7 +435,7 @@ namespace Mahou.Content.Fighters
             return simState;
         }
 
-        public void ApplySimState(ISimState state)
+        public virtual void ApplySimState(ISimState state)
         {
             PlayerSimState pState = (PlayerSimState)state;
             visual.transform.eulerAngles = pState.visualRotation;

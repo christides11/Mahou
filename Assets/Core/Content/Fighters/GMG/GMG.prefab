@@ -151,14 +151,14 @@ MonoBehaviour:
   currentJump: 0
   movesets: []
   softLockonRadius: 10
-  lockonRadius: 0
+  lockonRadius: 15
   lockonFudging: 0.1
   lockonLayerMask:
     serializedVersion: 2
     m_Bits: 256
   lockonVisibilityLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   visualOffset: {x: 0, y: 0, z: 0}
   statManager: {fileID: 9161192216790614098}
   testAudioClip: {fileID: 8300000, guid: 1657e13ce23651842a99257f388bd5f7, type: 3}
@@ -175,7 +175,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 5587520329024140789}
-  baseOffset: 0
 --- !u!114 &-2356063080773862610
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,5 +13,6 @@ namespace Mahou.Input
         public bool shoot;
         public bool dash;
         public bool parry;
+        public bool abilityOne, abilityTwo, abilityThree, abilityFour;
     }
 }

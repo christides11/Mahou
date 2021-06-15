@@ -9,6 +9,6 @@ namespace Mahou.Content
         public float firstBeatOffset;
         public AudioClip song;
 
-        public SongPieceChart leadChart;
+        public SongChart leadChart;
     }
 }

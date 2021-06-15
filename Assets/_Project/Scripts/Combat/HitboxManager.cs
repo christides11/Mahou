@@ -41,7 +41,7 @@ namespace Mahou
         {
             HurtInfo hurtInfo;
             hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
-                transform.position, transform.forward, transform.right);
+                transform.position, transform.forward, transform.right, Vector3.zero);
             return hurtInfo;
         }
     }

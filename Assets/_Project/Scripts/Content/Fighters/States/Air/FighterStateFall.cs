@@ -34,6 +34,7 @@ namespace Mahou.Content.Fighters
                 FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.walkRotationSpeed);
             }
 
+            //(Manager as FighterManager).jumpTotalLength++;
             CheckInterrupt();
         }
 

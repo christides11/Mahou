@@ -96,21 +96,25 @@ namespace Mahou.Content.Fighters
             {
                 case HitboxForceRelation.ATTACKER:
                     hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup, 
-                        transform.position, manager.visual.transform.forward, manager.visual.transform.right);
+                        transform.position, manager.visual.transform.forward, manager.visual.transform.right, 
+                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce());
                     break;
                 case HitboxForceRelation.HITBOX:
                     Vector3 position = hitboxGroup.attachToEntity ? manager.transform.position + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset
                 : referencePosition + (hitboxGroup.boxes[hitboxIndex] as HnSF.Combat.BoxDefinition).offset;
                     hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
-                        position,  manager.visual.transform.forward, manager.visual.transform.right);
+                        position,  manager.visual.transform.forward, manager.visual.transform.right,
+                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce());
                     break;
                 case HitboxForceRelation.WORLD:
                     hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
-                        transform.position, Vector3.forward, Vector3.right);
+                        transform.position, Vector3.forward, Vector3.right,
+                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce());
                     break;
                 default:
                     hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
-                        transform.position, manager.visual.transform.forward, manager.visual.transform.right);
+                        transform.position, manager.visual.transform.forward, manager.visual.transform.right,
+                        (manager.PhysicsManager as FighterPhysicsManager).GetOverallForce());
                     break;
             }
             return hurtInfo;

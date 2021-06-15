@@ -6,6 +6,6 @@ namespace Mahou.Combat
 {
     public class MovesetAttackNode : HnSF.Combat.MovesetAttackNode
     {
-
+        public bool lockonRequired;
     }
 }
