@@ -92,8 +92,7 @@ namespace Mahou.Simulation
         {
             foreach (ClientManager cm in ClientManager.GetClients())
             {
-                if (!clientStateSnapshots.ContainsKey(cm.clientID) || 
-                    clientStateSnapshots[cm.clientID][(CurrentRealTick - 2) % circularBufferSize].Equals(default(ClientSimState)))
+                if (!clientStateSnapshots.ContainsKey(cm.clientID) || clientStateSnapshots[cm.clientID][(CurrentRealTick - 2) % circularBufferSize] == null)
                 {
                     continue;
                 }
@@ -117,7 +116,6 @@ namespace Mahou.Simulation
             
             if (rollbackRequired || forceRollback)
             {
-                Debug.Log("Rollback triggered.");
                 Rollback(latestAckedServerWorldStateTick);
             }
         }
@@ -234,12 +232,14 @@ namespace Mahou.Simulation
             {
                 // SNAPSHOT STATE //
                 clientStateSnapshots[c.clientID][bufidx] = c.GetClientSimState();
+
                 // SNAPSHOT INPUT //
                 if (c.isLocalPlayer)
                 {
                     clientInputSnapshots[c.clientID][bufidx] = localClient.GetInputs();
                     continue;
                 }
+                
                 // We have already received input for this tick.
                 if (clientLatestAckedInput[c.clientID] > currentRealTick)
                 {
@@ -321,6 +321,7 @@ namespace Mahou.Simulation
             ServerWorldStateMessage incomingState = worldStateQueue.Dequeue();
             latestAckedServerWorldStateTick = incomingState.worldSnapshot.currentTick;
             latestAckedInput = incomingState.clientLatestAckedInput;
+            NetworkClient.Send(new ClientSimStateMessage() { latestAckedServerWorldStateTick = latestAckedServerWorldStateTick }, 0);
 
             // Calculate our actual tick lead on the server perspective. We add one because the world
             // state the server sends to use is always 1 higher than the latest input that has been
@@ -389,13 +390,18 @@ namespace Mahou.Simulation
             // Apply the client states on the rollback frame.
             for (int i = 0; i < incomingState.worldSnapshot.clientStates.Count; i++)
             {
-                var c = incomingState.worldSnapshot.clientStates[i];
-                ClientManager cm = c.networkIdentity.GetComponent<ClientManager>();
+                ClientManager cm = incomingState.worldSnapshot.clientStates[i].networkIdentity.GetComponent<ClientManager>();
                 if (!clientStateSnapshots.ContainsKey(cm.clientID))
                 {
                     clientStateSnapshots.Add(cm.clientID, new ClientSimState[circularBufferSize]);
                 }
-                clientStateSnapshots[cm.clientID][bufidx] = c;
+                clientStateSnapshots[cm.clientID][bufidx] = incomingState.worldSnapshot.clientStates[i];
+
+                /*if(clientStateSnapshots[cm.clientID][bufidx].playersStates != null
+                    && clientStateSnapshots[cm.clientID][bufidx].playersStates.Count > 0)
+                {
+                    Debug.Log(incomingState.worldSnapshot.clientStates[i].playersStates[0].GetType().FullName);
+                }*/
             }
         }
         #endregion

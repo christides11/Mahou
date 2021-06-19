@@ -36,6 +36,8 @@ namespace Mahou.Simulation
         /// </summary>
         private Dictionary<int, TickInput> clientCurrentInput = new Dictionary<int, TickInput>();
 
+        private Dictionary<int, int> clientConfirmedTick = new Dictionary<int, int>();
+
         public ServerSimulationManager(LobbyManager lobbyManager) : base(lobbyManager)
         {
             gameManager = GameManager.current;
@@ -44,9 +46,41 @@ namespace Mahou.Simulation
             Mahou.Networking.NetworkManager.OnServerClientReady += InitializePlayerState;
             Mahou.Networking.NetworkManager.OnServerClientDisconnected += HandleClientDisconnect;
             NetworkServer.RegisterHandler<ClientInputMessage>(ReceiveClientInput);
+            NetworkServer.RegisterHandler<ClientSimStateMessage>(ReceiveClientSimStateMsg);
+            NetworkClient.RegisterHandler<ServerWorldStateMessage>(TestWorldStateMsg);
 
             // Initialize timers.
             SetWorldStateBroadcastTimer((float)gameManager.GameSettings.serverWorldStateSendRate);
+        }
+
+        private void TestWorldStateMsg(ServerWorldStateMessage arg2)
+        {
+            if(arg2.worldSnapshot.clientStates.Count > 0)
+            {
+                if(arg2.worldSnapshot.clientStates[0].playersStates != null && arg2.worldSnapshot.clientStates[0].playersStates.Count > 0)
+                {
+                    for(int i = 0; i < arg2.worldSnapshot.clientStates[0].playersStates.Count; i++)
+                    {
+                        Debug.Log($"Player State Type: {arg2.worldSnapshot.clientStates[0].playersStates[i].GetType().FullName}");
+                    }
+                }
+            }
+        }
+
+        private void ReceiveClientSimStateMsg(NetworkConnection arg1, ClientSimStateMessage arg2)
+        {
+            ClientManager cm = ClientManager.GetClient(arg1.identity);
+            clientConfirmedTick[cm.clientID] = arg2.latestAckedServerWorldStateTick;
+        }
+
+        public virtual int GetEarliestConfirmedClientTick()
+        {
+            int confirmedTick = CurrentRealTick;
+            foreach(var c in clientConfirmedTick)
+            {
+                confirmedTick = Mathf.Min(confirmedTick, c.Value);
+            }
+            return confirmedTick;
         }
 
         public virtual void SetWorldStateBroadcastTimer(float worldStateSendRate)
@@ -64,7 +98,7 @@ namespace Mahou.Simulation
         {
             foreach (ClientManager cm in ClientManager.GetClients())
             {
-                if (clientStateSnapshots[cm.clientID][(CurrentRealTick - 1) % circularBufferSize].Equals(default(ClientSimState)))
+                if (clientStateSnapshots[cm.clientID][(CurrentRealTick - 1) % circularBufferSize] == null)
                 {
                     continue;
                 }
@@ -122,6 +156,8 @@ namespace Mahou.Simulation
 
             // BROADCAST WORLD STATE //
             worldStateBroadcastTimer.Update(dt);
+
+            SimulationDeletionManager.Cleanup();
         }
 
         private void ChangeInputDelay()
@@ -191,6 +227,7 @@ namespace Mahou.Simulation
             {
                 return;
             }
+            clientConfirmedTick[ClientManager.local.clientID] = CurrentRealTick;
             // For when the input delay is set lower.
             if (lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput > currentRealTick + inputDelay)
             {
@@ -298,6 +335,7 @@ namespace Mahou.Simulation
         private void InitializePlayerState(NetworkConnection clientConnection, ClientManager clientManager)
         {
             clientStateSnapshots.Add(clientManager.clientID, new ClientSimState[1024]);
+            clientConfirmedTick.Add(clientManager.clientID, CurrentRealTick);
         }
 
         public void ResetPlayerState(ClientManager player)
@@ -313,13 +351,17 @@ namespace Mahou.Simulation
         /// <param name="dt"></param>
         private void BroadcastWorldState(float dt)
         {
+            if (NetworkServer.connections.Count == 0 || NetworkServer.connections.Count == 1 && NetworkServer.localClientActive)
+            {
+                return;
+            }
             // Build Message
             ServerWorldStateMessage serverStateMsg = new ServerWorldStateMessage();
 
             List<ClientSimState> clientStates = new List<ClientSimState>();
             foreach(ClientManager cm in ClientManager.clientManagers.Values)
             {
-                clientStates.Add(clientStateSnapshots[cm.clientID][currentRealTick % circularBufferSize]); //cm.GetClientSimState());
+                clientStates.Add(clientStateSnapshots[cm.clientID][currentRealTick % circularBufferSize]);
             }
 
             serverStateMsg.worldSnapshot = new WorldSnapshot()
@@ -328,7 +370,7 @@ namespace Mahou.Simulation
                 clientStates = clientStates,
                 currentTick = currentRealTick
             };
-
+            
             // Send Message
             foreach (var v in lobbyManager.MatchManager.joinedClients)
             {

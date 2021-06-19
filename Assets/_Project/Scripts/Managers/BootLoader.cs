@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
 using Mahou.Managers;
 using Mahou.Debugging;
+using Mahou.Simulation;
+using Mahou.Networking;
 
 namespace Mahou
 {
@@ -23,6 +25,8 @@ namespace Mahou
         private void Awake()
         {
             consoleWindow.Init();
+            ISimStateSerializer.Initialize();
+            SimulationCreationManager.Initialize();
             NetworkFighterSpawnManager.Initialize();
             gameManager.Initialize();
         }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using Mahou.Simulation;
 
 namespace Mahou.Networking
 {
@@ -46,7 +47,7 @@ namespace Mahou.Networking
         {
             base.OnServerConnect(conn);
             // Ignore host.
-            if(NetworkServer.localClientActive
+            if (NetworkServer.localClientActive
                 && conn.connectionId == NetworkServer.localConnection.connectionId)
             {
                 return;

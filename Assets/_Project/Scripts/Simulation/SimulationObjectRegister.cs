@@ -9,7 +9,7 @@ namespace Mahou.Simulation
     {
         public override void OnStartServer()
         {
-            SimulationManagerBase.instance.RegisterSimulationObject(netIdentity);
+            //SimulationManagerBase.instance.RegisterSimulationObject(netIdentity);
         }
 
         public override void OnStartClient()
@@ -18,7 +18,7 @@ namespace Mahou.Simulation
             {
                 return;
             }
-            SimulationManagerBase.instance.RegisterSimulationObject(netIdentity);
+            //SimulationManagerBase.instance.RegisterSimulationObject(netIdentity);
         }
     }
 }

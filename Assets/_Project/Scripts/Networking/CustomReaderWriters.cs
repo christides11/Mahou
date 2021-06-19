@@ -1,3 +1,4 @@
+using KinematicCharacterController;
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,54 @@ namespace Mahou
 {
     public static class CustomReaderWriters
     {
+        public static void WriteKinematicCharacterMotorState(this NetworkWriter writer, KinematicCharacterMotorState kcms)
+        {
+            writer.Write(kcms.Position);
+            writer.Write(kcms.Rotation);
+            writer.Write(kcms.BaseVelocity);
+            writer.Write(kcms.MustUnground);
+            writer.Write(kcms.MustUngroundTime);
+            writer.Write(kcms.LastMovementIterationFoundAnyGround);
+            writer.Write(kcms.GroundingStatus);
+            writer.Write(kcms.AttachedRigidbodyVelocity);
+        }
+
+        public static KinematicCharacterMotorState ReadKinematicCharacterMotorState(this NetworkReader reader)
+        {
+            KinematicCharacterMotorState kcms = new KinematicCharacterMotorState();
+            kcms.Position = reader.ReadVector3();
+            kcms.Rotation = reader.ReadQuaternion();
+            kcms.BaseVelocity = reader.ReadVector3();
+            kcms.MustUnground = reader.ReadBool();
+            kcms.MustUngroundTime = reader.ReadFloat();
+            kcms.LastMovementIterationFoundAnyGround = reader.ReadBool();
+            kcms.GroundingStatus = reader.Read<CharacterTransientGroundingReport>();
+            kcms.AttachedRigidbodyVelocity = reader.ReadVector3();
+            return kcms;
+        }
+
+        public static void WriteCharacterTransientGroundingReport(this NetworkWriter writer, CharacterTransientGroundingReport ctgr)
+        {
+            writer.Write(ctgr.FoundAnyGround);
+            writer.Write(ctgr.IsStableOnGround);
+            writer.Write(ctgr.SnappingPrevented);
+            writer.Write(ctgr.GroundNormal);
+            writer.Write(ctgr.InnerGroundNormal);
+            writer.Write(ctgr.OuterGroundNormal);
+        }
+
+        public static CharacterTransientGroundingReport ReadCharacterTransientGroundingReport(this NetworkReader reader)
+        {
+            CharacterTransientGroundingReport ctgr = new CharacterTransientGroundingReport();
+            ctgr.FoundAnyGround = reader.ReadBool();
+            ctgr.IsStableOnGround = reader.ReadBool();
+            ctgr.SnappingPrevented = reader.ReadBool();
+            ctgr.GroundNormal = reader.ReadVector3();
+            ctgr.InnerGroundNormal = reader.ReadVector3();
+            ctgr.OuterGroundNormal = reader.ReadVector3();
+            return ctgr;
+        }
+
         public static void WriteHitboxDictionaryType(this NetworkWriter writer, Dictionary<int, IDGroupCollisionInfo> value)
         {
             writer.WriteInt(value.Count);

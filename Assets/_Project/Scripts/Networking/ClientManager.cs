@@ -143,6 +143,18 @@ namespace Mahou.Networking
             return null;
         }
 
+        public static ClientManager GetClient(NetworkIdentity networkIdentity)
+        {
+            foreach (ClientManager cm in clientManagers.Values)
+            {
+                if(cm.networkIdentity.netId == networkIdentity.netId)
+                {
+                    return cm;
+                }
+            }
+            return null;
+        }
+
         public static List<ClientManager> GetClients()
         {
             List<ClientManager> cManagers = new List<ClientManager>();
@@ -189,7 +201,7 @@ namespace Mahou.Networking
             List<PlayerSimState> pss = new List<PlayerSimState>();
             for (int i = 0; i < players.Count; i++)
             {
-                pss.Add((PlayerSimState)players[i].GetComponent<ISimObject>().GetSimState());
+                pss.Add(players[i].GetComponent<ISimObject>().GetSimState() as PlayerSimState);
             }
 
             return new ClientSimState(networkIdentity, pss);
@@ -197,7 +209,7 @@ namespace Mahou.Networking
 
         public void ApplyClientSimState(ClientSimState clientSimState)
         {
-            if(clientSimState.playersStates == null)
+            if(clientSimState == null || clientSimState.playersStates == null)
             {
                 return;
             }
@@ -230,11 +242,11 @@ namespace Mahou.Networking
         #region Error Checking
         [Header("Error Checking")]
         public bool showPositions = false;
-        public float positionDivergence = 0.01f;
-        public float rotationDivergence = 0.01f;
+        public float positionDivergence = 0.001f;
+        public float rotationDivergence = 0.001f;
         public bool CompareSimulationStates(ClientSimState serverSimState, ClientSimState localSimState)
         {
-            if (localSimState.playersStates == null)
+            if (localSimState == null || localSimState.playersStates == null)
             {
                 return false;
             }
@@ -272,8 +284,9 @@ namespace Mahou.Networking
                 {
                     return;
                 }
-                players[i].GetComponent<FighterManager>().Interpolate(((ClientSimState)lastTick).playersStates[i],
-                    ((ClientSimState)currentTick).playersStates[i], alpha);
+                players[i].GetComponent<FighterManager>().Interpolate(
+                    (PlayerSimState)((ClientSimState)lastTick).playersStates[i],
+                    (PlayerSimState)((ClientSimState)currentTick).playersStates[i], alpha);
             }
         }
     }

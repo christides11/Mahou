@@ -8,6 +8,7 @@ namespace Mahou.Content.Fighters
 {
     public class FighterNetwork : NetworkBehaviour
     {
+
         public override void OnStartAuthority()
         {
             base.OnStartAuthority();

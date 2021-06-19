@@ -8,11 +8,15 @@ namespace Mahou.Simulation
     /// Keeps a list of the current state of all local players for this client.
     /// </summary>
     [System.Serializable]
-    public struct ClientSimState : ISimState
+    public class ClientSimState : ISimState
     {
         public NetworkIdentity networkIdentity;
-
         public List<PlayerSimState> playersStates;
+
+        public ClientSimState()
+        {
+
+        }
 
         public ClientSimState(NetworkIdentity networkIdentity, List<PlayerSimState> playersStates)
         {

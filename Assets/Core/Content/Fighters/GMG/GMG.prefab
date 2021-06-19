@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4742129870160745856}
   - component: {fileID: 308169902951444416}
+  - component: {fileID: 553816322759427552}
   - component: {fileID: 7651240286032661150}
   - component: {fileID: 844805816179117161}
   - component: {fileID: 5587520329024140789}
@@ -20,7 +21,6 @@ GameObject:
   - component: {fileID: 2320185776235978899}
   - component: {fileID: 1412428705586473507}
   - component: {fileID: 9161192216790614098}
-  - component: {fileID: 6809904219315617522}
   - component: {fileID: 7886028677784697296}
   - component: {fileID: -2146182330565093495}
   m_Layer: 8
@@ -62,6 +62,20 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &553816322759427552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886669924077431813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c00879164cd9cc4aa3d974d212788fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &7651240286032661150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +176,13 @@ MonoBehaviour:
   visualOffset: {x: 0, y: 0, z: 0}
   statManager: {fileID: 9161192216790614098}
   testAudioClip: {fileID: 8300000, guid: 1657e13ce23651842a99257f388bd5f7, type: 3}
+  isClone: 0
+  lightningGameobject: {fileID: 1990499214107696599, guid: 2381c075b4f28d444a487f6931713084,
+    type: 3}
+  recordMode: 0
+  finishedRecording: 0
+  maxRecordTime: 120
+  currentRecordIndex: 0
 --- !u!114 &4195765052651656638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +246,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   team: 0
+  autoLinkForcePercentage: 1
 --- !u!114 &2320185776235978899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,6 +372,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     airDashGravityAfter: 0
     airDashLength: 0
+    hitstunHoldPositionFor: 10
     hitstunGravity:
       baseValue: 0
     hitstunMaxFallSpeed:
@@ -360,20 +383,6 @@ MonoBehaviour:
       baseValue: 0
     weight:
       baseValue: 0
---- !u!114 &6809904219315617522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 886669924077431813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c00879164cd9cc4aa3d974d212788fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!114 &7886028677784697296
 MonoBehaviour:
   m_ObjectHideFlags: 0

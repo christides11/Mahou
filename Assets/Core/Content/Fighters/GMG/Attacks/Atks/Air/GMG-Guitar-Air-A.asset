@@ -170,7 +170,7 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 8
+        startFrame: 16
         endFrame: 25
         attackEvent:
           id: 13
@@ -194,13 +194,13 @@ MonoBehaviour:
     00000006:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Soft Lockon
+        nickname: Jump Cancel
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 1
-        endFrame: 3
+        startFrame: 10
+        endFrame: 25
         attackEvent:
           id: 14
         conditions: []
@@ -238,7 +238,7 @@ MonoBehaviour:
         spaceBetweenHits: 0
         opponentResetXForce: 1
         opponentResetYForce: 1
-        autoLink: 0
+        autoLink: 1
         forceType: 0
         forceRelation: 0
         attackerHitstop: 4
@@ -270,7 +270,7 @@ MonoBehaviour:
     0000000B:
       type: {class: ClampGravity, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
-        maxLength: 2
+        maxLength: 0.4
     0000000C:
       type: {class: ApplyFriction, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
@@ -281,7 +281,7 @@ MonoBehaviour:
     0000000D:
       type: {class: ApplyGravity, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
       data:
-        useEntityMaxFallSpeed: 1
+        useEntityMaxFallSpeed: 0
         useEntityGravity: 1
         useEntityGravityScale: 1
         gravityCurveMultiplier: 1
@@ -298,14 +298,30 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        maxFallSpeedCurveMultiplier: 1
+        maxFallSpeedCurveMultiplier: 25
         maxFallSpeedCurve:
           serializedVersion: 2
-          m_Curve: []
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
     0000000E:
-      type: {class: SoftLockOn, ns: Mahou.Combat.Events, asm: Mahou_CSharp}
-      data:
-        rotSpeed: 25
+      type: {class: JumpCancel, ns: Mahou.Combat.Events, asm: Mahou_CSharp}

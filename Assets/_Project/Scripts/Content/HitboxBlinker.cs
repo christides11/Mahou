@@ -16,6 +16,20 @@ namespace Mahou
 
         public int hitstop = 0;
 
+        public bool ObjectEnabled { get; protected set; } = true;
+
+        public void Enable()
+        {
+            ObjectEnabled = true;
+        }
+
+        public void Disable()
+        {
+            ObjectEnabled = false;
+            visual.SetActive(false);
+            hitstop = 0;
+        }
+
         private void OnValidate()
         {
             if((hitboxGroup.hitboxHitInfo as Mahou.Combat.HitInfo) == null)

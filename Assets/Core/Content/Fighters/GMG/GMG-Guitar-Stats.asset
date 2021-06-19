@@ -159,7 +159,7 @@ MonoBehaviour:
     airDeceleration:
       baseValue: 10
     maxAirSpeed:
-      baseValue: 12
+      baseValue: 10
     airDashVelocityCurve:
       serializedVersion: 2
       m_Curve:

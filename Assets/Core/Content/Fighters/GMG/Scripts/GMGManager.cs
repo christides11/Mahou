@@ -1,5 +1,7 @@
 using Mahou.Content.Fighters;
+using Mahou.Networking;
 using Mahou.Simulation;
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +17,8 @@ namespace Mahou.Core
 
         [Header("GMG GENERAL")]
         public bool isClone = false;
-
+        public AssetIdentifier lightningGameobject;
+        
         [Header("ABILITY: Encore")]
         public bool recordMode = false;
         public bool finishedRecording = false;
@@ -29,6 +32,12 @@ namespace Mahou.Core
             base.Initialize();
         }
 
+        public override void Load()
+        {
+            NetworkClient.RegisterPrefab(lightningGameobject.gameObject, lightningGameobject.GetGUID());
+            ISimStateSerializer.AddReaderWriter(GMGSimState.StaticGetGUID(), new GMGSimStateReaderWriter());
+        }
+
         public override void Tick()
         {
             base.Tick();
@@ -37,6 +46,7 @@ namespace Mahou.Core
                 return;
             }
 
+            /*
             if(recordMode == true)
             {
                 recordBuffer[currentRecordIndex] = InputManager.InputRecord[SimulationManagerBase.instance.CurrentTick % (int)InputManager.inputRecordSize];
@@ -52,7 +62,7 @@ namespace Mahou.Core
                 {
                     recordMode = true;
                 }
-            }
+            }*/
         }
 
         public override void SetupStates()
@@ -78,7 +88,7 @@ namespace Mahou.Core
         public override ISimState GetSimState()
         {
             GMGSimState gmgSimState = new GMGSimState();
-            gmgSimState.playerSimState = (PlayerSimState)base.GetSimState();
+            FillSimState(gmgSimState);
             gmgSimState.recordMode = recordMode;
             gmgSimState.finishedRecording = finishedRecording;
             gmgSimState.currentRecordingIndex = currentRecordIndex;
@@ -88,8 +98,8 @@ namespace Mahou.Core
 
         public override void ApplySimState(ISimState state)
         {
-            GMGSimState gmgSimState = (GMGSimState)state;
-            base.ApplySimState(gmgSimState.playerSimState);
+            GMGSimState gmgSimState = state as GMGSimState;
+            base.ApplySimState(state as PlayerSimState);
             recordMode = gmgSimState.recordMode;
             finishedRecording = gmgSimState.finishedRecording;
             currentRecordIndex = gmgSimState.currentRecordingIndex;

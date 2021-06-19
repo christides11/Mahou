@@ -14,6 +14,7 @@ namespace Mahou.Content.Fighters
 {
     public class FighterManager : FighterBase, ISimObject
     {
+        public bool ObjectEnabled { get; protected set; } = true;
         public GameObject LockonTarget { get; protected set; } = null;
         public bool LockedOn { get; protected set; } = false;
         public Vector3 LockonForward { get; protected set; } = Vector3.forward;
@@ -44,7 +45,22 @@ namespace Mahou.Content.Fighters
 
         private Vector3 size;
 
-        //public int jumpTotalLength = 0;
+
+
+        public void Enable()
+        {
+            ObjectEnabled = true;
+        }
+
+        public void Disable()
+        {
+            ObjectEnabled = false;
+        }
+
+        public virtual void Load()
+        {
+
+        }
 
         public virtual void Awake()
         {
@@ -394,7 +410,16 @@ namespace Mahou.Content.Fighters
 
         public virtual ISimState GetSimState()
         {
-            PlayerSimState simState = new PlayerSimState();
+            Debug.Log("Base call.");
+            return null;
+            //PlayerSimState simState = new PlayerSimState();
+            //FillSimState(simState);
+            //return simState;
+        }
+
+        protected virtual void FillSimState(PlayerSimState simState)
+        {
+            simState.objectEnabled = ObjectEnabled;
             simState.visualRotation = visual.transform.eulerAngles;
             simState.netID = netid;
             simState.motorState = cc.Motor.GetState();
@@ -431,13 +456,12 @@ namespace Mahou.Content.Fighters
 
             // State
             simState.stateSimState = (StateManager.GetState(StateManager.CurrentState) as FighterState).GetSimState();
-
-            return simState;
         }
 
         public virtual void ApplySimState(ISimState state)
         {
-            PlayerSimState pState = (PlayerSimState)state;
+            ObjectEnabled = state.objectEnabled;
+            PlayerSimState pState = state as PlayerSimState;
             visual.transform.eulerAngles = pState.visualRotation;
             cc.Motor.ApplyState(pState.motorState);
             physicsManager.SetGrounded(pState.isGrounded);

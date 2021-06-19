@@ -126,6 +126,10 @@ namespace Mahou.Simulation
         {
             foreach(var v in simulationObjectReferences)
             {
+                if (v.Value.ObjectEnabled == false)
+                {
+                    continue;
+                }
                 v.Value.SimUpdate();
             }
         }
@@ -139,6 +143,10 @@ namespace Mahou.Simulation
         {
             foreach (var v in simulationObjectReferences)
             {
+                if (v.Value.ObjectEnabled == false)
+                {
+                    continue;
+                }
                 v.Value.SimLateUpdate();
             }
         }
@@ -162,6 +170,19 @@ namespace Mahou.Simulation
         {
             simulationObjectReferences.Remove(networkIdentity);
             simulationObjectSnapshots.Remove(networkIdentity);
+        }
+
+        public virtual void ReplaceSimulationObject(NetworkIdentity oldObject, NetworkIdentity newObject)
+        {
+            if(newObject.TryGetComponent(out ISimObject so))
+            {
+                simulationObjectReferences.Add(newObject, so);
+                simulationObjectSnapshots.Add(newObject, simulationObjectSnapshots[oldObject]);
+                simulationObjectReferences.Remove(oldObject);
+                simulationObjectSnapshots.Remove(oldObject);
+                return;
+            }
+            Debug.Log("Replace failed.");
         }
 
         public virtual void RequestInputDelayChange(int newInputDelay)

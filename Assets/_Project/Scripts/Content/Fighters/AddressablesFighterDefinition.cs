@@ -34,6 +34,7 @@ namespace Mahou.Content.Fighters
             {
                 await fighterTestReference.LoadAssetAsync<GameObject>();
                 fighter = (GameObject)fighterTestReference.Asset;
+                fighter.GetComponent<FighterManager>().Load();
                 //OperationResult<GameObject> fighterLoadResult = await AddressablesManager.LoadAssetAsync(fighterReference);
                 //fighter = fighterLoadResult.Value;
             }

@@ -1,12 +1,14 @@
 using KinematicCharacterController;
 using Mirror;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static HnSF.Combat.HitboxManager;
 
 namespace Mahou.Simulation
 {
-    public struct PlayerSimState : ISimState
+    [System.Serializable]
+    public class PlayerSimState : ISimState
     {
         public NetworkIdentity netID;
 
@@ -49,5 +51,15 @@ namespace Mahou.Simulation
 
         // State
         public PlayerStateSimState stateSimState;
+
+        public override Guid GetGUID()
+        {
+            return StaticGetGUID();
+        }
+
+        public static new System.Guid StaticGetGUID()
+        {
+            return new System.Guid("34102bae-80b6-4e86-927e-c056026131e2");
+        }
     }
 }

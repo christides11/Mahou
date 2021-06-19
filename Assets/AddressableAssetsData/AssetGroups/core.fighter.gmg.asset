@@ -21,16 +21,14 @@ MonoBehaviour:
     m_Address: core.fighter.gmg.definition
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 11400000, guid: b9110db6b096f2549b05c24b4df7b73f, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: b9110db6b096f2549b05c24b4df7b73f, type: 2}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: f0013c4f5f2ba1441bbd6a3e6ce81c25
     m_Address: core.fighter.gmg.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 886669924077431813, guid: f0013c4f5f2ba1441bbd6a3e6ce81c25,
-      type: 3}
-    m_TargetAsset: {fileID: 886669924077431813, guid: f0013c4f5f2ba1441bbd6a3e6ce81c25,
-      type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: af255da49258d6a4a8452d03a7b964b1
     m_Address: core.fighter.gmg.moveset
     m_ReadOnly: 0
@@ -41,8 +39,8 @@ MonoBehaviour:
     m_Address: core.fighter.gmg.stats
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 11400000, guid: fb328296379ca5b43a115408b3b67ef1, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: fb328296379ca5b43a115408b3b67ef1, type: 2}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f19033ff650faf4438fedfedb426e295, type: 2}
   m_SchemaSet:
