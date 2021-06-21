@@ -1,16 +1,15 @@
 using UnityEditor;
 using UnityEngine;
-
 namespace Mahou.Combat
 {
-    [CustomEditor(typeof(AttackDefinition), true)]
-    public class AttackDefinitionEditor : Editor
+    [CustomEditor(typeof(ProjectileDefinition), true)]
+    public class ProjectileDefinitionEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             if (GUILayout.Button("Open Editor", GUILayout.Width(Screen.width), GUILayout.Height(45)))
             {
-                AttackDefinitionEditorWindow.Init(target as AttackDefinition);
+                ProjectileDefinitionEditorWindow.Init(target as ProjectileDefinition);
             }
 
             DrawDefaultInspector();

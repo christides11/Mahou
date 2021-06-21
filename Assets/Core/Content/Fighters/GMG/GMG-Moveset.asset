@@ -53,7 +53,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: 13b157aa3baca2c42b35de2ed580f401, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 1
 --- !u!114 &-1183580482968015825
@@ -109,7 +109,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: 51a770d0d86f61d48afd1e8b8c9fba00, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 1
 --- !u!114 &-101673471821062487
@@ -161,7 +161,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: 99cb218cee40e3640bd958a916dd0a82, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 0
 --- !u!114 &11400000
@@ -254,7 +254,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: 86186b64c1809614fa5843460eccdc73, type: 2}
+  attackDefinition: {fileID: 11400000, guid: 3785c63c41486f746a6e61b1947040db, type: 2}
   nextNode: []
   lockonRequired: 0
 --- !u!114 &1503390650950357487
@@ -309,7 +309,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: 1953433e8987b2c42a8ef8224af1cd6b, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 0
 --- !u!114 &3134167402410135773
@@ -377,7 +377,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: 40c0704d259fcce498c2c5f2c5ccf09c, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode:
   - cancelWindow: {x: 10, y: 100}
     nodeIdentifier: 10
@@ -434,7 +434,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: a1152919346f98b41b65316d4e534ca2, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 0
 --- !u!114 &3543517496119984828
@@ -482,7 +482,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: f92604606cc5cfc43bc069f97f7bce00, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 0
 --- !u!114 &3625158533729177270
@@ -547,7 +547,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: f6ac080b2a2fde44da19b1aa438f71e5, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode:
   - cancelWindow: {x: 10, y: 100}
     nodeIdentifier: 1
@@ -597,7 +597,7 @@ MonoBehaviour:
     executeInputs: []
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: a1152919346f98b41b65316d4e534ca2, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 0
 --- !u!114 &5432671773901837520
@@ -665,7 +665,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: fff2705cbe34b884b8203048e042439d, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode:
   - cancelWindow: {x: 10, y: 100}
     nodeIdentifier: 2
@@ -732,7 +732,7 @@ MonoBehaviour:
       directionDeviation: 0
     sequenceWindow: 8
     sequenceInputs: []
-  attackDefinition: {fileID: 11400000, guid: 87c026d32fc4a3d49955bc892710d4f6, type: 2}
+  attackDefinition: {fileID: 0}
   nextNode:
   - cancelWindow: {x: 10, y: 100}
     nodeIdentifier: 9

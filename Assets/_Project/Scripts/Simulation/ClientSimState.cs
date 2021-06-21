@@ -10,7 +10,6 @@ namespace Mahou.Simulation
     [System.Serializable]
     public class ClientSimState : ISimState
     {
-        public NetworkIdentity networkIdentity;
         public List<PlayerSimState> playersStates;
 
         public ClientSimState()

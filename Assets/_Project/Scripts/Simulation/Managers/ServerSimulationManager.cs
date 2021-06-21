@@ -55,15 +55,10 @@ namespace Mahou.Simulation
 
         private void TestWorldStateMsg(ServerWorldStateMessage arg2)
         {
-            if(arg2.worldSnapshot.clientStates.Count > 0)
+            Debug.Log($"Object Count: {arg2.worldSnapshot.objectStates.Count}");
+            for(int i = 0; i < arg2.worldSnapshot.objectStates.Count; i++)
             {
-                if(arg2.worldSnapshot.clientStates[0].playersStates != null && arg2.worldSnapshot.clientStates[0].playersStates.Count > 0)
-                {
-                    for(int i = 0; i < arg2.worldSnapshot.clientStates[0].playersStates.Count; i++)
-                    {
-                        Debug.Log($"Player State Type: {arg2.worldSnapshot.clientStates[0].playersStates[i].GetType().FullName}");
-                    }
-                }
+                Debug.Log($"Object Type: {arg2.worldSnapshot.objectStates[i].GetType().FullName}");
             }
         }
 
@@ -198,6 +193,11 @@ namespace Mahou.Simulation
             foreach (ClientManager cm in ClientManager.GetClients())
             {
                 clientStateSnapshots[cm.clientID][bufidx] = cm.GetClientSimState();
+            }
+
+            foreach(var en in simulationObjectReferences)
+            {
+                simulationObjectSnapshots[en.Key][bufidx] = en.Value.GetSimState();
             }
         }
 
@@ -364,10 +364,17 @@ namespace Mahou.Simulation
                 clientStates.Add(clientStateSnapshots[cm.clientID][currentRealTick % circularBufferSize]);
             }
 
+            List<ISimState> objectStates = new List<ISimState>();
+            foreach (var oo in simulationObjectSnapshots)
+            {
+                objectStates.Add(oo.Value[currentRealTick % circularBufferSize]);
+            }
+
             serverStateMsg.worldSnapshot = new WorldSnapshot()
             {
                 gameModeSimState = gameManager.GameMode.GetSimState(),
                 clientStates = clientStates,
+                objectStates = objectStates,
                 currentTick = currentRealTick
             };
             

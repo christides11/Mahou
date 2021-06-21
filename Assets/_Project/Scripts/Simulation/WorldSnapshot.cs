@@ -12,5 +12,6 @@ namespace Mahou.Simulation
         public int currentTick;
         public GameModeBaseSimState gameModeSimState;
         public List<ClientSimState> clientStates;
+        public List<ISimState> objectStates;
     }
 }

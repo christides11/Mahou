@@ -1,3 +1,4 @@
+using Mahou.Combat;
 using Mahou.Simulation;
 using Mirror;
 using System;
@@ -13,12 +14,14 @@ namespace Mahou.Networking
         {
             AddReaderWriter(ISimState.StaticGetGUID(), new CustomISimStateReaderWriter());
             AddReaderWriter(PlayerSimState.StaticGetGUID(), new PlayerSimStateReaderWriter());
+            AddReaderWriter(ProjectileSimState.StaticGetGUID(), new ProjectileSimStateReaderWriter());
         }
 
         public static void AddReaderWriter(System.Guid guid, CustomISimStateReaderWriter readerWriter)
         {
             if (customReaderWriters.ContainsKey(guid))
             {
+                UnityEngine.Debug.Log($"Duplicate GUID of {guid} for readerwriter of type {readerWriter.GetType().FullName}");
                 return;
             }
             //UnityEngine.Debug.Log($"Adding ReaderWriter with GUID of {guid}");
@@ -27,8 +30,15 @@ namespace Mahou.Networking
 
         public static void WriteISimState(this NetworkWriter writer, ISimState ss)
         {
-            writer.WriteArray<byte>(ss.GetGUID().ToByteArray());
-            customReaderWriters[ss.GetType().GUID].Write(writer, ss);
+            try
+            {
+                writer.WriteArray<byte>(ss.GetGUID().ToByteArray());
+                customReaderWriters[ss.GetGUID()].Write(writer, ss);
+            }
+            catch
+            {
+                UnityEngine.Debug.LogError($"Error writing for GUID {ss.GetGUID().ToString()}");
+            }
         }
 
         public static ISimState ReadISimState(this NetworkReader reader)

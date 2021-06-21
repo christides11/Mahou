@@ -1,3 +1,5 @@
+using Mirror;
+
 namespace Mahou.Simulation
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace Mahou.Simulation
     public class ISimState
     {
         public bool objectEnabled;
-
+        public NetworkIdentity networkIdentity;
 
         public virtual System.Guid GetGUID()
         {
