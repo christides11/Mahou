@@ -37,11 +37,11 @@ namespace Mahou
             }
         }
 
-        protected override HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, HnSF.Combat.Hurtbox hurtbox)
+        protected override HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, HnSF.Combat.Hurtbox hurtbox, GameObject attacker)
         {
             HurtInfo hurtInfo;
             hurtInfo = new HurtInfo((Combat.HitInfo)hitboxGroup.hitboxHitInfo, hurtbox.HurtboxGroup as Mahou.Combat.HurtboxGroup,
-                transform.position, transform.forward, transform.right, Vector3.zero);
+                attacker.transform.position, transform.forward, transform.right, Vector3.zero);
             return hurtInfo;
         }
     }

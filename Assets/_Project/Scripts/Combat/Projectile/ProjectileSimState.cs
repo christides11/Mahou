@@ -10,6 +10,7 @@ namespace Mahou.Combat
 {
     public class ProjectileSimState : ISimState
     {
+        public NetworkIdentity owner;
         public Vector3 position;
         public Vector3 rotation;
         public int frameCounter;
@@ -21,7 +22,7 @@ namespace Mahou.Combat
 
         public static new System.Guid StaticGetGUID()
         {
-            return new Guid("1849093b-aea1-40e3-a408-33b6be648e8d");
+            return new Guid("44cc8309-d3a4-4b0d-90ea-c127d4f2b236");
         }
     }
 
@@ -31,6 +32,7 @@ namespace Mahou.Combat
         {
             base.Write(writer, ss);
             ProjectileSimState pss = ss as ProjectileSimState;
+            writer.WriteNetworkIdentity(pss.owner);
             writer.WriteVector3(pss.position);
             writer.WriteVector3(pss.rotation);
             writer.WriteInt(pss.frameCounter);
@@ -47,6 +49,7 @@ namespace Mahou.Combat
         {
             base.Read(reader, ss);
             ProjectileSimState pss = ss as ProjectileSimState;
+            pss.owner = reader.ReadNetworkIdentity();
             pss.position = reader.ReadVector3();
             pss.rotation = reader.ReadVector3();
             pss.frameCounter = reader.ReadInt();

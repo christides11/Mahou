@@ -9,7 +9,8 @@ namespace Mahou.Input
         public Vector2 movement;
         public bool lockon;
         public bool jump;
-        public bool attack;
+        public bool light_atttack;
+        public bool heavy_attack;
         public bool shoot;
         public bool dash;
         public bool parry;

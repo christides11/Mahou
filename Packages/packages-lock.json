@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "3a1866d9a700ab52f8de1425ebf601c8d2ec03ec"
+      "hash": "379dac40a50b2ec4aff7f84df0889d555d54d0e3"
     },
     "com.coffee.upm-git-extension": {
       "version": "https://github.com/mob-sakai/UpmGitExtension.git#1.3.4",
@@ -120,7 +120,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.8",
+      "version": "2.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {

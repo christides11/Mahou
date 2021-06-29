@@ -42,6 +42,7 @@ namespace Mahou.Core
                 GameObject fighter = GameObject.Instantiate(fighterGO, new Vector3(0, 1, 0), Quaternion.identity);
                 NetworkServer.Spawn(fighter);
                 Mahou.Simulation.SimulationManagerBase.instance.RegisterSimulationObject(fighter.GetComponent<NetworkIdentity>());
+                Debug.Log("Spawning");
             }
         }
     }

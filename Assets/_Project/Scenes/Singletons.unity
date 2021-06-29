@@ -869,9 +869,9 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 1
     - _id: 5
-      _name: Attack
+      _name: Light Attack
       _type: 1
-      _descriptiveName: Attack
+      _descriptiveName: Light Attack
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -958,6 +958,15 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 1
+    - _id: 15
+      _name: Heavy Attack
+      _type: 1
+      _descriptiveName: Action0
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 1
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -974,7 +983,7 @@ MonoBehaviour:
       - categoryId: 0
         actionIds: 
       - categoryId: 1
-        actionIds: 000000000100000002000000030000000600000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e000000
+        actionIds: 000000000100000002000000030000000600000004000000050000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -1203,6 +1212,17 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 15
+        _elementType: 1
+        _elementIdentifierId: 5
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     keyboardMaps:
     - id: 1
       categoryId: 1
@@ -1285,6 +1305,17 @@ MonoBehaviour:
         _invert: 0
         _axisContribution: 0
         _keyboardKeyCode: 105
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 15
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 111
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -1415,7 +1446,7 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 15
+    actionIdCounter: 16
     actionCategoryIdCounter: 2
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2
@@ -1487,20 +1518,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 461990865}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
+  m_Script: {fileID: 11500000, guid: 872fa23ef6e77334ca452ce16f6cd091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Port: 7777
-  NoDelay: 1
-  Interval: 10
-  Timeout: 10000
-  FastResend: 2
-  CongestionWindow: 0
-  SendWindowSize: 4096
-  ReceiveWindowSize: 4096
-  debugLog: 0
-  statisticsGUI: 0
-  statisticsLog: 0
+  port: 7777
+  LogType: 0
+  DebugDisplay: 0
+  serverBindsAll: 1
+  serverBindAddress: 
+  serverMaxPeerCapacity: 10
+  serverMaxNativeWaitTime: 1
+  clientMaxNativeWaitTime: 3
+  clientStatusUpdateInterval: -1
+  Channels: 0100000002000000
+  PacketBufferCapacity: 4096
+  MaxAllowedPacketSize: 33554432
 --- !u!114 &461990868
 MonoBehaviour:
   m_ObjectHideFlags: 0

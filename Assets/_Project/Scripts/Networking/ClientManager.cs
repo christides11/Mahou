@@ -265,7 +265,7 @@ namespace Mahou.Networking
                     }
                     return true;
                 }
-                float rotError = Vector3.Angle(serverSimState.playersStates[i].visualRotation, localSimState.playersStates[i].visualRotation);
+                float rotError = Mathf.Abs(serverSimState.playersStates[i].visualRotation - localSimState.playersStates[i].visualRotation);
                 if(rotError > rotationDivergence)
                 {
                     return true;

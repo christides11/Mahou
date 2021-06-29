@@ -9,6 +9,10 @@ public class AssetIdentifier : MonoBehaviour
 
     private void OnValidate()
     {
+        if (Application.isPlaying)
+        {
+            return;
+        }
         if (netId == null)
         {
             return;

@@ -7,6 +7,6 @@ namespace Mahou.Combat
     [CreateAssetMenu(fileName = "AttackDefinition", menuName = "Mahou/Combat/Attack Definition")]
     public class AttackDefinition : HnSF.Combat.AttackDefinition
     {
-
+        public int firstActableFrame = 100;
     }
 }

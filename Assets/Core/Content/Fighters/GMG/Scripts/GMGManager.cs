@@ -17,7 +17,7 @@ namespace Mahou.Core
 
         [Header("GMG GENERAL")]
         public bool isClone = false;
-        public AssetIdentifier lightningGameobject;
+        public AssetIdentifier[] extras;
         
         [Header("ABILITY: Encore")]
         public bool recordMode = false;
@@ -34,7 +34,10 @@ namespace Mahou.Core
 
         public override void Load()
         {
-            NetworkClient.RegisterPrefab(lightningGameobject.gameObject, lightningGameobject.GetGUID());
+            for (int i = 0; i < extras.Length; i++)
+            {
+                NetworkClient.RegisterPrefab(extras[i].gameObject, extras[i].GetGUID());
+            }
             ISimStateSerializer.AddReaderWriter(GMGSimState.StaticGetGUID(), new GMGSimStateReaderWriter());
         }
 

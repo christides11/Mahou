@@ -12,7 +12,7 @@ namespace Mahou.Combat
             return "Event";
         }
 
-        public virtual AttackEventReturnType Evaluate(int frame, int endFrame, Projectile projectile, AttackEventVariables variables)
+        public virtual AttackEventReturnType Evaluate(int frame, int length, Projectile projectile)
         {
             return AttackEventReturnType.NONE;
         }

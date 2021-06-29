@@ -10,17 +10,14 @@ namespace Mahou.Simulation
     [System.Serializable]
     public class PlayerSimState : ISimState
     {
-        public NetworkIdentity netID;
+        public float visualRotation;
 
-        public Vector3 visualRotation;
-
-        public Vector3 forceMovement;
-        public Vector3 forceGravity;
+        public Vector3 forceMovementGravity;
         public KinematicCharacterMotorState motorState;
 
         public ushort mainState;
         public uint mainStateFrame;
-        public int currentJump;
+        public byte currentJump;
 
         public bool isGrounded;
         public bool jumpHold;
@@ -33,15 +30,15 @@ namespace Mahou.Simulation
         public uint inputBufferTick;
 
         // Combat Manager
-        public int currentChargeLevel;
-        public int currentChargeLevelCharge;
+        public byte currentChargeLevel;
+        public ushort currentChargeLevelCharge;
 
-        public int currentMoveset;
-        public int currentAttackMoveset;
-        public int currentAttackNode;
+        public byte currentMoveset;
+        public sbyte currentAttackMoveset;
+        public sbyte currentAttackNode;
 
-        public int hitstun;
-        public int hitstop;
+        public ushort hitstun;
+        public ushort hitstop;
 
         // Hitbox Manager
         public Dictionary<int, IDGroupCollisionInfo> collidedIHurtables;

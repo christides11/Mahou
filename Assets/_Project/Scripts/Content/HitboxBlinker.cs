@@ -68,7 +68,7 @@ namespace Mahou
             if(SimulationManagerBase.instance.CurrentTick % hitboxRepeatFrame == 0)
             {
                 visual.SetActive(true);
-                if(hitboxManager.CheckForCollision(0, hitboxGroup))
+                if(hitboxManager.CheckForCollision(0, hitboxGroup, gameObject))
                 {
 
                 }

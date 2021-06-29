@@ -1,0 +1,297 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 355328904e2f1ef48be147ce3e6109d7, type: 3}
+  m_Name: GMG-Atk-Air-L
+  m_EditorClassIdentifier: 
+  attackName: L (Air)
+  description: 
+  useState: 0
+  stateOverride: 0
+  length: 30
+  hurtboxDefinition: {fileID: 0}
+  commandAttackCancelWindows: []
+  chargeWindows: []
+  hitboxGroups:
+  - id: 0
+  events:
+  - id: 1
+  - id: 2
+  - id: 3
+  - id: 4
+  cancels: []
+  references:
+    version: 1
+    00000000:
+      type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
+      data:
+        ID: 0
+        activeFramesStart: 6
+        activeFramesEnd: 9
+        boxes:
+        - id: 5
+        attachToEntity: 1
+        attachTo: 
+        chargeLevelNeeded: -1
+        chargeLevelMax: 1
+        hitboxHitInfo:
+          id: 6
+    00000001:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Soft.Lockon
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 4
+        attackEvent:
+          id: 7
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000002:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Clamp.Gravity
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 1
+        attackEvent:
+          id: 8
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000003:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Clamp.Move
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 1
+        endFrame: 1
+        attackEvent:
+          id: 9
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000004:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: Apply.Gravity
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 9
+        endFrame: 30
+        attackEvent:
+          id: 10
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000005:
+      type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        shape: 0
+        offset: {x: 0, y: 0, z: 0}
+        size: {x: 2, y: 3, z: 2}
+        rotation: {x: 0, y: 0, z: 0}
+        radius: 0
+        height: 0
+    00000006:
+      type: {class: HitInfo, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        hitType: 0
+        hitKills: 1
+        continuousHit: 0
+        spaceBetweenHits: 0
+        opponentResetXForce: 1
+        opponentResetYForce: 1
+        autoLink: 0
+        forceType: 0
+        forceRelation: 0
+        attackerHitstop: 4
+        hitstop: 4
+        hitstun: 30
+        airOnly: 0
+        groundOnly: 0
+        causesTumble: 0
+        knockdown: 0
+        groundBounces: 0
+        groundBounceForce: 0
+        wallBounces: 0
+        wallBounceForce: 0
+        damageOnHit: 0
+        opponentForce: {x: 0, y: 1, z: 0}
+        forceIncludeYForce: 0
+        opponentForceMultiplier: 1
+        opponentMaxMagnitude: 1
+        opponentMinMagnitude: 1
+        throwConfirm: {fileID: 0}
+    00000007:
+      type: {class: SoftLockOn, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+      data:
+        rotSpeed: 10
+    00000008:
+      type: {class: ClampGravity, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+      data:
+        maxLength: 0
+    00000009:
+      type: {class: ClampMovement, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+      data:
+        maxLength: 0
+    0000000A:
+      type: {class: ApplyGravity, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+      data:
+        gravityCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0.35
+            inSlope: 0.7142631
+            outSlope: 0.7142631
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.096743934
+          - serializedVersion: 3
+            time: 0.5
+            value: 1
+            inSlope: 2.1672928
+            outSlope: 0
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.045500137
+            outWeight: 0.19576958
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        gravityScaleCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        maxFallSpeedCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4

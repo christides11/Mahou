@@ -84,7 +84,6 @@ namespace Mahou.Simulation
                     OnGameObjectReplaced?.Invoke(creationRequests[i].simObject, arg2.realObject);
                     GameObject.Destroy(creationRequests[i].simObject.gameObject);
                     creationRequests.RemoveAt(i);
-                    Debug.Log("object replaced.");
                     return;
                 }
             }

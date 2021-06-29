@@ -177,8 +177,9 @@ MonoBehaviour:
   statManager: {fileID: 9161192216790614098}
   testAudioClip: {fileID: 8300000, guid: 1657e13ce23651842a99257f388bd5f7, type: 3}
   isClone: 0
-  lightningGameobject: {fileID: 1990499214107696599, guid: 2381c075b4f28d444a487f6931713084,
-    type: 3}
+  extras:
+  - {fileID: 1990499214107696599, guid: 2381c075b4f28d444a487f6931713084, type: 3}
+  - {fileID: 1990499214107696599, guid: 98d7769b47e4a0c4a85120250923d5a7, type: 3}
   recordMode: 0
   finishedRecording: 0
   maxRecordTime: 120

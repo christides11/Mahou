@@ -40,7 +40,8 @@ namespace Mahou.Combat.AttackEvents
                     spawnPosition = lockonTarget.transform.position;
                 }
             }
-            SimulationCreationManager.Create(projectilePrefab, spawnPosition, Quaternion.identity);
+            GameObject projectile = SimulationCreationManager.Create(projectilePrefab, spawnPosition, fm.visual.transform.rotation);
+            projectile.GetComponent<Projectile>().owner = fm.netid;
             return AttackEventReturnType.NONE;
         }
     }

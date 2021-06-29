@@ -82,7 +82,7 @@ namespace Mahou.Content.Fighters
             }
         }
 
-        protected override HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, HnSF.Combat.Hurtbox hurtbox)
+        protected override HurtInfoBase BuildHurtInfo(HitboxGroup hitboxGroup, int hitboxIndex, HnSF.Combat.Hurtbox hurtbox, GameObject attacker)
         {
             HurtInfo hurtInfo;
             Hurtbox realHurtbox = hurtbox as Hurtbox;

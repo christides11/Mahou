@@ -20,7 +20,14 @@ namespace Mahou.Combat.AttackEvents
             HnSF.Fighters.FighterBase controller, AttackEventVariables variables)
         {
             FighterPhysicsManager physicsManager = (FighterPhysicsManager)controller.PhysicsManager;
-            physicsManager.forceGravity = Vector3.ClampMagnitude(physicsManager.forceGravity, maxLength);
+            if (maxLength == 0)
+            {
+                physicsManager.forceGravity = Vector3.zero;
+            }
+            else
+            {
+                physicsManager.forceGravity = Vector3.ClampMagnitude(physicsManager.forceGravity, maxLength);
+            }
             return AttackEventReturnType.NONE;
         }
     }

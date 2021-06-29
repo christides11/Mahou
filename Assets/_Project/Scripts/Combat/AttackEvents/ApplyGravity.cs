@@ -8,17 +8,10 @@ namespace Mahou.Combat.AttackEvents
 {
     public class ApplyGravity : HnSF.Combat.AttackEvent
     {
-        public bool useEntityMaxFallSpeed;
-        public bool useEntityGravity;
-        public bool useEntityGravityScale;
-
-        public float gravityCurveMultiplier = 1;
         public AnimationCurve gravityCurve = new AnimationCurve();
 
-        public float gravityScaleCurveMultiplier = 1;
         public AnimationCurve gravityScaleCurve = new AnimationCurve();
 
-        public float maxFallSpeedCurveMultiplier = 1;
         public AnimationCurve maxFallSpeedCurve = new AnimationCurve();
 
         public override string GetName()
@@ -39,27 +32,14 @@ namespace Mahou.Combat.AttackEvents
             float percent = (float)frame / (float)endFrame;
 
             float gravity = statsManager.CurrentStats.gravity.GetCurrentValue();
-            if (!useEntityGravity)
-            {
-                gravity = gravityCurve.Evaluate(percent)
-                    * gravityCurveMultiplier;
-            }
-
             float gravityScale = physicsManager.GravityScale;
-            if (!useEntityGravityScale)
-            {
-                gravityScale = gravityScaleCurve.Evaluate(percent)
-                    * gravityScaleCurveMultiplier;
-            }
-
             float maxFallSpeed = statsManager.CurrentStats.maxFallSpeed.GetCurrentValue();
-            if (!useEntityMaxFallSpeed)
-            {
-                maxFallSpeed = maxFallSpeedCurve.Evaluate(percent)
-                    * maxFallSpeedCurveMultiplier;
-            }
 
-            physicsManager.HandleGravity(maxFallSpeed, gravity, gravityScale);
+            physicsManager.HandleGravity(
+                maxFallSpeed * maxFallSpeedCurve.Evaluate(percent), 
+                gravity * gravityCurve.Evaluate(percent),
+                gravityScale * gravityScaleCurve.Evaluate(percent)
+                );
             return AttackEventReturnType.NONE;
         }
     }

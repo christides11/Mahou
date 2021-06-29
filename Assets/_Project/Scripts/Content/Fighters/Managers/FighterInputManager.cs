@@ -39,7 +39,8 @@ namespace Mahou.Content.Fighters
                 pinput.cameraRight = manager.lookHandler.LookTransform().transform.right;
             }
             pinput.movement = p.GetAxis2D(Action.Movement_X, Action.Movement_Y);
-            pinput.attack = p.GetButton(Action.Attack);
+            pinput.light_atttack = p.GetButton(Action.Light_Attack);
+            pinput.heavy_attack = p.GetButton(Action.Heavy_Attack);
             pinput.jump = p.GetButton(Action.Jump);
             pinput.dash = p.GetButton(Action.Dash);
             pinput.lockon = p.GetButton(Action.Lockon);
@@ -78,7 +79,8 @@ namespace Mahou.Content.Fighters
             recordItem.cameraForward = pInput.cameraForward;
             recordItem.cameraRight = pInput.cameraRight;
             recordItem.AddInput((int)PlayerInputType.MOVEMENT, new InputRecordAxis2D(pInput.movement));
-            recordItem.AddInput((int)PlayerInputType.ATTACK, new InputRecordButton(pInput.attack));
+            recordItem.AddInput((int)PlayerInputType.LIGHT_ATTACK, new InputRecordButton(pInput.light_atttack));
+            recordItem.AddInput((int)PlayerInputType.HEAVY_ATTACK, new InputRecordButton(pInput.heavy_attack));
             recordItem.AddInput((int)PlayerInputType.JUMP, new InputRecordButton(pInput.jump));
             recordItem.AddInput((int)PlayerInputType.DASH, new InputRecordButton(pInput.dash));
             recordItem.AddInput((int)PlayerInputType.LOCKON, new InputRecordButton(pInput.lockon));

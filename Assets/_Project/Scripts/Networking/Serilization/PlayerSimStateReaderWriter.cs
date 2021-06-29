@@ -12,35 +12,34 @@ namespace Mahou.Networking
         {
             base.Write(writer, ss);
             PlayerSimState pss = ss as PlayerSimState;
-            writer.Write(pss.netID);
-            writer.Write(pss.visualRotation);
-            writer.Write(pss.forceMovement);
-            writer.Write(pss.forceGravity);
+            writer.WriteFloat(pss.visualRotation);
+            writer.WriteVector3(pss.forceMovementGravity);
             writer.Write(pss.motorState);
-            writer.Write(pss.mainState);
-            writer.Write(pss.mainStateFrame);
-            writer.Write(pss.currentJump);
-            writer.Write(pss.isGrounded);
-            writer.Write(pss.jumpHold);
-            writer.Write(pss.lockedOn);
-            writer.Write(pss.lockonForward);
-            writer.Write(pss.lockOnTarget);
+            writer.WriteUShort(pss.mainState);
+            writer.WriteUInt(pss.mainStateFrame);
+            writer.WriteByte(pss.currentJump);
+            writer.WriteBool(pss.isGrounded);
+            writer.WriteBool(pss.jumpHold);
+            writer.WriteBool(pss.lockedOn);
+            writer.WriteVector3(pss.lockonForward);
+            writer.WriteGameObject(pss.lockOnTarget);
             // Input Manager
-            writer.Write(pss.inputBufferTick);
+            writer.WriteUInt(pss.inputBufferTick);
             // Combat Manager
-            writer.Write(pss.currentChargeLevel);
-            writer.Write(pss.currentChargeLevelCharge);
-            writer.Write(pss.currentMoveset);
-            writer.Write(pss.currentAttackMoveset);
-            writer.Write(pss.currentAttackNode);
-            writer.Write(pss.hitstun);
-            writer.Write(pss.hitstop);
+            writer.WriteByte(pss.currentChargeLevel);
+            writer.WriteUShort(pss.currentChargeLevelCharge);
+            writer.WriteByte(pss.currentMoveset);
+            writer.WriteSByte(pss.currentAttackMoveset);
+            writer.WriteSByte(pss.currentAttackNode);
+            writer.WriteUShort(pss.hitstun);
+            writer.WriteUShort(pss.hitstop);
             // Hitbox Manager
             writer.Write(pss.collidedIHurtables);
             // Hurtbox Manager
             writer.Write(pss.hurtboxHitCount);
             // State
             //writer.Write(pss.stateSimState);
+            //totalByteSize = writer.Position - totalByteSize;
         }
 
         public override ISimState Read(NetworkReader reader)
@@ -54,14 +53,12 @@ namespace Mahou.Networking
         {
             base.Read(reader, ss);
             PlayerSimState pss = ss as PlayerSimState;
-            pss.netID = reader.ReadNetworkIdentity();
-            pss.visualRotation = reader.ReadVector3();
-            pss.forceMovement = reader.ReadVector3();
-            pss.forceGravity = reader.ReadVector3();
+            pss.visualRotation = reader.ReadFloat();
+            pss.forceMovementGravity = reader.ReadVector3();
             pss.motorState = reader.Read<KinematicCharacterMotorState>();
             pss.mainState = reader.ReadUShort();
             pss.mainStateFrame = reader.ReadUInt();
-            pss.currentJump = reader.ReadInt();
+            pss.currentJump = reader.ReadByte();
             pss.isGrounded = reader.ReadBool();
             pss.jumpHold = reader.ReadBool();
             pss.lockedOn = reader.ReadBool();
@@ -70,13 +67,13 @@ namespace Mahou.Networking
             // Input Manager
             pss.inputBufferTick = reader.ReadUInt();
             // Combat Manager
-            pss.currentChargeLevel = reader.ReadInt();
-            pss.currentChargeLevelCharge = reader.ReadInt();
-            pss.currentMoveset = reader.ReadInt();
-            pss.currentAttackMoveset = reader.ReadInt();
-            pss.currentAttackNode = reader.ReadInt();
-            pss.hitstun = reader.ReadInt();
-            pss.hitstop = reader.ReadInt();
+            pss.currentChargeLevel = reader.ReadByte();
+            pss.currentChargeLevelCharge = reader.ReadUShort();
+            pss.currentMoveset = reader.ReadByte();
+            pss.currentAttackMoveset = reader.ReadSByte();
+            pss.currentAttackNode = reader.ReadSByte();
+            pss.hitstun = reader.ReadUShort();
+            pss.hitstop = reader.ReadUShort();
             // Hitbox Manager
             pss.collidedIHurtables = reader.Read<Dictionary<int, IDGroupCollisionInfo>>();
             // Hurtbox Manager

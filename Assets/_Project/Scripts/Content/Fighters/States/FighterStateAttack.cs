@@ -45,6 +45,7 @@ namespace Mahou.Content.Fighters
         public override void Initialize()
         {
             eventInputThing.Clear();
+            (Manager as FighterManager).charging = true;
             (Manager.HurtboxManager as FighterHurtboxManager).Reset();
             AttackDefinition currentAttack = (AttackDefinition)FighterManager.CombatManager.CurrentAttackNode.attackDefinition;
             if (currentAttack.useState)
@@ -112,8 +113,7 @@ namespace Mahou.Content.Fighters
                 return;
             }
 
-            //if (!eventCancel && !HandleChargeLevels(entityManager, currentAttack))
-            if(!eventCancel)
+            if(eventCancel == false && HandleChargeLevels(entityManager, currentAttack) == false)
             {
                 entityManager.StateManager.IncrementFrame();
             }
@@ -152,6 +152,59 @@ namespace Mahou.Content.Fighters
         }
 
         /// <summary>
+        /// Handles processing the charge levels of the current attack.
+        /// </summary>
+        /// <param name="entityManager">The entity itself.</param>
+        /// <param name="currentAttack">The current attack the entity is doing.</param>
+        /// <returns>If the frame should be held.</returns>
+        private bool HandleChargeLevels(FighterManager entityManager, AttackDefinition currentAttack)
+        {
+            FighterCombatManager cManager = (FighterCombatManager)entityManager.CombatManager;
+
+            if(entityManager.charging == false)
+            {
+                return false;
+            }
+
+            bool result = false;
+            for (int i = 0; i < currentAttack.chargeWindows.Count; i++)
+            {
+                if (entityManager.StateManager.CurrentStateFrame != currentAttack.chargeWindows[i].startFrame)
+                {
+                    continue;
+                }
+
+                PlayerInputType button = (currentAttack.chargeWindows[i] as Mahou.Combat.ChargeDefinition).input;
+                if (entityManager.InputManager.GetButton((int)button).isDown == false)
+                {
+                    entityManager.charging = false;
+                    result = false;
+                    break;
+                }
+
+                // Still have charge levels to go through.
+                if (entityManager.CombatManager.CurrentChargeLevel < currentAttack.chargeWindows[i].chargeLevels.Count)
+                {
+                    cManager.IncrementChargeLevelCharge(currentAttack.chargeWindows[i].chargeLevels[cManager.CurrentChargeLevel].maxChargeFrames);
+                    // Charge completed, move on to the next level.
+                    if (cManager.CurrentChargeLevelCharge == currentAttack.chargeWindows[i].chargeLevels[cManager.CurrentChargeLevel].maxChargeFrames)
+                    {
+                        cManager.SetChargeLevel(cManager.CurrentChargeLevel + 1);
+                        cManager.SetChargeLevelCharge(0);
+                    }
+                }
+                else if (currentAttack.chargeWindows[i].releaseOnCompletion)
+                {
+                    entityManager.charging = false;
+                }
+                result = true;
+                // Only one charge level can be handled per frame, ignore everything else.
+                break;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Handles the lifetime of events.
         /// </summary>
         /// <param name="currentEvent">The event being processed.</param>
@@ -163,6 +216,12 @@ namespace Mahou.Content.Fighters
                 return HnSF.Combat.AttackEventReturnType.NONE;
             }
             FighterManager e = FighterManager;
+
+            if(e.CombatManager.CurrentChargeLevel < currentEvent.chargeLevelMin
+                || e.CombatManager.CurrentChargeLevel > currentEvent.chargeLevelMax)
+            {
+                return HnSF.Combat.AttackEventReturnType.NONE;
+            }
 
             if (currentEvent.inputCheckTiming != HnSF.Combat.AttackEventInputCheckTiming.NONE
                 && eventInputThing.ContainsKey(eventIndex) == false)
@@ -255,7 +314,7 @@ namespace Mahou.Content.Fighters
             switch (boxGroup.hitboxHitInfo.hitType)
             {
                 case HnSF.Combat.HitboxType.HIT:
-                    entityManager.CombatManager.hitboxManager.CheckForCollision(groupIndex, boxGroup);
+                    entityManager.CombatManager.hitboxManager.CheckForCollision(groupIndex, boxGroup, Manager.visual);
                     break;
             }
         }
@@ -265,6 +324,12 @@ namespace Mahou.Content.Fighters
             FighterManager entityManager = FighterManager;
             if (entityManager.TryAttack())
             {
+                return true;
+            }
+            if(FirstInterruptableFrameCheck())
+            {
+                Debug.Log("Interrupt frame.");
+                Manager.CombatManager.Cleanup();
                 return true;
             }
             if (entityManager.StateManager.CurrentStateFrame >
@@ -279,6 +344,28 @@ namespace Mahou.Content.Fighters
                     entityManager.StateManager.ChangeState((int)FighterStates.FALL);
                 }
                 Manager.CombatManager.Cleanup();
+                return true;
+            }
+            return false;
+        }
+
+        private bool FirstInterruptableFrameCheck()
+        {
+            FighterManager entityManager = FighterManager;
+            AttackDefinition currentAttack = (AttackDefinition)FighterManager.CombatManager.CurrentAttackNode.attackDefinition;
+            if (entityManager.StateManager.CurrentStateFrame < currentAttack.firstActableFrame)
+            {
+                return false;
+            }
+
+            if (entityManager.TryJump())
+            {
+                return true;
+            }
+            Vector2 move = entityManager.InputManager.GetAxis2D((int)PlayerInputType.MOVEMENT);
+            if(move.magnitude >= InputConstants.movementThreshold)
+            {
+                entityManager.StateManager.ChangeState((int)FighterStates.WALK);
                 return true;
             }
             return false;

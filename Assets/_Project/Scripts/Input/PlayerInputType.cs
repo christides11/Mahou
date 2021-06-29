@@ -5,13 +5,14 @@ namespace Mahou
         MOVEMENT = 0,
         CAMERA = 1,
         JUMP = 2,
-        ATTACK = 3,
+        LIGHT_ATTACK = 3,
         DASH = 4,
         LOCKON = 5,
         PARRY = 6,
         ABILITY_ONE = 7,
         ABILITY_TWO = 8,
         ABILITY_THREE = 9,
-        ABILITY_FOUR = 10
+        ABILITY_FOUR = 10,
+        HEAVY_ATTACK = 11
     }
 }

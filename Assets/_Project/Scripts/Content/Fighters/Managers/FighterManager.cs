@@ -31,8 +31,9 @@ namespace Mahou.Content.Fighters
         public Collider coll;
         public float movSpeed = 0.5f;
 
+        public bool charging = true;
         public bool jumpHold = false;
-        public int currentJump = 0;
+        public byte currentJump = 0;
 
         public MovesetDefinition[] movesets;
 
@@ -84,6 +85,7 @@ namespace Mahou.Content.Fighters
 
         public virtual void Initialize()
         {
+            netid = GetComponent<NetworkIdentity>();
             inputManager = GetComponent<FighterInputManager>();
             stateManager = GetComponent<FighterStateManager>();
             combatManager = GetComponent<FighterCombatManager>();
@@ -319,7 +321,7 @@ namespace Mahou.Content.Fighters
                 return false;
             }
             // Jump not pressed.
-            if (inputManager.GetButton((int)PlayerInputType.JUMP).firstPress == false)
+            if (inputManager.GetButton((int)PlayerInputType.JUMP, 0, true).firstPress == false)
             {
                 return false;
             }
@@ -383,7 +385,6 @@ namespace Mahou.Content.Fighters
         {
             Vector3 newDirection = Vector3.RotateTowards(visual.transform.forward, direction, speed * Time.fixedDeltaTime, 0.0f);
             visual.transform.rotation = Quaternion.LookRotation(newDirection);
-            //base.RotateVisual(direction, speed * Time.fixedDeltaTime);
         }
 
         public AnimationClip GetAnimationClip(string animationName, int movesetIdentifier = -1)
@@ -420,11 +421,11 @@ namespace Mahou.Content.Fighters
         protected virtual void FillSimState(PlayerSimState simState)
         {
             simState.objectEnabled = ObjectEnabled;
-            simState.visualRotation = visual.transform.eulerAngles;
-            simState.netID = netid;
+            simState.visualRotation = visual.transform.eulerAngles.y;
+            simState.networkIdentity = netid;
             simState.motorState = cc.Motor.GetState();
-            simState.forceMovement = (physicsManager as FighterPhysicsManager3D).forceMovement;
-            simState.forceGravity = (physicsManager as FighterPhysicsManager3D).forceGravity;
+            simState.forceMovementGravity = (physicsManager as FighterPhysicsManager3D).forceMovement;
+            simState.forceMovementGravity.y = (physicsManager as FighterPhysicsManager3D).forceGravity.y;
             simState.mainState = (StateManager as FighterStateManager).CurrentState;
             simState.mainStateFrame = (StateManager as FighterStateManager).CurrentStateFrame;
 
@@ -440,13 +441,13 @@ namespace Mahou.Content.Fighters
             simState.inputBufferTick = inputManager.inputBufferTick;
 
             // Combat Manager
-            simState.currentChargeLevel = combatManager.CurrentChargeLevel;
-            simState.currentChargeLevelCharge = combatManager.CurrentChargeLevelCharge;
-            simState.hitstop = combatManager.HitStop;
-            simState.hitstun = combatManager.HitStun;
-            simState.currentMoveset = combatManager.CurrentMovesetIdentifier;
-            simState.currentAttackMoveset = combatManager.CurrentAttackMovesetIdentifier;
-            simState.currentAttackNode = combatManager.CurrentAttackNodeIdentifier;
+            simState.currentChargeLevel = (byte)combatManager.CurrentChargeLevel;
+            simState.currentChargeLevelCharge = (ushort)combatManager.CurrentChargeLevelCharge;
+            simState.hitstop = (ushort)combatManager.HitStop;
+            simState.hitstun = (ushort)combatManager.HitStun;
+            simState.currentMoveset = (byte)combatManager.CurrentMovesetIdentifier;
+            simState.currentAttackMoveset = (sbyte)combatManager.CurrentAttackMovesetIdentifier;
+            simState.currentAttackNode = (sbyte)combatManager.CurrentAttackNodeIdentifier;
 
             // Hitbox Manager
             simState.collidedIHurtables = hitboxManager.collidedIHurtables;
@@ -462,14 +463,15 @@ namespace Mahou.Content.Fighters
         {
             ObjectEnabled = state.objectEnabled;
             PlayerSimState pState = state as PlayerSimState;
-            visual.transform.eulerAngles = pState.visualRotation;
+            visual.transform.eulerAngles = new Vector3(0, pState.visualRotation, 0);
             cc.Motor.ApplyState(pState.motorState);
             physicsManager.SetGrounded(pState.isGrounded);
             currentJump = pState.currentJump;
             jumpHold = pState.jumpHold;
 
-            (physicsManager as FighterPhysicsManager3D).forceMovement = pState.forceMovement;
-            (physicsManager as FighterPhysicsManager3D).forceGravity = pState.forceGravity;
+            (physicsManager as FighterPhysicsManager3D).forceGravity.y = pState.forceMovementGravity.y;
+            pState.forceMovementGravity.y = 0;
+            (physicsManager as FighterPhysicsManager3D).forceMovement = pState.forceMovementGravity;
             (StateManager as FighterStateManager).ChangeState(pState.mainState, pState.mainStateFrame);
 
             LockedOn = pState.lockedOn;

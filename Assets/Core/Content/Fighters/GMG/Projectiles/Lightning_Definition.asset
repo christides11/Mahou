@@ -17,6 +17,7 @@ MonoBehaviour:
   scriptOverride: 0
   hitboxGroups:
   - id: 0
+  - id: 1
   events: []
   references:
     version: 1
@@ -24,17 +25,31 @@ MonoBehaviour:
       type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
       data:
         ID: 0
-        activeFramesStart: 15
-        activeFramesEnd: 25
+        activeFramesStart: 10
+        activeFramesEnd: 14
         boxes:
-        - id: 1
+        - id: 2
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 2
+          id: 3
     00000001:
+      type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
+      data:
+        ID: 1
+        activeFramesStart: 15
+        activeFramesEnd: 25
+        boxes:
+        - id: 4
+        attachToEntity: 1
+        attachTo: 
+        chargeLevelNeeded: -1
+        chargeLevelMax: 1
+        hitboxHitInfo:
+          id: 5
+    00000002:
       type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         shape: 0
@@ -43,7 +58,7 @@ MonoBehaviour:
         rotation: {x: 0, y: 0, z: 0}
         radius: 0
         height: 0
-    00000002:
+    00000003:
       type: {class: HitInfo, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         hitType: 0
@@ -54,6 +69,45 @@ MonoBehaviour:
         opponentResetYForce: 1
         autoLink: 0
         forceType: 0
+        forceRelation: 1
+        attackerHitstop: 4
+        hitstop: 4
+        hitstun: 30
+        airOnly: 0
+        groundOnly: 0
+        causesTumble: 0
+        knockdown: 0
+        groundBounces: 0
+        groundBounceForce: 0
+        wallBounces: 0
+        wallBounceForce: 0
+        damageOnHit: 0
+        opponentForce: {x: 0, y: 10, z: 0}
+        forceIncludeYForce: 0
+        opponentForceMultiplier: 1
+        opponentMaxMagnitude: 1
+        opponentMinMagnitude: 1
+        throwConfirm: {fileID: 0}
+    00000004:
+      type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        shape: 0
+        offset: {x: 0, y: 5, z: 0}
+        size: {x: 2, y: 10, z: 2}
+        rotation: {x: 0, y: 0, z: 0}
+        radius: 0
+        height: 0
+    00000005:
+      type: {class: HitInfo, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        hitType: 0
+        hitKills: 1
+        continuousHit: 0
+        spaceBetweenHits: 0
+        opponentResetXForce: 1
+        opponentResetYForce: 1
+        autoLink: 0
+        forceType: 2
         forceRelation: 0
         attackerHitstop: 4
         hitstop: 4
@@ -67,9 +121,9 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 5, z: -10}
-        forceIncludeYForce: 0
-        opponentForceMultiplier: 1
-        opponentMaxMagnitude: 1
-        opponentMinMagnitude: 1
+        opponentForce: {x: 0, y: 5, z: -20}
+        forceIncludeYForce: 1
+        opponentForceMultiplier: 3.5
+        opponentMaxMagnitude: 30
+        opponentMinMagnitude: 9
         throwConfirm: {fileID: 0}

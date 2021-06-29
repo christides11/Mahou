@@ -48,6 +48,10 @@ namespace Mahou.Content.Fighters
             return (int)team;
         }
 
+        public AnimationCurve xCurvePosition;
+        public AnimationCurve yCurvePosition;
+        public AnimationCurve zCurvePosition;
+        public AnimationCurve gravityCurve;
         public override HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             FighterPhysicsManager physicsManager = (FighterPhysicsManager)manager.PhysicsManager;
@@ -76,10 +80,15 @@ namespace Mahou.Content.Fighters
                 return HitReactionBase;
             }
             // Got hit, apply stun, damage, and forces.
-            //LastHitBy = hInfo;
             SetHitStop(hitInfo.hitstop);
             SetHitStun(hitInfo.hitstun);
 
+            xCurvePosition = hitInfo.xCurvePosition;
+            yCurvePosition = hitInfo.yCurvePosition;
+            zCurvePosition = hitInfo.zCurvePosition;
+            gravityCurve = hitInfo.gravityCurve;
+
+            
             // Convert forces the attacker-based forward direction.
             switch (hitInfo.forceType)
             {
@@ -87,6 +96,32 @@ namespace Mahou.Content.Fighters
                     Vector3 forces = (hitInfo.opponentForce.x * hurtInfo.right) + (hitInfo.opponentForce.z * hurtInfo.forward);
                     physicsManager.forceGravity.y = hitInfo.opponentForce.y;
                     physicsManager.forceMovement = forces;
+                    break;
+                case HitboxForceType.PULL:
+                    Vector3 pullDir = Vector3.ClampMagnitude((hurtInfo.center - transform.position) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
+                    if(pullDir.magnitude < hitInfo.opponentMinMagnitude)
+                    {
+                        pullDir = (hurtInfo.center - transform.position).normalized * hitInfo.opponentMinMagnitude;
+                    }
+                    if (hitInfo.forceIncludeYForce)
+                    {
+                        physicsManager.forceGravity.y = pullDir.y;
+                    }
+                    pullDir.y = 0;
+                    physicsManager.forceMovement = pullDir;
+                    break;
+                case HitboxForceType.PUSH:
+                    Vector3 pushDir = Vector3.ClampMagnitude((transform.position - hurtInfo.center) * hitInfo.opponentForceMultiplier, hitInfo.opponentMaxMagnitude);
+                    if (pushDir.magnitude < hitInfo.opponentMinMagnitude)
+                    {
+                        pushDir = (transform.position - hurtInfo.center).normalized * hitInfo.opponentMinMagnitude;
+                    }
+                    if (hitInfo.forceIncludeYForce)
+                    {
+                        physicsManager.forceGravity.y = pushDir.y;
+                    }
+                    pushDir.y = 0;
+                    physicsManager.forceMovement = pushDir;
                     break;
             }
 

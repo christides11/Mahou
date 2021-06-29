@@ -11,12 +11,14 @@ namespace Mahou.Core
     {
         public override void Write(NetworkWriter writer, ISimState ss)
         {
+            //int startPosition = writer.Position;
             base.Write(writer, ss);
             GMGSimState gss = ss as GMGSimState;
             writer.Write(gss.recordMode);
             writer.Write(gss.finishedRecording);
             writer.Write(gss.currentRecordingIndex);
             //writer.WriteArray<HnSF.Input.InputRecordItem>(gss.recordBuffer);
+            //UnityEngine.Debug.Log($"GMGSimState is {writer.Position - startPosition} bytes");
         }
 
         public override ISimState Read(NetworkReader reader)

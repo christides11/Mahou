@@ -22,7 +22,7 @@ namespace Mahou.Input
                 for (int w = 0; w < cInput.playerInputs.Count; w++){
                     cInput.playerInputs[w] = new PlayerInput()
                     {
-                        attack = cInput.playerInputs[w].attack,
+                        light_atttack = cInput.playerInputs[w].light_atttack,
                         jump = cInput.playerInputs[w].jump,
                         lockon = cInput.playerInputs[w].lockon,
                         movement = cInput.playerInputs[w].movement * falloff,
