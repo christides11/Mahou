@@ -22,8 +22,15 @@ namespace Mahou.Combat
         PARRY
     }
 
+    public enum HurtboxType
+    {
+        Hurtbox,
+        Pushbox
+    }
+
     public class HurtboxGroup : HnSF.Combat.HurtboxGroup
     {
+        public HurtboxType hurtboxType = HurtboxType.Hurtbox;
         public InvincibilityTypes invincibility;
         public ArmorType armor;
     }

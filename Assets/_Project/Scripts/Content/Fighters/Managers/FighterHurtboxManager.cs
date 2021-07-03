@@ -1,13 +1,16 @@
 using HnSF.Combat;
+using Mahou.Combat;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BoxDefinition = Mahou.Combat.BoxDefinition;
 
 namespace Mahou.Content.Fighters
 {
     public class FighterHurtboxManager : HnSF.Fighters.FighterHurtboxManager
     {
         [SerializeField] protected Hurtbox hurtboxPrefab;
+        [SerializeField] protected Pushbox pushboxPrefab;
 
         public Dictionary<int, int> hurtboxHitCount = new Dictionary<int, int>();
 

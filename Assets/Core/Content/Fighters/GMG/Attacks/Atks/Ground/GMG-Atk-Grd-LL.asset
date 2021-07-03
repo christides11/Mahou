@@ -16,21 +16,23 @@ MonoBehaviour:
   description: 
   useState: 0
   stateOverride: 0
-  length: 19
+  length: 30
   hurtboxDefinition: {fileID: 0}
   commandAttackCancelWindows: []
   chargeWindows: []
   hitboxGroups:
   - id: 0
-  events:
   - id: 1
+  events:
   - id: 2
   - id: 3
   - id: 4
   - id: 5
   - id: 6
-  cancels: []
-  firstActableFrame: 15
+  - id: 7
+  cancels:
+  - id: 8
+  firstActableFrame: 28
   references:
     version: 1
     00000000:
@@ -39,14 +41,29 @@ MonoBehaviour:
         ID: 0
         activeFramesStart: 7
         activeFramesEnd: 10
-        boxes: []
+        boxes:
+        - id: 9
         attachToEntity: 1
         attachTo: 
         chargeLevelNeeded: -1
         chargeLevelMax: 1
         hitboxHitInfo:
-          id: 7
+          id: 10
     00000001:
+      type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
+      data:
+        ID: 1
+        activeFramesStart: 17
+        activeFramesEnd: 20
+        boxes:
+        - id: 11
+        attachToEntity: 1
+        attachTo: 
+        chargeLevelNeeded: -1
+        chargeLevelMax: 1
+        hitboxHitInfo:
+          id: 12
+    00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
         nickname: Soft.Lockon
@@ -57,36 +74,7 @@ MonoBehaviour:
         startFrame: 1
         endFrame: 4
         attackEvent:
-          id: 8
-        conditions: []
-        variables:
-          intVars: 
-          floatVars: []
-          objectVars: []
-          curveVars: []
-        inputCheckTiming: 0
-        inputCheckStartFrame: 1
-        inputCheckEndFrame: 1
-        input:
-          executeWindow: 3
-          executeInputs: []
-          sequenceWindow: 8
-          sequenceInputs: []
-        chargeLevelMin: 0
-        chargeLevelMax: 0
-        inputCheckProcessed: 0
-    00000002:
-      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
-      data:
-        nickname: Clamp.Move
-        active: 1
-        onHitCheck: 0
-        onHitHitboxGroup: 0
-        onHitIDGroup: 0
-        startFrame: 1
-        endFrame: 1
-        attackEvent:
-          id: 9
+          id: 13
         conditions: []
         variables:
           intVars: 
@@ -107,15 +95,15 @@ MonoBehaviour:
     00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Move.Friction
+        nickname: Clamp.Move
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 5
-        endFrame: 30
+        startFrame: 1
+        endFrame: 1
         attackEvent:
-          id: 10
+          id: 14
         conditions: []
         variables:
           intVars: 
@@ -141,10 +129,10 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 15
+        startFrame: 11
         endFrame: 30
         attackEvent:
-          id: 11
+          id: 15
         conditions: []
         variables:
           intVars: 
@@ -165,15 +153,15 @@ MonoBehaviour:
     00000005:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Move
+        nickname: Move.Curve
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 5
-        endFrame: 5
+        startFrame: 4
+        endFrame: 30
         attackEvent:
-          id: 12
+          id: 16
         conditions: []
         variables:
           intVars: 
@@ -199,10 +187,10 @@ MonoBehaviour:
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 6
-        endFrame: 19
+        startFrame: 7
+        endFrame: 7
         attackEvent:
-          id: 13
+          id: 17
         conditions: []
         variables:
           intVars: 
@@ -221,6 +209,50 @@ MonoBehaviour:
         chargeLevelMax: 0
         inputCheckProcessed: 0
     00000007:
+      type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        nickname: event
+        active: 1
+        onHitCheck: 0
+        onHitHitboxGroup: 0
+        onHitIDGroup: 0
+        startFrame: 17
+        endFrame: 17
+        attackEvent:
+          id: 18
+        conditions: []
+        variables:
+          intVars: 
+          floatVars: []
+          objectVars: []
+          curveVars: []
+        inputCheckTiming: 0
+        inputCheckStartFrame: 1
+        inputCheckEndFrame: 1
+        input:
+          executeWindow: 3
+          executeInputs: []
+          sequenceWindow: 8
+          sequenceInputs: []
+        chargeLevelMin: 0
+        chargeLevelMax: 0
+        inputCheckProcessed: 0
+    00000008:
+      type: {class: CancelListDefinition, ns: HnSF.Combat, asm: HnSF}
+      data:
+        startFrame: 11
+        endFrame: 30
+        cancelListID: 0
+    00000009:
+      type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        size: {x: 2, y: 2, z: 2}
+        rotation: {x: 0, y: 0, z: 0}
+        radius: 0
+        height: 0
+    0000000A:
       type: {class: HitInfo, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         hitType: 0
@@ -232,9 +264,9 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 4
-        hitstop: 4
-        hitstun: 15
+        attackerHitstop: 3
+        hitstop: 3
+        hitstun: 20
         airOnly: 0
         groundOnly: 0
         causesTumble: 0
@@ -244,40 +276,296 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: 4}
+        opponentForce: {x: 0, y: 0, z: 0}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
         throwConfirm: {fileID: 0}
-    00000008:
+        xCurvePosition:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        yCurvePosition:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.1490515
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        zCurvePosition:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 4.529244
+            outSlope: 4.529244
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.034315858
+          - serializedVersion: 3
+            time: 0.7
+            value: 1
+            inSlope: 0.040664434
+            outSlope: 0.040664434
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        gravityCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0.005004883
+            outSlope: 0.005004883
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.5
+            value: 0.0025024414
+            inSlope: 0
+            outSlope: 0.7422657
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.14784002
+          - serializedVersion: 3
+            time: 1
+            value: 0.5
+            inSlope: 0.085541435
+            outSlope: 0.085541435
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.12273097
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    0000000B:
+      type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        shape: 0
+        offset: {x: 0, y: 1, z: 1}
+        size: {x: 2, y: 2, z: 2}
+        rotation: {x: 0, y: 0, z: 0}
+        radius: 0
+        height: 0
+    0000000C:
+      type: {class: HitInfo, ns: Mahou.Combat, asm: Mahou_CSharp}
+      data:
+        hitType: 0
+        hitKills: 1
+        continuousHit: 0
+        spaceBetweenHits: 0
+        opponentResetXForce: 1
+        opponentResetYForce: 1
+        autoLink: 0
+        forceType: 0
+        forceRelation: 0
+        attackerHitstop: 3
+        hitstop: 3
+        hitstun: 20
+        airOnly: 0
+        groundOnly: 0
+        causesTumble: 0
+        knockdown: 0
+        groundBounces: 0
+        groundBounceForce: 0
+        wallBounces: 0
+        wallBounceForce: 0
+        damageOnHit: 0
+        opponentForce: {x: 0, y: 0, z: 0}
+        forceIncludeYForce: 0
+        opponentForceMultiplier: 1
+        opponentMaxMagnitude: 1
+        opponentMinMagnitude: 1
+        throwConfirm: {fileID: 0}
+        xCurvePosition:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        yCurvePosition:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        zCurvePosition:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 3.1037705
+            outSlope: 3.1037705
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.03643664
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        gravityCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0.005004883
+            outSlope: 0.005004883
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.5
+            value: 0.0025024414
+            inSlope: 0
+            outSlope: 0.7422657
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.14784002
+          - serializedVersion: 3
+            time: 1
+            value: 0.5
+            inSlope: 0.085541435
+            outSlope: 0.085541435
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.12273097
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    0000000D:
       type: {class: SoftLockOn, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
         rotSpeed: 35
-    00000009:
+    0000000E:
       type: {class: ClampMovement, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
         maxLength: 10
-    0000000A:
-      type: {class: ApplyFriction, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
-      data:
-        useXZFriction: 1
-        useYFriction: 0
-        xzFriction: 20
-        yFriction: 0
-    0000000B:
+    0000000F:
       type: {class: JumpCancel, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
-    0000000C:
-      type: {class: ForceSet, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+    00000010:
+      type: {class: ForceCurve, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
         applyXZForce: 1
         applyYForce: 0
-        xzForce: {x: 0, y: 5}
-        yForce: 0
-    0000000D:
-      type: {class: ApplyFriction, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+        xCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.1490515
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        zCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 2.656535
+            outSlope: 2.656535
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.04573171
+          - serializedVersion: 3
+            time: 1
+            value: 2
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        yCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        gravityCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    00000011:
+      type: {class: PlaySound, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
-        useXZFriction: 1
-        useYFriction: 0
-        xzFriction: 0.5
-        yFriction: 0
+        sound: {fileID: 8300000, guid: 7ecc4f751cd1f4b4b8215589908a92e0, type: 3}
+    00000012:
+      type: {class: PlaySound, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+      data:
+        sound: {fileID: 8300000, guid: 7ecc4f751cd1f4b4b8215589908a92e0, type: 3}

@@ -127,6 +127,7 @@ namespace Mahou.Content.Fighters
                 // Smooth movement Velocity
                 currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity + gravity, airMovementSharpness * deltaTime);
             }
+
         }
 
         public bool IsColliderValidForCollisions(Collider coll)

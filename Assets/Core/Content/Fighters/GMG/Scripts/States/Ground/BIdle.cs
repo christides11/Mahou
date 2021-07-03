@@ -14,7 +14,12 @@ namespace Mahou.Core
 
         public override void OnUpdate()
         {
-            base.OnUpdate();
+            PhysicsManager.ApplyMovementFriction();
+            if ((Manager as FighterManager).LockedOn)
+            {
+                (Manager as FighterManager).RotateVisual((Manager as FighterManager).LockonForward, 10);
+            }
+
             (FighterManager.HurtboxManager as FighterHurtboxManager).CreateHurtboxes(
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
                 StateManager.CurrentStateFrame);
@@ -23,7 +28,11 @@ namespace Mahou.Core
             {
                 (Manager as FighterManager).fighterAnimator.SetFrame((int)Manager.StateManager.CurrentStateFrame);
             }
-            Manager.StateManager.IncrementFrame();
+
+            if (CheckInterrupt() == false)
+            {
+                Manager.StateManager.IncrementFrame();
+            }
         }
     }
 }

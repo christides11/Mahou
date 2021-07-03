@@ -54,12 +54,15 @@ namespace Mahou.Content.Fighters
         public AnimationCurve gravityCurve;
         public override HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
+            FighterManager fManager = (FighterManager)manager;
             FighterPhysicsManager physicsManager = (FighterPhysicsManager)manager.PhysicsManager;
             FighterHurtboxManager hurtboxManager = manager.HurtboxManager as FighterHurtboxManager;
             HurtInfo hurtInfo = hurtInfoBase as HurtInfo;
             HitInfo hitInfo = hurtInfo.hitInfo as HitInfo;
             HitReactionBase HitReactionBase = new HitReactionBase();
-            
+
+            fManager.SetVisualRotation(-hurtInfo.forward);
+
             int indexOfHurtboxGroup = hurtboxManager.GetHurtboxDefinition().hurtboxGroups.IndexOf(hurtInfo.hurtboxGroupHit);
             if (hurtboxManager.hurtboxHitCount.ContainsKey(indexOfHurtboxGroup) == false)
             {
@@ -88,7 +91,12 @@ namespace Mahou.Content.Fighters
             zCurvePosition = hitInfo.zCurvePosition;
             gravityCurve = hitInfo.gravityCurve;
 
-            
+            Vector3 startOffset = (hurtInfo.right * xCurvePosition.Evaluate(0))
+                + (hurtInfo.forward * zCurvePosition.Evaluate(0))
+                + (Vector3.up * yCurvePosition.Evaluate(0));
+
+            fManager.cc.Motor.SetPosition(transform.position + startOffset);
+            /*
             // Convert forces the attacker-based forward direction.
             switch (hitInfo.forceType)
             {
@@ -134,7 +142,7 @@ namespace Mahou.Content.Fighters
             if (physicsManager.forceGravity.y > 0)
             {
                 physicsManager.SetGrounded(false);
-            }
+            }*/
 
             // Change into the correct state.
             if (hitInfo.groundBounces && physicsManager.IsGrounded)

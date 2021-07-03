@@ -44,8 +44,10 @@ namespace Mahou.Content.Fighters
             movement.y = 0;
             FighterManager.RotateVisual(movement.normalized, FighterManager.StatsManager.CurrentStats.dashRotationSpeed);
 
-            StateManager.IncrementFrame();
-            CheckInterrupt();
+            if (CheckInterrupt() == false)
+            {
+                StateManager.IncrementFrame();
+            }
         }
 
         public override bool CheckInterrupt()

@@ -33,6 +33,8 @@ namespace Mahou.Combat
             yPosition += lineSpacing;
             var attachToRect = new Rect(position.x, yPosition, position.width, lineHeight);
             yPosition += lineSpacing;
+            var boxTypeRect = new Rect(position.x, yPosition, position.width, lineHeight);
+            yPosition += lineSpacing;
             var invincibilityRect = new Rect(position.x, yPosition, position.width, lineHeight);
             yPosition += lineSpacing;
             var armorRect = new Rect(position.x, yPosition, position.width, lineHeight);
@@ -49,6 +51,7 @@ namespace Mahou.Combat
 
             EditorGUI.PropertyField(attachToEntityRect, property.FindPropertyRelative("attachToEntity"));
             EditorGUI.PropertyField(attachToRect, property.FindPropertyRelative("attachTo"));
+            EditorGUI.PropertyField(boxTypeRect, property.FindPropertyRelative("hurtboxType"));
             EditorGUI.PropertyField(invincibilityRect, property.FindPropertyRelative("invincibility"));
             EditorGUI.PropertyField(armorRect, property.FindPropertyRelative("armor"));
 

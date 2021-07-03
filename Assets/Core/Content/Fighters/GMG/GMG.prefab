@@ -161,6 +161,7 @@ MonoBehaviour:
   definition: {fileID: 11400000, guid: b9110db6b096f2549b05c24b4df7b73f, type: 2}
   coll: {fileID: 1412428705586473507}
   movSpeed: 0.5
+  charging: 1
   jumpHold: 0
   currentJump: 0
   movesets: []
@@ -248,6 +249,30 @@ MonoBehaviour:
     m_Bits: 128
   team: 0
   autoLinkForcePercentage: 1
+  xCurvePosition:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  yCurvePosition:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  zCurvePosition:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  gravityCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &2320185776235978899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +287,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 5587520329024140789}
   hurtboxPrefab: {fileID: 5374533362761696113, guid: b68ad8eb45a3deb46ac4e2394268a43b,
+    type: 3}
+  pushboxPrefab: {fileID: -1750924275259110106, guid: 44a9f825ee5256e4cb9d21c11ba0f517,
     type: 3}
 --- !u!136 &1412428705586473507
 CapsuleCollider:

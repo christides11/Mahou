@@ -7,7 +7,7 @@ namespace Mahou.Menus
 {
     public class MainMenu : MonoBehaviour
     {
-        [SerializeField] private PlayableDirector hostMenuTransition;
+        //[SerializeField] private PlayableDirector hostMenuTransition;
         [SerializeField] private HostMenu hostMenu;
 
         public void Open()
@@ -18,7 +18,7 @@ namespace Mahou.Menus
         public void OnButtonHostPressed()
         {
             hostMenu.OpenMenu();
-            hostMenuTransition.Play();
+            //hostMenuTransition.Play();
             hostMenu.OnMenuClosed += (data) => { Open(); };
             gameObject.SetActive(false);
         }

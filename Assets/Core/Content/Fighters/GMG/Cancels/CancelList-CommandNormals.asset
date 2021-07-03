@@ -15,4 +15,5 @@ MonoBehaviour:
   nickname: Command Normals
   nodes:
   - {fileID: -1183580482968015825, guid: af255da49258d6a4a8452d03a7b964b1, type: 2}
+  - {fileID: -5971298929415937232, guid: af255da49258d6a4a8452d03a7b964b1, type: 2}
   - {fileID: -5044094681593864790, guid: af255da49258d6a4a8452d03a7b964b1, type: 2}

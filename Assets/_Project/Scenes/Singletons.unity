@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.12107852, a: 1}
+  m_IndirectSpecularColor: {r: 0.18154654, g: 0.22718707, b: 0.30740517, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4381,7 +4381,7 @@ MonoBehaviour:
   gameManager: {fileID: 1812465252}
   consoleReader: {fileID: 1471945004}
   consoleWindow: {fileID: 1471945002}
-  useArgs: 1
+  useArgs: 0
   args:
   - host core/training core/debugroom core/versusr
 --- !u!1 &1847963925
