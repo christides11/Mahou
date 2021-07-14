@@ -14,16 +14,14 @@ namespace Mahou.Content
 
         public override string Name { get { return gamemodeName; } }
         public override string Description { get { return description; } }
-        public override bool BattleSelectionRequired { get { return battleSelectionRequired; } }
-        public override bool MapSelectionRequired { get { return mapSelectionRequired;  } }
         public override ModObjectReference[] GameModeComponentReferences { get { return componentReferences; } }
+        public override ContentType[] ContentRequirements { get { return contentRequirements; } }
 
         [SerializeField] private string gamemodeName;
         [SerializeField] [TextArea] private string description;
         [SerializeField] private AssetReference gamemodeReference;
-        [SerializeField] private bool battleSelectionRequired = true;
-        [SerializeField] private bool mapSelectionRequired = false;
         [SerializeField] private ModObjectReference[] componentReferences;
+        [SerializeField] private ContentType[] contentRequirements;
 
         [NonSerialized] private GameObject gamemode;
 

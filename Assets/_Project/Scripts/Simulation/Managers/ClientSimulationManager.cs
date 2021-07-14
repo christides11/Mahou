@@ -52,28 +52,30 @@ namespace Mahou.Simulation
 
         public Queue<ClientInput> inputQueue = new Queue<ClientInput>();
 
-        public ClientSimulationManager(ClientManager localClient, LobbyManager lobbyManager, int gottenServerTick) : base(lobbyManager)
+        public ClientSimulationManager(ClientManager localClientManager, LobbyManager lobbyManager) : base(lobbyManager)
         {
-            this.localClient = localClient;
+            localClient = localClientManager;
             gameManager = GameManager.current;
             rollbackRequired = false;
+
+            gameModeSimStateSnapshots = new GameModeBaseSimState[circularBufferSize];
+            localClientWorldTickSnapshots = new int[circularBufferSize];
 
             // Setup the simulation adjuster, this delegate will be responsible for time-warping the client
             // simulation whenever we are too far ahead or behind the server simulation.
             simulationAdjuster = clientSimulationAdjuster = new ClientSimulationAdjuster(gameManager.GameSettings.serverWorldStateSendRate, 3);
 
-            gameModeSimStateSnapshots = new GameModeBaseSimState[circularBufferSize];
-            localClientWorldTickSnapshots = new int[circularBufferSize];
-            OnClientJoin(localClient);
+            NetworkClient.RegisterHandler<ServerWorldStateMessage>(EnqueueWorldState);
+            NetworkClient.RegisterHandler<ServerClientInputMessage>(EnqueueClientInput);
+        }
 
+        public void StartMatch(int gottenServerTick)
+        {
             // Set the last-acknowledged server tick.
             latestAckedServerWorldStateTick = gottenServerTick;
 
             // Guess the tick we should be on based on our latency.
             currentRealTick = clientSimulationAdjuster.DetermineStartTick(gottenServerTick, (float)Mirror.NetworkTime.rtt, 1.0f / gameManager.GameSettings.simulationRate);
-
-            NetworkClient.RegisterHandler<ServerWorldStateMessage>(EnqueueWorldState);
-            NetworkClient.RegisterHandler<ServerClientInputMessage>(EnqueueClientInput);
         }
 
         private void OnClientJoin(ClientManager cm)

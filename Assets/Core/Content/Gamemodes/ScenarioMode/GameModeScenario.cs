@@ -7,23 +7,35 @@ using UnityEngine;
 
 namespace Mahou.Core
 {
-    public class GameModeBandBattle : GameModeBase
+    public class GameModeScenario : GameModeBase
     {
         private MusicMeterComponent musicMeterComponent;
 
-        public override async UniTask<bool> LoadRequirements()
+        public override async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
         {
-            if(battleDefinition == null)
+            bool baseResult = await base.SetupGamemode(componentReferences, content);
+            if (baseResult == false)
             {
-                Debug.Log("BandBattle requires a battle.");
                 return false;
             }
+
+            if (content.Count != 1)
+            {
+                return false;
+            }
+
+            bool battleLoadResult = await ContentManager.instance.LoadContentDefinition(ContentType.Scenario, content[0]);
+            if (battleLoadResult == false)
+            {
+                return false;
+            }
+
             return true;
         }
 
-        public override void Initialize(IBattleDefinition battleDefinition = null)
+        public override void Initialize()
         {
-            base.Initialize(battleDefinition);
+            base.Initialize();
 
             GameObject gmGameObjectPrefab = ((IGameModeComponentDefinition)ContentManager.instance
                 .GetContentDefinition(ContentType.GamemodeComponent, new ModObjectReference("core", "musicmeter")))

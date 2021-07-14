@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8722293472217576077}
   - component: {fileID: 6459453201689603078}
   m_Layer: 0
-  m_Name: GameMode_BandBattle
+  m_Name: GameMode_Scenario
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

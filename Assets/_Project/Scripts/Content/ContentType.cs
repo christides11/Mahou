@@ -6,7 +6,8 @@ namespace Mahou
         Gamemode,
         GamemodeComponent,
         Map,
-        Battle,
-        Song
+        Scenario,
+        Song,
+        Battle
     }
 }

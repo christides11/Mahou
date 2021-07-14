@@ -92,6 +92,29 @@ namespace Mahou.Content
         }
 
         #region Content
+        public bool ContentExist(ContentType contentType, string contentIdentfier)
+        {
+            switch (contentType)
+            {
+                case ContentType.Fighter:
+                    return fighterReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Scenario:
+                    return battleReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Gamemode:
+                    return gamemodeReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.GamemodeComponent:
+                    return gamemodeComponentReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Map:
+                    return mapReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Song:
+                    return songReferences.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Battle:
+                    return battleReferences.ContainsKey(contentIdentfier) ? true : false;
+                default:
+                    return false;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -103,7 +126,7 @@ namespace Mahou.Content
             {
                 case ContentType.Fighter:
                     return await LoadContentDefinitions(fighterReferences, fighterDefinitions);
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return await LoadContentDefinitions(battleReferences, battleDefinitions);
                 case ContentType.Gamemode:
                     return await LoadContentDefinitions(gamemodeReferences, gamemodeDefinitions);
@@ -113,9 +136,10 @@ namespace Mahou.Content
                     return await LoadContentDefinitions(mapReferences, mapDefinitions);
                 case ContentType.Song:
                     return await LoadContentDefinitions(songReferences, songDefinitions);
-                default:
-                    return false;
+                case ContentType.Battle:
+                    return await LoadContentDefinitions(battleReferences, battleDefinitions);
             }
+            return false;
         } 
 
         /// <summary>
@@ -128,7 +152,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return await LoadContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
                 case ContentType.Fighter:
                     return await LoadContentDefinition(fighterReferences, fighterDefinitions, contentIdentifier);
@@ -140,6 +164,8 @@ namespace Mahou.Content
                     return await LoadContentDefinition(mapReferences, mapDefinitions, contentIdentifier);
                 case ContentType.Song:
                     return await LoadContentDefinition(songReferences, songDefinitions, contentIdentifier);
+                case ContentType.Battle:
+                    return await LoadContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
                 default:
                     return false;
             }
@@ -149,7 +175,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return GetContentDefinitions(battleReferences, battleDefinitions);
                 case ContentType.Fighter:
                     return GetContentDefinitions(fighterReferences, fighterDefinitions);
@@ -161,6 +187,8 @@ namespace Mahou.Content
                     return GetContentDefinitions(mapReferences, mapDefinitions);
                 case ContentType.Song:
                     return GetContentDefinitions(songReferences, songDefinitions);
+                case ContentType.Battle:
+                    return GetContentDefinitions(battleReferences, battleDefinitions);
                 default:
                     return null;
             }
@@ -176,7 +204,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return GetContentDefinition(battleDefinitions, contentIdentifier);
                 case ContentType.Fighter:
                     return GetContentDefinition(fighterDefinitions, contentIdentifier);
@@ -188,6 +216,8 @@ namespace Mahou.Content
                     return GetContentDefinition(mapDefinitions, contentIdentifier);
                 case ContentType.Song:
                     return GetContentDefinition(songDefinitions, contentIdentifier);
+                case ContentType.Battle:
+                    return GetContentDefinition(battleDefinitions, contentIdentifier);
                 default:
                     return null;
             }
@@ -201,7 +231,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     UnloadContentDefinitions(battleReferences, battleDefinitions);
                     break;
                 case ContentType.Fighter:
@@ -219,6 +249,9 @@ namespace Mahou.Content
                 case ContentType.Song:
                     UnloadContentDefinitions(songReferences, songDefinitions);
                     break;
+                case ContentType.Battle:
+                    UnloadContentDefinitions(battleReferences, battleDefinitions);
+                    break;
             }
         }
 
@@ -231,7 +264,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     UnloadContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
                     break;
                 case ContentType.Fighter:
@@ -248,6 +281,9 @@ namespace Mahou.Content
                     break;
                 case ContentType.Song:
                     UnloadContentDefinition(songReferences, songDefinitions, contentIdentifier);
+                    break;
+                case ContentType.Battle:
+                    UnloadContentDefinition(battleReferences, battleDefinitions, contentIdentifier);
                     break;
             }
         }

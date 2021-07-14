@@ -20,3 +20,5 @@ MonoBehaviour:
     m_SubObjectType: 
   battleSelectionRequired: 0
   mapSelectionRequired: 1
+  componentReferences: []
+  contentRequirements: 03000000

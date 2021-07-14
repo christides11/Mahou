@@ -25,17 +25,27 @@ namespace Mahou.Managers
         }
 
         #region General
+        public bool ContentExist(ContentType contentType, ModObjectReference objectReference)
+        {
+            if (!modLoader.loadedMods.ContainsKey(objectReference.modIdentifier))
+            {
+                return false;
+            }
+            return modLoader.loadedMods[objectReference.modIdentifier].definition.ContentExist(contentType, objectReference.objectIdentifier);
+        }
+
         public async UniTask<bool> LoadContentDefinitions(ContentType contentType)
         {
+            bool result = true;
             foreach(string m in modLoader.loadedMods.Keys)
             {
-                bool result = await LoadContentDefinitions(contentType, m);
-                if(result == false)
+                bool r = await LoadContentDefinitions(contentType, m);
+                if(r == false)
                 {
-                    return false;
+                    result = false;
                 }
             }
-            return true;
+            return result;
         }
 
         public async UniTask<bool> LoadContentDefinitions(ContentType contentType, string modIdentifier)

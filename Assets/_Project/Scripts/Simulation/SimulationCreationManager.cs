@@ -19,15 +19,15 @@ namespace Mahou.Simulation
         }
 
 
-        public static GameObject Create(AssetIdentifier projectile, Vector3 position, Quaternion rotation)
+        public static GameObject Create(AssetIdentifier gameObject, Vector3 position, Quaternion rotation)
         {
             if (NetworkServer.active)
             {
-                return ServerCreation(projectile, position, rotation);
+                return ServerCreation(gameObject, position, rotation);
             }
             else
             {
-                return ClientCreation(projectile, position, rotation);
+                return ClientCreation(gameObject, position, rotation);
             }
         }
 

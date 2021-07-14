@@ -1,12 +1,9 @@
-using Cysharp.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Mahou.Content
 {
     public enum GameModeState
     {
-        INITIALIZING = 0
+        INITIALIZING = 0,
+        PRE_MATCH = 1,
+        MATCH_IN_PROGRESS = 2
     }
 }

@@ -47,7 +47,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: dc952c5456c4d6549957dae2f4a92283
+  m_AssetId: 
   hasSpawned: 0
 --- !u!114 &2798105995136914319
 MonoBehaviour:
@@ -64,6 +64,15 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   networkIdentity: {fileID: 5614899615720564155}
+  fighters:
+  - modIdentifier: 
+    objectIdentifier: 
+  - modIdentifier: 
+    objectIdentifier: 
+  - modIdentifier: 
+    objectIdentifier: 
+  - modIdentifier: 
+    objectIdentifier: 
   clientID: 0
   showPositions: 0
   positionDivergence: 0.001

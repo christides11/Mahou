@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73db8d286bc2bca4f96da12d1a1a7208, type: 3}
-  m_Name: GameMode_BandBattleDefinition
+  m_Name: GameMode_WaveDefinition
   m_EditorClassIdentifier: 
-  gamemodeName: Band Battle
+  gamemodeName: Wave Battle
   description: 
   gamemodeReference:
-    m_AssetGUID: 731c44d31cb811b47bf1c8ddbb41824e
+    m_AssetGUID: bc361df839fcc0d4b9343732899039fa
     m_SubObjectName: 
     m_SubObjectType: 
-  battleSelectionRequired: 1
-  mapSelectionRequired: 0
   componentReferences:
   - modIdentifier: core
     objectIdentifier: musicmeter
+  contentRequirements: 0600000003000000

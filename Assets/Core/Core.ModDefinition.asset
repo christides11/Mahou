@@ -20,19 +20,14 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
   gamemodeRefs:
-  - identifier: bandbattle
-    asset:
-      m_AssetGUID: ff8c74f26f020db47a982dcb2c9bc147
-      m_SubObjectName: 
-      m_SubObjectType: 
-  - identifier: versus
-    asset:
-      m_AssetGUID: 4563cefb27aa1f743bf9f05186ab3c4a
-      m_SubObjectName: 
-      m_SubObjectType: 
   - identifier: training
     asset:
       m_AssetGUID: a30e2e14d92c74f4798105150d96dad8
+      m_SubObjectName: 
+      m_SubObjectType: 
+  - identifier: wavebattle
+    asset:
+      m_AssetGUID: 4f90eb9d41384c34a9182c3a8368572f
       m_SubObjectName: 
       m_SubObjectType: 
   gamemodeComponentRefs:

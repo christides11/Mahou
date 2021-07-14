@@ -7,6 +7,7 @@ namespace Mahou.Content
     public abstract class IFighterDefinition : IContentDefinition
     {
         public virtual bool Selectable { get; }
+        public virtual int Health { get; }
 
         /// <summary>
         /// Loads everything related to the fighter. Call this before any other method.

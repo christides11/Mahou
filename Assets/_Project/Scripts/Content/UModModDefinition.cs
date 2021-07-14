@@ -85,6 +85,27 @@ namespace Mahou.Content
         }
 
         #region Content
+        public bool ContentExist(ContentType contentType, string contentIdentfier)
+        {
+            switch (contentType)
+            {
+                case ContentType.Fighter:
+                    return fighterPaths.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Scenario:
+                    return battlePaths.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Gamemode:
+                    return gamemodePaths.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.GamemodeComponent:
+                    return gamemodeComponentPaths.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Map:
+                    return mapPaths.ContainsKey(contentIdentfier) ? true : false;
+                case ContentType.Song:
+                    return songPaths.ContainsKey(contentIdentfier) ? true : false;
+                default:
+                    return false;
+            }
+        }
+
         public async UniTask<bool> LoadContentDefinition(ContentType contentType, string contentIdentifier)
         {
             ModHost modHost = ModLoader.instance.loadedMods[modNamespace.reference.modIdentifier].host;
@@ -92,7 +113,7 @@ namespace Mahou.Content
             {
                 case ContentType.Fighter:
                     return await LoadContentDefinition(modHost, fighterPaths, fighterDefinitions, contentIdentifier);
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return await LoadContentDefinition(modHost, battlePaths, battleDefinitions, contentIdentifier);
                 case ContentType.Gamemode:
                     return await LoadContentDefinition(modHost, gamemodePaths, gamemodeDefinitions, contentIdentifier);
@@ -114,7 +135,7 @@ namespace Mahou.Content
             {
                 case ContentType.Fighter:
                     return await LoadContentDefinitions(modHost, fighterPaths, fighterDefinitions);
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return await LoadContentDefinitions(modHost, battlePaths, battleDefinitions);
                 case ContentType.Gamemode:
                     return await LoadContentDefinitions(modHost, gamemodePaths, gamemodeDefinitions);
@@ -133,7 +154,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return GetContentDefinition(battleDefinitions, contentIdentifier);
                 case ContentType.Fighter:
                     return GetContentDefinition(fighterDefinitions, contentIdentifier);
@@ -154,7 +175,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     return GetContentDefinitions(battleDefinitions);
                 case ContentType.Fighter:
                     return GetContentDefinitions(fighterDefinitions);
@@ -175,7 +196,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     UnloadContentDefinition(battleDefinitions, contentIdentifier);
                     break;
                 case ContentType.Fighter:
@@ -200,7 +221,7 @@ namespace Mahou.Content
         {
             switch (contentType)
             {
-                case ContentType.Battle:
+                case ContentType.Scenario:
                     UnloadContentDefinitions(battleDefinitions);
                     break;
                 case ContentType.Fighter:

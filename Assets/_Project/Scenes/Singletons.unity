@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18154654, g: 0.22718707, b: 0.30740517, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3106,6 +3106,7 @@ Transform:
   - {fileID: 863555611}
   - {fileID: 1696627694}
   - {fileID: 1471945001}
+  - {fileID: 1837699162}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3931,15 +3932,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523c1c45f6d7a4c4fbd2f0e73cc91123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  matchInProgress: 0
   gameManager: {fileID: 1812465252}
   networkManager: {fileID: 461990868}
-  mainMenuSceneName: MainMenu
+  lobbySceneName: MainMenu
+  settings:
+    selectedGamemode:
+      modIdentifier: 
+      objectIdentifier: 
+    requiredContent: []
   matchManager:
     simManager:
       id: 0
     gameManager: {fileID: 0}
     lobbyManager: {fileID: 0}
     networkManager: {fileID: 0}
+  matchStarted: 0
   references:
     version: 1
     00000000:
@@ -4384,6 +4392,36 @@ MonoBehaviour:
   useArgs: 0
   args:
   - host core/training core/debugroom core/versusr
+--- !u!1 &1837699161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1837699162}
+  m_Layer: 0
+  m_Name: LoadingScreen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1837699162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837699161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1291368762}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1847963925
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,3 +28,4 @@ MonoBehaviour:
     m_SubObjectType: Mahou.Combat.MovesetAttackNode, Mahou_CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   selectable: 1
+  health: 1000

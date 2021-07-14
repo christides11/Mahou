@@ -102,6 +102,7 @@ namespace Mahou.Simulation
             SimulatePlayersUpdate(dt);
             SimulateObjectsUpdate(dt);
             SimulatePhysics(dt);
+            gameManager.GameMode.LateTick();
             SimulatePlayersLateUpdate(dt);
             SimulateObjectsLateUpdate(dt);
         }

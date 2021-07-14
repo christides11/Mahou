@@ -11,11 +11,9 @@ namespace Mahou.Content
     {
         public override string Name { get { return battleName; } }
         public override string Description { get { return description; } }
-        public override ModObjectReference MapReference { get { return mapReference; } }
 
         [SerializeField] private string battleName;
         [SerializeField] [TextArea] private string description;
-        [SerializeField] private ModObjectReference mapReference;
         [SerializeField] private AssetReferenceT<Battle> battleReference;
 
         [NonSerialized] private Battle battle;

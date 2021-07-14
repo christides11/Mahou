@@ -9,9 +9,8 @@ namespace Mahou.Content
     {
         public override string Name { get; }
         public override string Description { get; }
-        public virtual bool BattleSelectionRequired { get; }
-        public virtual bool MapSelectionRequired { get; }
         public virtual ModObjectReference[] GameModeComponentReferences { get; }
+        public virtual ContentType[] ContentRequirements { get; }
 
         public abstract UniTask<bool> LoadGamemode();
         public abstract GameModeBase GetGamemode();

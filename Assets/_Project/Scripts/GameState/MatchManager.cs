@@ -10,6 +10,9 @@ namespace Mahou.Managers
     [System.Serializable]
     public class MatchManager
     {
+        public delegate void EmptyAction();
+        public event EmptyAction OnMatchStarted;
+
         public SimulationManagerBase SimulationManager { get { return simManager; } }
 
         [SerializeReference] private SimulationManagerBase simManager;
@@ -19,9 +22,9 @@ namespace Mahou.Managers
 
         /// <summary>
         /// Information on clients that have joined the game.
+        /// Only server-side.
         /// </summary>
-        public Dictionary<int, ClientConnectionInfo> joinedClients
-            = new Dictionary<int, ClientConnectionInfo>();
+        public Dictionary<int, ClientMatchInfo> clientMatchInfo = new Dictionary<int, ClientMatchInfo>();
 
         public MatchManager(GameManager gameManager, LobbyManager lobbyManager, SimulationManagerBase simManager)
         {
@@ -29,18 +32,6 @@ namespace Mahou.Managers
             this.lobbyManager = lobbyManager;
             this.simManager = simManager;
             this.networkManager = gameManager.NetworkManager;
-
-            NetworkManager.OnServerClientReady += OnClientConnectToServer;
-        }
-
-        private void OnClientConnectToServer(Mirror.NetworkConnection clientConnection, ClientManager clientManager)
-        {
-            joinedClients.Add(clientManager.connectionToClient.connectionId,
-                new ClientConnectionInfo()
-                {
-                    connectionID = clientConnection.connectionId,
-                    clientManager = clientManager
-                });
         }
 
         public void Tick()
@@ -50,6 +41,18 @@ namespace Mahou.Managers
                 return;
             }
             simManager.Update(Time.deltaTime);
+        }
+
+        public void ServerStartMatch()
+        {
+            (SimulationManager as ServerSimulationManager).StartMatch();
+            OnMatchStarted?.Invoke();
+        }
+
+        public void ClientStartMatch(int startTick)
+        {
+            (SimulationManager as ClientSimulationManager).StartMatch(startTick);
+            OnMatchStarted?.Invoke();
         }
     }
 }

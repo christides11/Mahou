@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 9161192216790614098}
   - component: {fileID: 7886028677784697296}
   - component: {fileID: -2146182330565093495}
+  - component: {fileID: -6580862577226656753}
+  - component: {fileID: -2133200425563168548}
   m_Layer: 8
   m_Name: GMG
   m_TagString: Player
@@ -444,6 +446,33 @@ MonoBehaviour:
   - {fileID: 2901111361416764894}
   currentAnimationState:
     clip: {fileID: 0}
+--- !u!114 &-6580862577226656753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886669924077431813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420033c16a5f1c64b8bd6d7ca98c39eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+--- !u!114 &-2133200425563168548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886669924077431813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 240d20ff17705e2429b536fbbc6c2c0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  netId: {fileID: 308169902951444416}
+  guid: 00000000-0000-0000-0000-000000000000
 --- !u!95 &2901111361416764894
 Animator:
   serializedVersion: 3

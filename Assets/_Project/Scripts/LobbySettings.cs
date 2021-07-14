@@ -5,17 +5,16 @@ using UnityEngine;
 
 namespace Mahou
 {
+    [System.Serializable]
     public struct LobbySettings
     {
         public ModObjectReference selectedGamemode;
-        public ModObjectReference selectedMap;
-        public ModObjectReference selectedBattle;
+        public List<ModObjectReference> requiredContent;
 
-        public LobbySettings(ModObjectReference selectedGamemode, ModObjectReference selectedMap, ModObjectReference selectedBattle)
+        public LobbySettings(ModObjectReference selectedGamemode, List<ModObjectReference> requiredContent)
         {
-            this.selectedMap = selectedMap;
             this.selectedGamemode = selectedGamemode;
-            this.selectedBattle = selectedBattle;
+            this.requiredContent = requiredContent;
         }
     }
 }

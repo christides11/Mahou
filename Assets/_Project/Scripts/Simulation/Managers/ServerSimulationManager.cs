@@ -43,14 +43,20 @@ namespace Mahou.Simulation
             gameManager = GameManager.current;
             clientInputProcessor = new ClientInputProcessor();
 
-            Mahou.Networking.NetworkManager.OnServerClientReady += InitializePlayerState;
-            Mahou.Networking.NetworkManager.OnServerClientDisconnected += HandleClientDisconnect;
             NetworkServer.RegisterHandler<ClientInputMessage>(ReceiveClientInput);
             NetworkServer.RegisterHandler<ClientSimStateMessage>(ReceiveClientSimStateMsg);
             NetworkClient.RegisterHandler<ServerWorldStateMessage>(TestWorldStateMsg);
 
             // Initialize timers.
             SetWorldStateBroadcastTimer((float)gameManager.GameSettings.serverWorldStateSendRate);
+        }
+
+        public void StartMatch()
+        {
+            foreach(var c in lobbyManager.MatchManager.clientMatchInfo)
+            {
+                InitializePlayerState(c.Value.clientManager.connectionToClient, c.Value.clientManager);
+            }
         }
 
         private void TestWorldStateMsg(ServerWorldStateMessage arg2)
@@ -102,11 +108,6 @@ namespace Mahou.Simulation
             }
         }
 
-        private void HandleClientDisconnect(NetworkConnection clientConnection)
-        {
-
-        }
-
         private void ReceiveClientInput(NetworkConnection arg1, ClientInputMessage arg2)
         {
             if (arg2.Inputs.Count() > 0)
@@ -117,18 +118,18 @@ namespace Mahou.Simulation
 
             // Update the latest input tick that we have for that client.
             int messageInputTick = arg2.StartWorldTick + arg2.Inputs.Length - 1;
-            if (lobbyManager.MatchManager.joinedClients[arg1.connectionId].latestestAckedInput < messageInputTick)
+            if (lobbyManager.MatchManager.clientMatchInfo[arg1.connectionId].latestestAckedInput < messageInputTick)
             {
-                lobbyManager.MatchManager.joinedClients[arg1.connectionId].latestestAckedInput = messageInputTick;
+                lobbyManager.MatchManager.clientMatchInfo[arg1.connectionId].latestestAckedInput = messageInputTick;
             }
 
             // Send input to all clients.
             ServerClientInputMessage scInputMsg = new ServerClientInputMessage()
             {
-                clientManagerIdentity = lobbyManager.MatchManager.joinedClients[arg1.connectionId].clientManager.networkIdentity,
+                clientManagerIdentity = lobbyManager.MatchManager.clientMatchInfo[arg1.connectionId].clientManager.networkIdentity,
                 inputMessage = arg2
             };
-            foreach (var v in lobbyManager.MatchManager.joinedClients)
+            foreach (var v in lobbyManager.MatchManager.clientMatchInfo)
             {
                 if(v.Value.clientManager.networkIdentity.connectionToClient.connectionId == arg1.connectionId)
                 {
@@ -178,7 +179,7 @@ namespace Mahou.Simulation
                     }, 0);
                 }
 
-                lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput = currentRealTick + requestedInputDelay;
+                lobbyManager.MatchManager.clientMatchInfo[ClientManager.local.clientID].latestestAckedInput = currentRealTick + requestedInputDelay;
             }
             else
             {
@@ -229,7 +230,7 @@ namespace Mahou.Simulation
             }
             clientConfirmedTick[ClientManager.local.clientID] = CurrentRealTick;
             // For when the input delay is set lower.
-            if (lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput > currentRealTick + inputDelay)
+            if (lobbyManager.MatchManager.clientMatchInfo[ClientManager.local.clientID].latestestAckedInput > currentRealTick + inputDelay)
             {
                 return;
             }
@@ -239,7 +240,7 @@ namespace Mahou.Simulation
             cim.Inputs = new Input.ClientInput[] { ClientManager.local ? ClientManager.local.GetInputs() : new Input.ClientInput() };
             clientInputProcessor.EnqueueInput(cim, NetworkServer.localConnection, currentRealTick+inputDelay);
 
-            lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput = currentRealTick + inputDelay;
+            lobbyManager.MatchManager.clientMatchInfo[ClientManager.local.clientID].latestestAckedInput = currentRealTick + inputDelay;
 
             NetworkServer.SendToAll(new ServerClientInputMessage()
             {
@@ -269,17 +270,16 @@ namespace Mahou.Simulation
                 unprocessedPlayerIds.Remove(player.clientID);
 
                 // Mark the player as synchronized.
-                lobbyManager.MatchManager.joinedClients[player.clientID].synced = true;
+                lobbyManager.MatchManager.clientMatchInfo[player.clientID].synced = true;
             }
 
-            // Any remaining players without inputs have their latest input command repeated,
-            // but we notify them that they need to fast-forward their simulation to improve buffering.
+            // Any remaining players without inputs have their latest input command repeated.
             foreach (int clientID in unprocessedPlayerIds)
             {
                 // If the player is not yet synchronized, this means that they haven't sent any
                 // inputs yet. Ignore them.
-                if (!lobbyManager.MatchManager.joinedClients.ContainsKey(clientID) ||
-                    !lobbyManager.MatchManager.joinedClients[clientID].synced)
+                if (!lobbyManager.MatchManager.clientMatchInfo.ContainsKey(clientID) ||
+                    !lobbyManager.MatchManager.clientMatchInfo[clientID].synced)
                 {
                     continue;
                 }
@@ -300,13 +300,13 @@ namespace Mahou.Simulation
                 {
                     Debug.Log($"No inputs for player #{clientID} and no history to replay.");
                 }
-                lobbyManager.MatchManager.joinedClients[ClientManager.local.clientID].latestestAckedInput = currentRealTick - 1;
+                lobbyManager.MatchManager.clientMatchInfo[ClientManager.local.clientID].latestestAckedInput = currentRealTick - 1;
             }
         }
 
         private void BroadcastUnackedInputs()
         {
-            foreach (var v in lobbyManager.MatchManager.joinedClients)
+            foreach (var v in lobbyManager.MatchManager.clientMatchInfo)
             {
                 if(v.Value.synced == false)
                 {
@@ -379,7 +379,7 @@ namespace Mahou.Simulation
             };
             
             // Send Message
-            foreach (var v in lobbyManager.MatchManager.joinedClients)
+            foreach (var v in lobbyManager.MatchManager.clientMatchInfo)
             {
                 // Ignore the host.
                 if (NetworkServer.localClientActive

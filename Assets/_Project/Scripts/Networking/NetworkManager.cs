@@ -8,8 +8,10 @@ namespace Mahou.Networking
 {
     public class NetworkManager : Mirror.NetworkManager
     {
+        public delegate void EmptyAction();
         public delegate void ServerClientAction(NetworkConnection clientConnection);
         public delegate void ServerAction(NetworkConnection clientConnection, ClientManager clientManager);
+        public static event EmptyAction OnServerStartHost;
         /// <summary>
         /// Called on the server when a new client connects.
         /// </summary>
@@ -30,6 +32,7 @@ namespace Mahou.Networking
         /// Called on the client when disconnected from a server.
         /// </summary>
         public static event ServerClientAction OnClientDisconnected;
+        public static event EmptyAction OnClientReady;
 
         public void JoinGame(string address)
         {
@@ -39,38 +42,53 @@ namespace Mahou.Networking
 
         public void ClientReadyConnection()
         {
-            NetworkClient.Ready();
+            if (NetworkClient.ready)
+            {
+                return;
+            }
+
+            if (NetworkClient.Ready())
+            {
+                OnClientReady?.Invoke();
+            }
+        }
+
+        public override void OnStartHost()
+        {
+            base.OnStartHost();
+            OnServerStartHost?.Invoke();
+        }
+
+        public override void OnStopHost()
+        {
+            base.OnStopHost();
+            Debug.Log("Hosting stopped.");
         }
 
         #region Server-Side Callbacks
         public override void OnServerConnect(NetworkConnection conn)
         {
             base.OnServerConnect(conn);
-            // Ignore host.
+            /*// Ignore host.
             if (NetworkServer.localClientActive
                 && conn.connectionId == NetworkServer.localConnection.connectionId)
             {
                 return;
-            }
+            }*/
             OnServerClientConnected?.Invoke(conn);
         }
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             OnServerClientDisconnected?.Invoke(conn);
-            base.OnServerDisconnect(conn);
+            //NetworkServer.DestroyPlayerForConnection(conn);
+            //base.OnServerDisconnect(conn);
         }
         #endregion
 
         #region Client-Side Callbacks
         public override void OnClientConnect(NetworkConnection conn)
         {
-            // Host.
-            if (NetworkServer.localClientActive)
-            {
-                base.OnClientConnect(conn);
-                return;
-            }
             OnClientConnected?.Invoke(conn);
         }
 

@@ -11,6 +11,7 @@ namespace Mahou.Content.Fighters
         public override string Name { get { return fighterName; } }
         public override string Description { get { return description; } }
         public override bool Selectable { get { return selectable; } }
+        public override int Health { get { return health; } }
 
         [SerializeField] private string fighterName;
         [SerializeField] [TextArea] private string description;
@@ -18,6 +19,7 @@ namespace Mahou.Content.Fighters
         [SerializeField] private AssetReference fighterTestReference;
         [SerializeField] private AssetReferenceT<MovesetDefinition>[] movesetReferences;
         [SerializeField] private bool selectable = true;
+        [SerializeField] private int health;
 
         [NonSerialized] private MovesetDefinition[] movesets = null;
         [NonSerialized] private GameObject fighter = null;

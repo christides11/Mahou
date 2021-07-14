@@ -27,7 +27,9 @@ namespace Mahou.Networking
         public static Dictionary<int, ClientManager> clientManagers = new Dictionary<int, ClientManager>();
         public static List<int> clientIDs = new List<int>();
 
-        private CharacterSelectMenu characterSelect;
+        //private CharacterSelectMenu characterSelect;
+
+        public List<ModObjectReference> fighters = new List<ModObjectReference>();
 
         public SyncList<NetworkIdentity> players = new SyncList<NetworkIdentity>();
 
@@ -55,50 +57,12 @@ namespace Mahou.Networking
         public override void OnStartAuthority()
         {
             local = this;
-            GameObject g = GameObject.Instantiate(GameManager.current.GameSettings.characterSelectMenu.gameObject, transform);
-            characterSelect = g.GetComponent<CharacterSelectMenu>();
-            characterSelect.OpenMenu();
-            characterSelect.OnCharacterSubmit += SendFighterRequestToServer;
-        }
-
-        private void Update()
-        {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
-            {
-                if(characterSelect == null)
-                {
-                    return;
-                }
-                if (characterSelect.gameObject.activeInHierarchy)
-                {
-                    characterSelect.CloseMenu();
-                }
-                else
-                {
-                    characterSelect.OpenMenu();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Request the server to load our fighter. 
-        /// </summary>
-        /// <param name="fighter"></param>
-        [Client]
-        private void SendFighterRequestToServer(ModObjectReference fighter)
-        {
-            CmdFighterSpawnRequest(fighter);
         }
 
         #region Spawn Player
         [Command]
-        public async void CmdFighterSpawnRequest(ModObjectReference fighterReference)
+        public async void CmdLoadFighterRequest(ModObjectReference fighterReference)
         {
-            if(players.Count >= 1)
-            {
-                return;
-            }
-
             bool loadResult = await NetworkFighterSpawnManager.ServerRequestFighterLoad(fighterReference);
 
             if(loadResult == false)
@@ -107,29 +71,30 @@ namespace Mahou.Networking
                 return;
             }
 
-            SpawnPlayerFighter(fighterReference);
+            fighters[0] = fighterReference;
         }
 
         [Server]
-        private void SpawnPlayerFighter(ModObjectReference requestFighterRef)
+        public GameObject SpawnPlayerFighter(ModObjectReference requestFighterRef, Vector3 position, Quaternion rotation)
         {
             if(requestFighterRef == null)
             {
-                return;
+                return null;
             }
             IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, requestFighterRef);
             if (fighterDefinition == null)
             {
-                return;
+                return null;
             }
             var fighterGO = fighterDefinition.GetFighter();
             if (fighterGO == null)
             {
-                return;
+                return null;
             }
-            GameObject fighter = GameObject.Instantiate(fighterGO, new Vector3(0, 1, 0), Quaternion.identity);
+            GameObject fighter = GameObject.Instantiate(fighterGO, position, rotation);
             NetworkServer.Spawn(fighter, new System.Guid(fighterDefinition.GetFighterGUID()), networkIdentity.connectionToClient);
             players.Add(fighter.GetComponent<NetworkIdentity>());
+            return fighter;
         }
         #endregion
 

@@ -26,6 +26,7 @@ namespace Mahou
         {
             consoleWindow.Init();
             ISimStateSerializer.Initialize();
+            GamemodeSimStateSerializer.Initialize();
             SimulationCreationManager.Initialize();
             SimulationDeletionManager.Initialize();
             NetworkFighterSpawnManager.Initialize();

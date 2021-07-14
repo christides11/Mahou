@@ -21,7 +21,9 @@ namespace Mahou.Content.Fighters
 
         public virtual FighterStatsManager StatsManager { get { return statsManager; } }
         public virtual FighterHitboxManager HitboxManager { get { return hitboxManager; } }
+        public virtual HealthManager HealthManager { get { return healthManager; } }
 
+        private HealthManager healthManager;
         private FighterStatsManager statsManager;
         private FighterHitboxManager hitboxManager;
         public FighterAnimator fighterAnimator;
@@ -81,10 +83,12 @@ namespace Mahou.Content.Fighters
             StatsManager.SetStats(movesets[0].fighterStats);
             (PhysicsManager as FighterPhysicsManager).OnGroundedChanged += (data) => { if (data == true) ResetGroundOptions(); };
             size = coll.bounds.size;
+            healthManager.SetHealth(definition.Health);
         }
 
         public virtual void Initialize()
         {
+            healthManager = GetComponent<HealthManager>();
             netid = GetComponent<NetworkIdentity>();
             inputManager = GetComponent<FighterInputManager>();
             stateManager = GetComponent<FighterStateManager>();

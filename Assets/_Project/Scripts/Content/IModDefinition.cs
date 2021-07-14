@@ -12,6 +12,7 @@ namespace Mahou.Content
         string Description { get; }
 
         // CONTENT //
+        bool ContentExist(ContentType contentType, string contentIdentfier);
         UniTask<bool> LoadContentDefinitions(ContentType contentType);
         UniTask<bool> LoadContentDefinition(ContentType contentType, string contentIdentifier);
         List<IContentDefinition> GetContentDefinitions(ContentType contentType);

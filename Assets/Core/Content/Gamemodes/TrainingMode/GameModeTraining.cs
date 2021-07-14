@@ -1,6 +1,10 @@
+using Cysharp.Threading.Tasks;
 using Mahou.Content;
 using Mahou.Managers;
+using Mahou.Networking;
 using Mirror;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mahou.Core
@@ -9,15 +13,59 @@ namespace Mahou.Core
     {
         public ModObjectReference testReference;
 
+        public override async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
+        {
+            bool baseResult = await base.SetupGamemode(componentReferences, content);
+            if (baseResult == false)
+            {
+                return false;
+            }
+
+            if(content.Count != 1)
+            {
+                return false;
+            }
+
+            bool mapLoadResult = await GameManager.current.LoadMap(content[0]);
+            if(mapLoadResult == false)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        public override void OnStartMatch()
+        {
+            base.OnStartMatch();
+            if (NetworkServer.active)
+            {
+                SpawnPointManager spm = GameObject.FindObjectOfType<SpawnPointManager>();
+                int sIndex = 0;
+                foreach (var c in ClientManager.clientManagers)
+                {
+                    c.Value.SpawnPlayerFighter(c.Value.fighters[0], spm.spawnPoints[sIndex].transform.position, spm.spawnPoints[sIndex].transform.rotation);
+                    sIndex++;
+                }
+            }
+
+            SetGameModeState(GameModeState.MATCH_IN_PROGRESS);
+        }
+
         public override void Update()
         {
             if (UnityEngine.Input.GetKeyDown(KeyCode.F8))
             {
-                SpawnFighter();
+                SpawnTrainingRoomFighter();
             }
         }
 
-        public async void SpawnFighter()
+        public async void SpawnTrainingRoomFighter()
         {
             // Server only.
             if(NetworkServer.active == false)

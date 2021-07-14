@@ -18,6 +18,7 @@ namespace Mahou.Menus
         public delegate void CloseAction(GameObject hostMenu);
         public event CloseAction OnMenuClosed;
 
+        /*
         List<ModObjectReference> maps;
         List<ModObjectReference> gamemodes;
 
@@ -158,5 +159,6 @@ namespace Mahou.Menus
         {
             selectedGamemode = gamemodeReference;
         }
+        */
     }
 }

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: core.gamemode.wavebattle
+  m_EditorClassIdentifier: 
+  m_GroupName: core.gamemode.wavebattle
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 8afb73b30cedcc44a8c1235c333ca3e2
+  m_SerializeEntries:
+  - m_GUID: 4f90eb9d41384c34a9182c3a8368572f
+    m_Address: core.gamemode.wavebattle.defintion
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 11400000, guid: 4f90eb9d41384c34a9182c3a8368572f, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 4f90eb9d41384c34a9182c3a8368572f, type: 2}
+  - m_GUID: bc361df839fcc0d4b9343732899039fa
+    m_Address: core.gamemode.wavebattle.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 7813076538735259805, guid: bc361df839fcc0d4b9343732899039fa,
+      type: 3}
+    m_TargetAsset: {fileID: 7813076538735259805, guid: bc361df839fcc0d4b9343732899039fa,
+      type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f19033ff650faf4438fedfedb426e295, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: cae06588a3019f448b5a26fc2c7b9548, type: 2}
+    - {fileID: 11400000, guid: 1feedd9861a8531459d875ea90acdfc9, type: 2}

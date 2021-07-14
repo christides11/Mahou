@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
+using Mahou.Managers;
 using Mahou.Simulation;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mahou.Content
@@ -7,24 +9,36 @@ namespace Mahou.Content
     public class GameModeBase : MonoBehaviour
     {
         public GameModeState GameModeState { get { return gameModeState; } }
-
-        protected IBattleDefinition battleDefinition;
-
         protected GameModeState gameModeState = GameModeState.INITIALIZING;
 
-        /// <summary>
-        /// Load anything here that the gamemode will need.
-        /// </summary>
-        /// <returns>True if everything loaded successfully.</returns>
-        public virtual async UniTask<bool> LoadRequirements()
+        public virtual async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
         {
+            for(int i = 0; i < componentReferences.Length; i++)
+            {
+                bool cResult = await ContentManager.instance.LoadContentDefinition(ContentType.GamemodeComponent, componentReferences[i]);
+                if(cResult == false)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
-        public virtual void Initialize(IBattleDefinition battleDefinition = null)
+        public virtual void Initialize()
         {
             gameModeState = GameModeState.INITIALIZING;
-            this.battleDefinition = battleDefinition;
+            LobbyManager.current.MatchManager.OnMatchStarted += OnStartMatch;
+        }
+
+        public virtual void OnStartMatch()
+        {
+            gameModeState = GameModeState.PRE_MATCH;
+        }
+
+        public virtual void Deconstruct()
+        {
+            LobbyManager.current.MatchManager.OnMatchStarted -= OnStartMatch;
         }
 
         public virtual void Update()
@@ -37,9 +51,14 @@ namespace Mahou.Content
 
         }
 
-        public virtual void SetGameModeState(GameModeState wantedState)
+        public virtual void LateTick()
         {
 
+        }
+
+        public virtual void SetGameModeState(GameModeState wantedState)
+        {
+            gameModeState = wantedState;
         }
 
         public virtual GameModeBaseSimState GetSimState()

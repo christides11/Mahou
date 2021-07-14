@@ -22,11 +22,11 @@
       "hash": "72e620d169841f32bc6110ad0e12ee9eae6f1aaf"
     },
     "com.dbrizov.naughtyattributes": {
-      "version": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
+      "version": "https://github.com/dbrizov/NaughtyAttributes.git#v2.1.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "ca67285bd1b013ce4ee1a6b5c27f9e11453bd64e"
+      "hash": "bf09948bcab85f0d1c30ad438e7f6d1d590823fb"
     },
     "com.github.siccity.xnode": {
       "version": "https://github.com/siccity/xNode.git#1.8.0",
@@ -90,7 +90,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.6.4",
+      "version": "2.6.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -120,7 +120,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.9",
+      "version": "2.0.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -136,7 +136,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.memoryprofiler": {
-      "version": "0.2.9-preview.1",
+      "version": "0.2.9-preview.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -152,7 +152,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.probuilder": {
-      "version": "4.5.0",
+      "version": "4.5.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -186,7 +186,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "10.5.0",
+      "version": "10.5.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -195,13 +195,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.universal": {
-      "version": "10.5.0",
+      "version": "10.5.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.1.0",
-        "com.unity.render-pipelines.core": "10.5.0",
-        "com.unity.shadergraph": "10.5.0"
+        "com.unity.render-pipelines.core": "10.5.1",
+        "com.unity.shadergraph": "10.5.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -227,17 +227,17 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "10.5.0",
+      "version": "10.5.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "10.5.0",
+        "com.unity.render-pipelines.core": "10.5.1",
         "com.unity.searcher": "4.3.2"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.24",
+      "version": "1.1.26",
       "depth": 1,
       "source": "registry",
       "dependencies": {

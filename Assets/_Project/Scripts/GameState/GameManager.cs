@@ -52,7 +52,7 @@ namespace Mahou.Managers
         /// </summary>
         /// <param name="gamemode">The gamemode to set.</param>
         /// <returns>True if successful.</returns>
-        public virtual async UniTask<bool> SetGamemode(ModObjectReference gamemode, ModObjectReference battle = null)
+        public virtual async UniTask<bool> SetGamemode(ModObjectReference gamemode)
         {
             await modManager.LoadContentDefinitions(ContentType.Gamemode, gamemode.modIdentifier);
             IGameModeDefinition gamemodeDefinition = (IGameModeDefinition)modManager.GetContentDefinition(ContentType.Gamemode, gamemode);
@@ -61,19 +61,6 @@ namespace Mahou.Managers
             {
                 Debug.Log($"Can not find gamemode {gamemode.ToString()}");
                 return false;
-            }
-
-            // Load battle.
-            IBattleDefinition battleDefinition = null;
-            if (gamemodeDefinition.BattleSelectionRequired)
-            {
-                await modManager.LoadContentDefinition(ContentType.Battle, battle);
-                battleDefinition = (IBattleDefinition)modManager.GetContentDefinition(ContentType.Battle, battle);
-                if(battleDefinition == null)
-                {
-                    Debug.Log($"Could not find battle {battle.ToString()}");
-                    return false;
-                }
             }
 
             // Load components.
@@ -103,14 +90,7 @@ namespace Mahou.Managers
             }
 
             GameObject gameMode = Instantiate(gamemodeDefinition.GetGamemode().gameObject, transform);
-            gameMode.GetComponent<GameModeBase>().Initialize(battleDefinition);
-
-            if ((await gameMode.GetComponent<GameModeBase>().LoadRequirements()) == false)
-            {
-                Debug.Log($"Gamemode could not load it's requirements.");
-                Destroy(gameMode);
-                return false;
-            }
+            gameMode.GetComponent<GameModeBase>().Initialize();
 
             this.GameMode = gameMode.GetComponent<GameModeBase>();
             CurrentGamemode = gamemodeDefinition;
@@ -147,7 +127,6 @@ namespace Mahou.Managers
                 return false;
             }
 
-            // Unloads scenes that aren't the singletons scene.
             if (scenesToUnload != null)
             {
                 for (int i = 0; i < scenesToUnload.Count; i++)

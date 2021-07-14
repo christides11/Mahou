@@ -1,4 +1,5 @@
 using KinematicCharacterController;
+using Mahou.Networking;
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
@@ -118,6 +119,27 @@ namespace Mahou
             for (int i = 0; i < valueCount; i++)
             {
                 d.Add(reader.ReadInt(), reader.ReadInt());
+            }
+            return d;
+        }
+
+        public static void WriteIntClientLobbyInfoDictionaryType(this NetworkWriter writer, Dictionary<int, ClientLobbyInfo> value)
+        {
+            writer.WriteInt(value.Count);
+            foreach (var v in value)
+            {
+                writer.WriteInt(v.Key);
+                writer.Write<ClientLobbyInfo>(v.Value);
+            }
+        }
+
+        public static Dictionary<int, ClientLobbyInfo> ReadIntClientLobbyInfoDictionary(this NetworkReader reader)
+        {
+            Dictionary<int, ClientLobbyInfo> d = new Dictionary<int, ClientLobbyInfo>();
+            int valueCount = reader.ReadInt();
+            for (int i = 0; i < valueCount; i++)
+            {
+                d.Add(reader.ReadInt(), reader.Read<ClientLobbyInfo>());
             }
             return d;
         }
