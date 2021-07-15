@@ -194,99 +194,15 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: 0}
+        opponentForce: {x: 0, y: 20, z: 0}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
         throwConfirm: {fileID: 0}
-        xCurvePosition:
-          serializedVersion: 2
-          m_Curve: []
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        yCurvePosition:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 12.632173
-            outSlope: 12.632173
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.025406504
-          - serializedVersion: 3
-            time: 0.5
-            value: 3
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 1
-            value: 3
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.13739634
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        zCurvePosition:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 2
-            outSlope: 2
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        gravityCurve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 0.575
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.03861773
-          - serializedVersion: 3
-            time: 1
-            value: 0.3
-            inSlope: 0.7840092
-            outSlope: 0.7840092
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.056910515
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
+        opponentForceAir: {x: 0, y: 20, z: 0}
+        opponentFriction: 0
+        opponentGravity: 0
     00000007:
       type: {class: ClampMovement, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:

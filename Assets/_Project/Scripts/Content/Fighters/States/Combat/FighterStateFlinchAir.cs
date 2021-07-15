@@ -14,9 +14,11 @@ namespace Mahou.Content.Fighters
         public override void Initialize()
         {
             base.Initialize();
+            heldFrames = 0;
             //(Manager as FighterManager).entityAnimator.PlayAnimation((Manager as FighterManager).GetAnimationClip("hurt"));
         }
 
+        int heldFrames = 0;
         public override void OnUpdate()
         {
             FighterManager e = FighterManager;
@@ -25,36 +27,20 @@ namespace Mahou.Content.Fighters
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch-air"),
                 StateManager.CurrentStateFrame);
 
-            /*
-            float fallSpeedMulti = cm.gravityCurve.Evaluate((float)e.StateManager.CurrentStateFrame / (float)cm.HitStun);
-            PhysicsManager.HandleGravity(
-                e.StatsManager.CurrentStats.maxFallSpeed,
-                e.StatsManager.CurrentStats.gravity * fallSpeedMulti,
-                PhysicsManager.GravityScale);*/
-
-            Vector3 gotOffset = Vector3.zero;
-            float yFrameOffset = cm.yCurvePosition.Evaluate((float)e.StateManager.CurrentStateFrame / (float)cm.HitStun)
-                - cm.yCurvePosition.Evaluate((float)((int)e.StateManager.CurrentStateFrame - 1) / (float)cm.HitStun);
-            float zFrameOffset = cm.zCurvePosition.Evaluate((float)e.StateManager.CurrentStateFrame / (float)cm.HitStun)
-                 - cm.zCurvePosition.Evaluate((float)((int)e.StateManager.CurrentStateFrame - 1) / (float)cm.HitStun);
-
-            if (yFrameOffset != 0)
+            if(PhysicsManager.forceGravity.y == 0 && heldFrames < 15)
             {
-                gotOffset += yFrameOffset * Vector3.up;
+                heldFrames++;
             }
-            if (zFrameOffset != 0)
+            else
             {
-                gotOffset += -zFrameOffset * e.visual.transform.forward;
-            }
-
-            gotOffset /= Time.fixedDeltaTime;
-            PhysicsManager.forceMovement = Vector3.zero;
-            gotOffset.y = Mathf.Lerp(gotOffset.y, -e.StatsManager.CurrentStats.gravity, cm.gravityCurve.Evaluate((float)e.StateManager.CurrentStateFrame / (float)cm.HitStun));
-            if (gotOffset != Vector3.zero)
-            {
-                PhysicsManager.forceGravity.y = gotOffset.y;
-                gotOffset.y = 0;
-                PhysicsManager.forceMovement = gotOffset;   
+                PhysicsManager.HandleGravity(
+                    e.StatsManager.CurrentStats.maxFallSpeed,
+                    (e.CombatManager as FighterCombatManager).hitstunGravity,
+                    PhysicsManager.GravityScale);
+                if(Mathf.Abs(PhysicsManager.forceGravity.y) <= 0.001f)
+                {
+                    PhysicsManager.forceGravity.y = 0;
+                }
             }
 
             /*

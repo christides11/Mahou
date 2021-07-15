@@ -48,10 +48,8 @@ namespace Mahou.Content.Fighters
             return (int)team;
         }
 
-        public AnimationCurve xCurvePosition;
-        public AnimationCurve yCurvePosition;
-        public AnimationCurve zCurvePosition;
-        public AnimationCurve gravityCurve;
+        public float hitstunFriction = 0;
+        public float hitstunGravity = 0;
         public override HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             FighterManager fManager = (FighterManager)manager;
@@ -86,23 +84,23 @@ namespace Mahou.Content.Fighters
             SetHitStop(hitInfo.hitstop);
             SetHitStun(hitInfo.hitstun);
 
-            xCurvePosition = hitInfo.xCurvePosition;
-            yCurvePosition = hitInfo.yCurvePosition;
-            zCurvePosition = hitInfo.zCurvePosition;
-            gravityCurve = hitInfo.gravityCurve;
-
-            Vector3 startOffset = (hurtInfo.right * xCurvePosition.Evaluate(0))
-                + (hurtInfo.forward * zCurvePosition.Evaluate(0))
-                + (Vector3.up * yCurvePosition.Evaluate(0));
-
-            fManager.cc.Motor.SetPosition(transform.position + startOffset);
-            /*
+            Vector3 baseForce = manager.PhysicsManager.IsGrounded ? hitInfo.opponentForce : hitInfo.opponentForceAir;
+            hitstunFriction = hitInfo.opponentFriction;
+            if(hitstunFriction == 0)
+            {
+                hitstunFriction = (manager as FighterManager).StatsManager.CurrentStats.groundFriction;
+            }
+            hitstunGravity = hitInfo.opponentGravity;
+            if(hitstunGravity == 0)
+            {
+                hitstunGravity = (manager as FighterManager).StatsManager.CurrentStats.gravity;
+            }
             // Convert forces the attacker-based forward direction.
             switch (hitInfo.forceType)
             {
                 case HitboxForceType.SET:
-                    Vector3 forces = (hitInfo.opponentForce.x * hurtInfo.right) + (hitInfo.opponentForce.z * hurtInfo.forward);
-                    physicsManager.forceGravity.y = hitInfo.opponentForce.y;
+                    Vector3 forces = (baseForce.x * hurtInfo.right) + (baseForce.z * hurtInfo.forward);
+                    physicsManager.forceGravity.y = baseForce.y;
                     physicsManager.forceMovement = forces;
                     break;
                 case HitboxForceType.PULL:
@@ -142,7 +140,7 @@ namespace Mahou.Content.Fighters
             if (physicsManager.forceGravity.y > 0)
             {
                 physicsManager.SetGrounded(false);
-            }*/
+            }
 
             // Change into the correct state.
             if (hitInfo.groundBounces && physicsManager.IsGrounded)

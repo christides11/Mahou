@@ -25,25 +25,7 @@ namespace Mahou.Content.Fighters
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch"),
                 StateManager.CurrentStateFrame);
 
-            Vector3 gotOffset = Vector3.zero;
-            float yFrameOffset = cm.yCurvePosition.Evaluate((float)e.StateManager.CurrentStateFrame / (float)cm.HitStun) 
-                - cm.yCurvePosition.Evaluate((float)((int)e.StateManager.CurrentStateFrame - 1) / (float)cm.HitStun);
-            float zFrameOffset = cm.zCurvePosition.Evaluate((float)e.StateManager.CurrentStateFrame / (float)cm.HitStun)
-                 - cm.zCurvePosition.Evaluate((float)((int)e.StateManager.CurrentStateFrame - 1) / (float)cm.HitStun);
-
-            if (yFrameOffset != 0)
-            {
-                gotOffset += yFrameOffset * Vector3.up;
-            }
-            if(zFrameOffset != 0)
-            {
-                gotOffset += -zFrameOffset * e.visual.transform.forward;
-            }
-
-            if (gotOffset != Vector3.zero)
-            {
-                e.cc.Motor.SetPosition(e.transform.position + gotOffset, false);
-            }
+            PhysicsManager.ApplyMovementFriction();
 
             e.StateManager.IncrementFrame();
 

@@ -11,16 +11,6 @@ namespace Mahou.Combat
         protected override float DrawForcesGroup(ref Rect position, SerializedProperty property, float yPosition)
         {
             float yPos = base.DrawForcesGroup(ref position, property, yPosition);
-
-            EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("xCurvePosition"));
-            yPos += lineSpacing;
-            EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("yCurvePosition"));
-            yPos += lineSpacing;
-            EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("zCurvePosition"));
-            yPos += lineSpacing;
-            EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("gravityCurve"));
-            yPos += lineSpacing;
-
             return yPos;
         }
     }
