@@ -51,13 +51,13 @@ MonoBehaviour:
     00000001:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Soft.Lockon
+        nickname: Sound
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 1
-        endFrame: 4
+        startFrame: 5
+        endFrame: 5
         attackEvent:
           id: 10
         conditions: []
@@ -80,13 +80,13 @@ MonoBehaviour:
     00000002:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Clamp.Move
+        nickname: Soft.Lockon
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
         startFrame: 1
-        endFrame: 1
+        endFrame: 4
         attackEvent:
           id: 11
         conditions: []
@@ -109,7 +109,7 @@ MonoBehaviour:
     00000003:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: F.Force
+        nickname: Clamp.Move
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
@@ -138,13 +138,13 @@ MonoBehaviour:
     00000004:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Move.Friction
+        nickname: F.Force
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 5
-        endFrame: 35
+        startFrame: 1
+        endFrame: 1
         attackEvent:
           id: 13
         conditions: []
@@ -167,12 +167,12 @@ MonoBehaviour:
     00000005:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Jump.Cancel
+        nickname: Move.Friction
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 10
+        startFrame: 5
         endFrame: 35
         attackEvent:
           id: 14
@@ -196,13 +196,13 @@ MonoBehaviour:
     00000006:
       type: {class: AttackEventDefinition, ns: HnSF.Combat, asm: HnSF}
       data:
-        nickname: Sound
+        nickname: Jump.Cancel
         active: 1
         onHitCheck: 0
         onHitHitboxGroup: 0
         onHitIDGroup: 0
-        startFrame: 5
-        endFrame: 5
+        startFrame: 10
+        endFrame: 35
         attackEvent:
           id: 15
         conditions: []
@@ -249,8 +249,8 @@ MonoBehaviour:
         autoLink: 0
         forceType: 0
         forceRelation: 0
-        attackerHitstop: 3
-        hitstop: 3
+        attackerHitstop: 4
+        hitstop: 4
         hitstun: 20
         airOnly: 0
         groundOnly: 0
@@ -261,115 +261,42 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 0, z: 0}
+        opponentForce: {x: 0, y: 0, z: 5}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
         throwConfirm: {fileID: 0}
-        xCurvePosition:
-          serializedVersion: 2
-          m_Curve: []
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        yCurvePosition:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        zCurvePosition:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 1.1553817
-            outSlope: 1.1553817
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.040650405
-          - serializedVersion: 3
-            time: 1
-            value: 0.5
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        gravityCurve:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0.005004883
-            outSlope: 0.005004883
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 0.5
-            value: 0.0025024414
-            inSlope: 0
-            outSlope: 0.7422657
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0.14784002
-          - serializedVersion: 3
-            time: 1
-            value: 0.5
-            inSlope: 0.085541435
-            outSlope: 0.085541435
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.12273097
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
+        holdVelocityTime: 1
+        opponentForceAir: {x: 0, y: 5, z: 0}
+        opponentFriction: 0
+        opponentGravity: 0
+        hitSound: {fileID: 8300000, guid: 36a0aa67c8746a545bcb0908f62d4696, type: 3}
     0000000A:
+      type: {class: PlaySound, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
+      data:
+        sound: {fileID: 8300000, guid: 85782ce6faa46474d8fecc25494e1087, type: 3}
+    0000000B:
       type: {class: SoftLockOn, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
         rotSpeed: 35
-    0000000B:
+    0000000C:
       type: {class: ClampMovement, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
         maxLength: 0
-    0000000C:
+    0000000D:
       type: {class: ForceAdd, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
         addXZForce: 1
         addYForce: 0
         xzForce: {x: 0, y: 5}
         yForce: 0
-    0000000D:
+    0000000E:
       type: {class: ApplyFriction, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:
         useXZFriction: 1
         useYFriction: 0
         xzFriction: 20
         yFriction: 0
-    0000000E:
-      type: {class: JumpCancel, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
     0000000F:
-      type: {class: PlaySound, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
-      data:
-        sound: {fileID: 8300000, guid: 85782ce6faa46474d8fecc25494e1087, type: 3}
+      type: {class: JumpCancel, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}

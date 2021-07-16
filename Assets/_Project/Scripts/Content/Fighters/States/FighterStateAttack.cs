@@ -55,6 +55,7 @@ namespace Mahou.Content.Fighters
             }
         }
 
+        bool eventCancel;
         public override void OnUpdate()
         {
             FighterManager entityManager = FighterManager;
@@ -71,7 +72,7 @@ namespace Mahou.Content.Fighters
                 return;
             }
 
-            bool eventCancel = false;
+            eventCancel = false;
             bool interrupted = false;
             bool cleanup = false;
             for (int i = 0; i < currentAttack.events.Count; i++)
@@ -108,15 +109,6 @@ namespace Mahou.Content.Fighters
                 }
                 return;
             }
-            if (CheckInterrupt())
-            {
-                return;
-            }
-
-            if(eventCancel == false && HandleChargeLevels(entityManager, currentAttack) == false)
-            {
-                entityManager.StateManager.IncrementFrame();
-            }
         }
 
         public override void OnLateUpdate()
@@ -128,6 +120,17 @@ namespace Mahou.Content.Fighters
             for (int i = 0; i < currentAttack.hitboxGroups.Count; i++)
             {
                 HandleHitboxGroup(i, currentAttack.hitboxGroups[i]);
+            }
+
+            if (CheckInterrupt())
+            {
+                return;
+            }
+
+            FighterManager entityManager = FighterManager;
+            if (eventCancel == false && HandleChargeLevels(entityManager, currentAttack) == false)
+            {
+                entityManager.StateManager.IncrementFrame();
             }
         }
 
@@ -314,7 +317,14 @@ namespace Mahou.Content.Fighters
             switch (boxGroup.hitboxHitInfo.hitType)
             {
                 case HnSF.Combat.HitboxType.HIT:
-                    entityManager.CombatManager.hitboxManager.CheckForCollision(groupIndex, boxGroup, Manager.visual);
+                    bool hitResult = entityManager.CombatManager.hitboxManager.CheckForCollision(groupIndex, boxGroup, Manager.visual);
+                    if(hitResult == true)
+                    {
+                        if ((boxGroup.hitboxHitInfo as HitInfo).hitSound != null)
+                        {
+                            SimulationAudioManager.Play((boxGroup.hitboxHitInfo as HitInfo).hitSound, Manager.transform.position, AudioPlayMode.ROLLBACK);
+                        }
+                    }
                     break;
             }
         }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1bce94995de11342802ce5258863c88, type: 3}
-  m_Name: GMG-Hurtbox-Idle
+  m_Name: GMG-Pushbox-Idle
   m_EditorClassIdentifier: 
   hurtboxGroups:
   - id: 0
@@ -26,15 +26,14 @@ MonoBehaviour:
         - id: 1
         attachToEntity: 1
         attachTo: 
-        hurtboxType: 0
         invincibility: 0
         armor: 0
     00000001:
       type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         shape: 0
-        offset: {x: 0, y: 1, z: 0}
-        size: {x: 1, y: 2, z: 1}
+        offset: {x: 0, y: 0.75, z: 0}
+        size: {x: 0.8, y: 1.5, z: 0.8}
         rotation: {x: 0, y: 0, z: 0}
         radius: 0
         height: 0

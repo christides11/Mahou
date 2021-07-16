@@ -25,7 +25,10 @@ namespace Mahou.Content.Fighters
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch"),
                 StateManager.CurrentStateFrame);
 
-            PhysicsManager.ApplyMovementFriction();
+            if (e.StateManager.CurrentStateFrame > cm.holdVelocityTime)
+            {
+                PhysicsManager.ApplyMovementFriction((e.CombatManager as FighterCombatManager).hitstunFriction);
+            }
 
             e.StateManager.IncrementFrame();
 

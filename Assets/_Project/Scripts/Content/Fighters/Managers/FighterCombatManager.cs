@@ -50,6 +50,7 @@ namespace Mahou.Content.Fighters
 
         public float hitstunFriction = 0;
         public float hitstunGravity = 0;
+        public int holdVelocityTime = 0;
         public override HitReactionBase Hurt(HurtInfoBase hurtInfoBase)
         {
             FighterManager fManager = (FighterManager)manager;
@@ -85,6 +86,7 @@ namespace Mahou.Content.Fighters
             SetHitStun(hitInfo.hitstun);
 
             Vector3 baseForce = manager.PhysicsManager.IsGrounded ? hitInfo.opponentForce : hitInfo.opponentForceAir;
+            holdVelocityTime = hitInfo.holdVelocityTime;
             hitstunFriction = hitInfo.opponentFriction;
             if(hitstunFriction == 0)
             {

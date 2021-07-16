@@ -23,6 +23,11 @@ namespace Mahou.Core
             (FighterManager.HurtboxManager as FighterHurtboxManager).CreateHurtboxes(
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
                 StateManager.CurrentStateFrame);
+
+            FighterManager.PushboxManager.CreatePushboxes(
+                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
+                StateManager.CurrentStateFrame);
+
             if (Simulation.SimulationManagerBase.IsRollbackFrame == false
                 || Simulation.SimulationManagerBase.instance.CurrentRollbackTick == Simulation.SimulationManagerBase.instance.CurrentRealTick-1)
             {

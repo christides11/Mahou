@@ -37,12 +37,6 @@ namespace Mahou.Content.Fighters
             hurtboxHitCount.Clear();
         }
 
-        public override void CreateHurtboxes(HnSF.Combat.StateHurtboxDefinition hurtboxDefinition, uint frame)
-        {
-            this.hurtboxDefinition = hurtboxDefinition;
-            base.CreateHurtboxes(hurtboxDefinition, frame);
-        }
-
         protected override void SetHurtboxInfo(int groupID, int hurtboxIndex)
         {
             BoxDefinition bd = (BoxDefinition)hurtboxDefinition.hurtboxGroups[groupID].boxes[hurtboxIndex];
@@ -71,6 +65,13 @@ namespace Mahou.Content.Fighters
         public StateHurtboxDefinition GetHurtboxDefinition()
         {
             return (StateHurtboxDefinition)hurtboxDefinition;
+        }
+
+        public override void CreateHurtboxes(HnSF.Combat.StateHurtboxDefinition currentHurtboxDefinition, uint frame)
+        {
+            this.hurtboxDefinition = currentHurtboxDefinition;
+
+            base.CreateHurtboxes(currentHurtboxDefinition, frame);
         }
     }
 }

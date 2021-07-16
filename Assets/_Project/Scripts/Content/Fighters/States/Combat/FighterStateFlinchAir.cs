@@ -27,7 +27,7 @@ namespace Mahou.Content.Fighters
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch-air"),
                 StateManager.CurrentStateFrame);
 
-            if(PhysicsManager.forceGravity.y == 0 && heldFrames < 15)
+            if(PhysicsManager.forceGravity.y == 0 && heldFrames < 5)
             {
                 heldFrames++;
             }
@@ -42,12 +42,6 @@ namespace Mahou.Content.Fighters
                     PhysicsManager.forceGravity.y = 0;
                 }
             }
-
-            /*
-            if (gotOffset != Vector3.zero)
-            {
-                //e.cc.Motor.SetPosition(e.transform.position + gotOffset, false);
-            }*/
 
             //float f = (((float)e.StateManager.CurrentStateFrame / (float)e.CombatManager.HitStun) * 10.0f);
             //(Manager as FighterManager).entityAnimator.SetFrame((int)f);

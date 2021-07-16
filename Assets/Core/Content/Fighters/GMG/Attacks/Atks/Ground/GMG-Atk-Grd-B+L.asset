@@ -200,9 +200,11 @@ MonoBehaviour:
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
         throwConfirm: {fileID: 0}
+        holdVelocityTime: 0
         opponentForceAir: {x: 0, y: 20, z: 0}
         opponentFriction: 0
         opponentGravity: 0
+        hitSound: {fileID: 8300000, guid: e4aa6cc468234de42b95f40783531667, type: 3}
     00000007:
       type: {class: ClampMovement, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:

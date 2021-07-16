@@ -164,6 +164,61 @@ MonoBehaviour:
   attackDefinition: {fileID: 11400000, guid: 6792164df7f8f4740b3b40df037ae605, type: 2}
   nextNode: []
   lockonRequired: 1
+--- !u!114 &-2869917857014619369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
+  m_Name: LH
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 136, y: 328}
+  ports:
+    keys:
+    - lastNode
+    - nextNode
+    values:
+    - _fieldName: lastNode
+      _node: {fileID: -2869917857014619369}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: nextNode 1
+        node: {fileID: 3625158533729177270}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: nextNode
+      _node: {fileID: -2869917857014619369}
+      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
+        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
+        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  Identifier: 14
+  lastNode: {fileID: 3625158533729177270}
+  inputSequence:
+    executeWindow: 3
+    executeInputs:
+    - inputType: 0
+      buttonID: 11
+      stickDirection: {x: 0, y: 0}
+      directionDeviation: 0
+    sequenceWindow: 8
+    sequenceInputs: []
+  attackDefinition: {fileID: 11400000, guid: 66ce3cc6bc3088e4085ebdc9478259c5, type: 2}
+  nextNode: []
+  lockonRequired: 0
 --- !u!114 &-1183580482968015825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,7 +353,8 @@ MonoBehaviour:
   - {fileID: 326980900410186874}
   - {fileID: -7894274434849859049}
   - {fileID: -5971298929415937232}
-  nodeIDCounter: 14
+  - {fileID: -2869917857014619369}
+  nodeIDCounter: 15
   cancelLists:
   - ID: 0
     list: {fileID: 11400000, guid: 8005483bb6855244686a435ec57e6c12, type: 2}
@@ -617,6 +673,7 @@ MonoBehaviour:
     - lastNode
     - nextNode
     - nextNode 0
+    - nextNode 1
     values:
     - _fieldName: lastNode
       _node: {fileID: 3625158533729177270}
@@ -649,6 +706,18 @@ MonoBehaviour:
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 1
+    - _fieldName: nextNode 1
+      _node: {fileID: 3625158533729177270}
+      _typeQualifiedName: HnSF.Combat.MovesetAttackNode+nextNodeDefinition, HnSF,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: lastNode
+        node: {fileID: -2869917857014619369}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 1
   Identifier: 0
   lastNode: {fileID: 0}
   inputSequence:
@@ -664,6 +733,8 @@ MonoBehaviour:
   nextNode:
   - cancelWindow: {x: 10, y: 100}
     nodeIdentifier: 1
+  - cancelWindow: {x: 10, y: 100}
+    nodeIdentifier: 14
   lockonRequired: 0
 --- !u!114 &5432671773901837520
 MonoBehaviour:

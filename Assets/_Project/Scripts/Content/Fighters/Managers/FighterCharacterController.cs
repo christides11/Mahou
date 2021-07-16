@@ -24,6 +24,7 @@ namespace Mahou.Content.Fighters
         public List<Collider> IgnoredColliders = new List<Collider>();
 
         private Vector3 moveVector;
+        private Vector3 _internalVelocityAdd;
 
         void Awake()
         {
@@ -128,7 +129,19 @@ namespace Mahou.Content.Fighters
                 currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity + gravity, airMovementSharpness * deltaTime);
             }
 
+            // Take into account additive velocity
+            if (_internalVelocityAdd.sqrMagnitude > 0f)
+            {
+                currentVelocity += _internalVelocityAdd;
+                _internalVelocityAdd = Vector3.zero;
+            }
         }
+
+        public void AddVelocity(Vector3 velocity)
+        {
+            _internalVelocityAdd += velocity;
+        }
+
 
         public bool IsColliderValidForCollisions(Collider coll)
         {

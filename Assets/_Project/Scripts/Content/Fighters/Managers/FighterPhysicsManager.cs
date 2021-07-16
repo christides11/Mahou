@@ -18,8 +18,7 @@ namespace Mahou.Content.Fighters
 
         public override void Tick()
         {
-            Manager.cc.SetMovement(forceMovement + forcePushbox, forceDamage, forceGravity);
-            forcePushbox = Vector3.zero;
+            Manager.cc.SetMovement(forceMovement, forceDamage, forceGravity);
         }
 
         public override void Freeze()

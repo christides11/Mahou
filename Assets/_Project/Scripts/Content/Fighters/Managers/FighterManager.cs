@@ -9,6 +9,7 @@ using Mahou.Networking;
 using Mahou.Managers;
 using HnSF.Input;
 using HnSF.Combat;
+using Mahou.Combat;
 
 namespace Mahou.Content.Fighters
 {
@@ -22,10 +23,12 @@ namespace Mahou.Content.Fighters
         public virtual FighterStatsManager StatsManager { get { return statsManager; } }
         public virtual FighterHitboxManager HitboxManager { get { return hitboxManager; } }
         public virtual HealthManager HealthManager { get { return healthManager; } }
+        public virtual FighterPushboxManager PushboxManager { get { return pushboxManager; } }
 
         private HealthManager healthManager;
         private FighterStatsManager statsManager;
         private FighterHitboxManager hitboxManager;
+        private FighterPushboxManager pushboxManager;
         public FighterAnimator fighterAnimator;
         public NetworkIdentity netid;
         public FighterCharacterController cc;
@@ -98,6 +101,7 @@ namespace Mahou.Content.Fighters
             hitboxManager = GetComponent<FighterHitboxManager>();
             statsManager = GetComponent<FighterStatsManager>();
             cc = GetComponent<FighterCharacterController>();
+            pushboxManager = GetComponent<FighterPushboxManager>();
         }
 
         public Vector3 visualOffset;
@@ -130,12 +134,19 @@ namespace Mahou.Content.Fighters
         public void SimUpdate()
         {
             (hurtboxManager as FighterHurtboxManager).Cleanup();
+            pushboxManager.Cleanup();
             Tick();
         }
 
         public void SimLateUpdate()
         {
             LateTick();
+        }
+
+        public override void LateTick()
+        {
+            base.LateTick();
+            pushboxManager.LateTick();
         }
 
         public virtual Vector3 GetCenter()

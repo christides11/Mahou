@@ -7,10 +7,11 @@ namespace Mahou.Combat
     [System.Serializable]
     public class HitInfo : HnSF.Combat.HitInfo
     {
+        public int holdVelocityTime;
         public Vector3 opponentForceAir;
         public float opponentFriction;
         public float opponentGravity;
-
+        public AudioClip hitSound;
 
         public HitInfo() : base()
         {

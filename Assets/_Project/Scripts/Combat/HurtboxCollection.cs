@@ -18,13 +18,21 @@ namespace Mahou
         protected Dictionary<string, StateHurtboxDefinition> hurtboxDictionary = new Dictionary<string, StateHurtboxDefinition>();
         [SerializeField] protected HurtboxEntry[] hurtboxDefinitions = new HurtboxEntry[0];
 
+        protected Dictionary<string, StateHurtboxDefinition> pushboxDictionary = new Dictionary<string, StateHurtboxDefinition>();
+        [SerializeField] protected HurtboxEntry[] pushboxDefinitions = new HurtboxEntry[0];
+
         public void OnEnable()
         {
             if (hurtboxDictionary == null)
             {
                 hurtboxDictionary = new Dictionary<string, StateHurtboxDefinition>();
             }
+            if(pushboxDictionary == null)
+            {
+                pushboxDictionary = new Dictionary<string, StateHurtboxDefinition>();
+            }
             hurtboxDictionary.Clear();
+            pushboxDictionary.Clear();
             for (int i = 0; i < hurtboxDefinitions.Length; i++)
             {
                 if (hurtboxDictionary.ContainsKey(hurtboxDefinitions[i].identifier.ToLower()))
@@ -34,6 +42,15 @@ namespace Mahou
                 }
                 hurtboxDictionary.Add(hurtboxDefinitions[i].identifier.ToLower(), hurtboxDefinitions[i].hurtboxDefinition);
             }
+            for (int i = 0; i < pushboxDefinitions.Length; i++)
+            {
+                if (pushboxDictionary.ContainsKey(pushboxDefinitions[i].identifier.ToLower()))
+                {
+                    Debug.LogError($"{name} PushboxCollection has a duplicate entry for {pushboxDefinitions[i].identifier.ToLower()}.");
+                    continue;
+                }
+                pushboxDictionary.Add(pushboxDefinitions[i].identifier.ToLower(), pushboxDefinitions[i].hurtboxDefinition);
+            }
         }
 
         public StateHurtboxDefinition GetHurtbox(string identifier)
@@ -42,6 +59,16 @@ namespace Mahou
             if (hurtboxDictionary.TryGetValue(identifier, out StateHurtboxDefinition hurtbox))
             {
                 return hurtbox;
+            }
+            return null;
+        }
+
+        public StateHurtboxDefinition GetPushbox(string identifier)
+        {
+            identifier = identifier.ToLower();
+            if (pushboxDictionary.TryGetValue(identifier, out StateHurtboxDefinition pushbox))
+            {
+                return pushbox;
             }
             return null;
         }
