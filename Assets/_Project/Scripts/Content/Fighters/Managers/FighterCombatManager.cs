@@ -13,6 +13,10 @@ namespace Mahou.Content.Fighters
     public class FighterCombatManager : HnSF.Fighters.FighterCombatManager
     {
         public override HnSF.Combat.MovesetDefinition CurrentMoveset { get { return (manager as FighterManager).movesets[currentMoveset]; } }
+        public int BlockStun { get { return blockstun; } }
+
+        protected int blockstun;
+        public BlockStateType blockState;
 
         public TeamTypes team;
 
@@ -41,6 +45,16 @@ namespace Mahou.Content.Fighters
                 return false;
             }
             return true;
+        }
+
+        public void AddBlockstun(int value)
+        {
+            blockstun += value;
+        }
+
+        public void SetBlockstun(int value)
+        {
+            blockstun = value;
         }
 
         public override int GetTeam()
@@ -81,10 +95,24 @@ namespace Mahou.Content.Fighters
                 //HitReactionBase.reactionType = HitReactionBaseType.Avoided;
                 return HitReactionBase;
             }
+            if (blockState != BlockStateType.NONE)
+            {
+                if (hitInfo.blockType == HitBlockType.MID) {
+                    return HitReactionBase;
+                } else if (blockState == BlockStateType.HIGH && hitInfo.blockType == HitBlockType.HIGH)
+                {
+                    return HitReactionBase;
+                } else if (blockState == BlockStateType.LOW && hitInfo.blockType == HitBlockType.LOW)
+                {
+                    return HitReactionBase;
+                }
+            }
+
             // Got hit, apply stun, damage, and forces.
             SetHitStop(hitInfo.hitstop);
             SetHitStun(hitInfo.hitstun);
 
+            (manager as FighterManager).hangTime = hitInfo.hangTime;
             Vector3 baseForce = manager.PhysicsManager.IsGrounded ? hitInfo.opponentForce : hitInfo.opponentForceAir;
             holdVelocityTime = hitInfo.holdVelocityTime;
             hitstunFriction = hitInfo.opponentFriction;

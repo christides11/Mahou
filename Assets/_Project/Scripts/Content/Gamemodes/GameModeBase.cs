@@ -41,7 +41,7 @@ namespace Mahou.Content
             LobbyManager.current.MatchManager.OnMatchStarted -= OnStartMatch;
         }
 
-        public virtual void Update()
+        public virtual void GMUpdate()
         {
 
         }

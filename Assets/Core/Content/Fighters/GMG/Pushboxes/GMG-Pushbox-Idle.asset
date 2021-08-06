@@ -32,8 +32,8 @@ MonoBehaviour:
       type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
         shape: 0
-        offset: {x: 0, y: 0.75, z: 0}
-        size: {x: 0.8, y: 1.5, z: 0.8}
+        offset: {x: 0, y: 0.85, z: 0}
+        size: {x: 0.4, y: 1.7, z: 0.4}
         rotation: {x: 0, y: 0, z: 0}
         radius: 0
         height: 0

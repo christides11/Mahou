@@ -38,8 +38,8 @@ MonoBehaviour:
       type: {class: HitboxGroup, ns: HnSF.Combat, asm: HnSF}
       data:
         ID: 0
-        activeFramesStart: 6
-        activeFramesEnd: 9
+        activeFramesStart: 8
+        activeFramesEnd: 11
         boxes:
         - id: 8
         attachToEntity: 1
@@ -251,7 +251,7 @@ MonoBehaviour:
         forceRelation: 0
         attackerHitstop: 4
         hitstop: 4
-        hitstun: 20
+        hitstun: 60
         airOnly: 0
         groundOnly: 0
         causesTumble: 0
@@ -261,17 +261,18 @@ MonoBehaviour:
         wallBounces: 0
         wallBounceForce: 0
         damageOnHit: 0
-        opponentForce: {x: 0, y: 5, z: 0}
+        opponentForce: {x: 0, y: 8, z: 0}
         forceIncludeYForce: 0
         opponentForceMultiplier: 1
         opponentMaxMagnitude: 1
         opponentMinMagnitude: 1
         throwConfirm: {fileID: 0}
-        holdVelocityTime: 1
+        holdVelocityTime: 5
         opponentForceAir: {x: 0, y: 5, z: 0}
         opponentFriction: 0
         opponentGravity: 0
         hitSound: {fileID: 8300000, guid: ca209790b88a99f40998a8921758a7e9, type: 3}
+        hangTime: 20
     0000000A:
       type: {class: PlaySound, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:

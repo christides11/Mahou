@@ -16,19 +16,10 @@ namespace Mahou.Core
         public AudioClip testAudioClip;
 
         [Header("GMG GENERAL")]
-        public bool isClone = false;
         public AssetIdentifier[] extras;
-        
-        [Header("ABILITY: Encore")]
-        public bool recordMode = false;
-        public bool finishedRecording = false;
-        public int maxRecordTime = 120;
-        public int currentRecordIndex = 0;
-        public HnSF.Input.InputRecordItem[] recordBuffer;
 
         public override void Initialize()
         {
-            recordBuffer = new HnSF.Input.InputRecordItem[maxRecordTime];
             base.Initialize();
         }
 
@@ -44,28 +35,6 @@ namespace Mahou.Core
         public override void Tick()
         {
             base.Tick();
-            if (isClone)
-            {
-                return;
-            }
-
-            /*
-            if(recordMode == true)
-            {
-                recordBuffer[currentRecordIndex] = InputManager.InputRecord[SimulationManagerBase.instance.CurrentTick % (int)InputManager.inputRecordSize];
-                currentRecordIndex++;
-                if(currentRecordIndex == maxRecordTime)
-                {
-                    recordMode = false;
-                    finishedRecording = true;
-                }
-            } else if(finishedRecording == false)
-            {
-                if(inputManager.GetButton((int)PlayerInputType.ABILITY_ONE).firstPress == true)
-                {
-                    recordMode = true;
-                }
-            }*/
         }
 
         public override void SetupStates()
@@ -81,6 +50,10 @@ namespace Mahou.Core
             stateManager.AddState(new BAirJump(), (ushort)FighterStates.AIR_JUMP);
             stateManager.AddState(new FighterStateAttack(), (ushort)FighterStates.ATTACK);
 
+            stateManager.AddState(new FighterStateBlockHigh(), (ushort)FighterStates.BLOCK_HIGH);
+            stateManager.AddState(new FighterStateBlockLow(), (ushort)FighterStates.BLOCK_LOW);
+            stateManager.AddState(new FighterStateBlockAir(), (ushort)FighterStates.BLOCK_AIR);
+
             stateManager.AddState(new FighterStateFlinchGround(), (ushort)FighterStates.FLINCH_GROUND);
             stateManager.AddState(new FighterStateFlinchAir(), (ushort)FighterStates.FLINCH_AIR);
             stateManager.AddState(new FighterStateTumble(), (ushort)FighterStates.TUMBLE);
@@ -92,10 +65,6 @@ namespace Mahou.Core
         {
             GMGSimState gmgSimState = new GMGSimState();
             FillSimState(gmgSimState);
-            gmgSimState.recordMode = recordMode;
-            gmgSimState.finishedRecording = finishedRecording;
-            gmgSimState.currentRecordingIndex = currentRecordIndex;
-            gmgSimState.recordBuffer = recordBuffer;
             return gmgSimState;
         }
 
@@ -103,10 +72,6 @@ namespace Mahou.Core
         {
             GMGSimState gmgSimState = state as GMGSimState;
             base.ApplySimState(state as PlayerSimState);
-            recordMode = gmgSimState.recordMode;
-            finishedRecording = gmgSimState.finishedRecording;
-            currentRecordIndex = gmgSimState.currentRecordingIndex;
-            recordBuffer = gmgSimState.recordBuffer;
         }
     }
 }

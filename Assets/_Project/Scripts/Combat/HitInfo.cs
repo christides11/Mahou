@@ -12,6 +12,12 @@ namespace Mahou.Combat
         public float opponentFriction;
         public float opponentGravity;
         public AudioClip hitSound;
+        public int hangTime;
+
+        public HitBlockType blockType;
+        public ushort blockstun;
+        public Vector3 blockForce;
+        public Vector3 blockForceAir;
 
         public HitInfo() : base()
         {

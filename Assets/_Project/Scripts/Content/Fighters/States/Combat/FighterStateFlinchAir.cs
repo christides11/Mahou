@@ -14,11 +14,10 @@ namespace Mahou.Content.Fighters
         public override void Initialize()
         {
             base.Initialize();
-            heldFrames = 0;
+            FighterManager.heldTime = 0;
             //(Manager as FighterManager).entityAnimator.PlayAnimation((Manager as FighterManager).GetAnimationClip("hurt"));
         }
 
-        int heldFrames = 0;
         public override void OnUpdate()
         {
             FighterManager e = FighterManager;
@@ -27,9 +26,13 @@ namespace Mahou.Content.Fighters
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch-air"),
                 StateManager.CurrentStateFrame);
 
-            if(PhysicsManager.forceGravity.y == 0 && heldFrames < 5)
+            FighterManager.PushboxManager.CreatePushboxes(
+                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetPushbox("idle"),
+                StateManager.CurrentStateFrame);
+
+            if (PhysicsManager.forceGravity.y == 0 && e.heldTime < e.hangTime)
             {
-                heldFrames++;
+                e.heldTime++;
             }
             else
             {
@@ -37,7 +40,8 @@ namespace Mahou.Content.Fighters
                     e.StatsManager.CurrentStats.maxFallSpeed,
                     (e.CombatManager as FighterCombatManager).hitstunGravity,
                     PhysicsManager.GravityScale);
-                if(Mathf.Abs(PhysicsManager.forceGravity.y) <= 0.001f)
+
+                if(e.heldTime < e.hangTime && Mathf.Abs(PhysicsManager.forceGravity.y) <= 0.5f)
                 {
                     PhysicsManager.forceGravity.y = 0;
                 }
@@ -50,6 +54,12 @@ namespace Mahou.Content.Fighters
             {
                 StateManager.IncrementFrame();
             }
+        }
+
+        public override void OnInterrupted()
+        {
+            base.OnInterrupted();
+            FighterManager.heldTime = 0;
         }
 
         public override bool CheckInterrupt()

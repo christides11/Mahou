@@ -22,3 +22,7 @@ MonoBehaviour:
   - identifier: flinch
     hurtboxDefinition: {fileID: 11400000, guid: f5dcecfe8597d1149afe3145436728eb,
       type: 2}
+  pushboxDefinitions:
+  - identifier: idle
+    hurtboxDefinition: {fileID: 11400000, guid: 25c4e1d206e48e643ad171e393b820f6,
+      type: 2}

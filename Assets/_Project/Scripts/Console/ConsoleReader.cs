@@ -32,10 +32,24 @@ namespace Mahou.Debugging
         {
             List<string> splitInputs = new List<string>();
 
+            bool insideList = false;
             bool insideParenth = false;
             string builtInput = "";
             for(int i = 0; i < inputLine.Length; i++)
             {
+                if (insideList)
+                {
+                    if (inputLine[i] == ']')
+                    {
+                        insideList = false;
+                        splitInputs.Add(builtInput);
+                        builtInput = "";
+                        continue;
+                    }
+                    builtInput += inputLine[i];
+                    continue;
+                }
+
                 if (insideParenth)
                 {
                     switch (inputLine[i])
@@ -66,6 +80,9 @@ namespace Mahou.Debugging
                             break;
                         case '\"':
                             insideParenth = true;
+                            break;
+                        case '[':
+                            insideList = true;
                             break;
                         default:
                             builtInput += inputLine[i];

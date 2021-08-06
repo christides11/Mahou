@@ -25,7 +25,7 @@ namespace Mahou.Core
                 StateManager.CurrentStateFrame);
 
             FighterManager.PushboxManager.CreatePushboxes(
-                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
+                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetPushbox("idle"),
                 StateManager.CurrentStateFrame);
 
             if (Simulation.SimulationManagerBase.IsRollbackFrame == false

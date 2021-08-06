@@ -8,7 +8,7 @@ namespace Mahou
         LIGHT_ATTACK = 3,
         DASH = 4,
         LOCKON = 5,
-        PARRY = 6,
+        BLOCK = 6,
         ABILITY_ONE = 7,
         ABILITY_TWO = 8,
         ABILITY_THREE = 9,

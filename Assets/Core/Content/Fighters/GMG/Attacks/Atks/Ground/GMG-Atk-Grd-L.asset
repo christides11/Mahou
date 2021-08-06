@@ -233,7 +233,7 @@ MonoBehaviour:
       data:
         shape: 0
         offset: {x: 0, y: 1, z: 1}
-        size: {x: 2, y: 2, z: 2}
+        size: {x: 2, y: 2, z: 3}
         rotation: {x: 0, y: 0, z: 0}
         radius: 0
         height: 0
@@ -272,6 +272,7 @@ MonoBehaviour:
         opponentFriction: 0
         opponentGravity: 0
         hitSound: {fileID: 8300000, guid: 36a0aa67c8746a545bcb0908f62d4696, type: 3}
+        hangTime: 0
     0000000A:
       type: {class: PlaySound, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:

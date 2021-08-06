@@ -332,6 +332,7 @@ MonoBehaviour:
         opponentFriction: 0
         opponentGravity: 0
         hitSound: {fileID: 8300000, guid: 36a0aa67c8746a545bcb0908f62d4696, type: 3}
+        hangTime: 0
     0000000D:
       type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
@@ -376,6 +377,7 @@ MonoBehaviour:
         opponentFriction: 0
         opponentGravity: 0
         hitSound: {fileID: 8300000, guid: 36a0aa67c8746a545bcb0908f62d4696, type: 3}
+        hangTime: 0
     0000000F:
       type: {class: BoxDefinition, ns: Mahou.Combat, asm: Mahou_CSharp}
       data:
@@ -420,6 +422,7 @@ MonoBehaviour:
         opponentFriction: 0
         opponentGravity: 0
         hitSound: {fileID: 8300000, guid: 36a0aa67c8746a545bcb0908f62d4696, type: 3}
+        hangTime: 10
     00000011:
       type: {class: ClampMovement, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:

@@ -45,6 +45,7 @@ namespace Mahou.Menus
 
         public void OpenLobbyMenu()
         {
+            NetworkManager.OnServerStartHost -= OpenLobbyMenu;
             _ = lobbyMenu.OpenMenu();
             directConnectMenu.SetActive(false);
             gameObject.SetActive(false);

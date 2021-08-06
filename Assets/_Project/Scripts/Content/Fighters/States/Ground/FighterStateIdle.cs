@@ -10,7 +10,6 @@ namespace Mahou.Content.Fighters
         {
             base.Initialize();
             PhysicsManager.forceGravity = Vector3.zero;
-            //Debug.Log((Manager as FighterManager).jumpTotalLength);
         }
 
         public override void OnUpdate()
@@ -29,6 +28,10 @@ namespace Mahou.Content.Fighters
             if (PhysicsManager.IsGrounded == false)
             {
                 StateManager.ChangeState((ushort)FighterStates.FALL);
+                return true;
+            }
+            if (FighterManager.TryBlock())
+            {
                 return true;
             }
             if (FighterManager.TryAttack())

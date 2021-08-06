@@ -20,6 +20,8 @@ namespace Mahou.Combat
             yPos += lineSpacing;
             EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("holdVelocityTime"));
             yPos += lineSpacing;
+            EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, lineHeight), property.FindPropertyRelative("hangTime"));
+            yPos += lineSpacing;
             return yPos;
         }
     }

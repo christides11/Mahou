@@ -14,7 +14,7 @@ namespace Mahou.Menus
         public LobbyMenu lobbyMenu;
         public GameObject directConnectMenu;
 
-        public void Awake()
+        public void Start()
         {
             NetworkManager.OnClientReady += OnClientReady;
             directConnectMenu.SetActive(false);
@@ -27,6 +27,11 @@ namespace Mahou.Menus
                 mainMenu.gameObject.SetActive(true);
                 lobbyMenu.gameObject.SetActive(false);
             }
+        }
+
+        private void OnDisable()
+        {
+            NetworkManager.OnClientReady -= OnClientReady;
         }
 
         private void OnClientReady()

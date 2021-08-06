@@ -39,6 +39,8 @@ namespace Mahou.Content.Fighters
         public bool charging = true;
         public bool jumpHold = false;
         public byte currentJump = 0;
+        public int heldTime = 0;
+        public int hangTime = 0;
 
         public MovesetDefinition[] movesets;
 
@@ -50,8 +52,6 @@ namespace Mahou.Content.Fighters
         public LayerMask lockonVisibilityLayerMask;
 
         private Vector3 size;
-
-
 
         public void Enable()
         {
@@ -123,6 +123,10 @@ namespace Mahou.Content.Fighters
             stateManager.AddState(new FighterStateAirDash(), (ushort)FighterStates.AIR_DASH);
             stateManager.AddState(new FighterStateAirJump(), (ushort)FighterStates.AIR_JUMP);
             stateManager.AddState(new FighterStateAttack(), (ushort)FighterStates.ATTACK);
+
+            stateManager.AddState(new FighterStateBlockHigh(), (ushort)FighterStates.BLOCK_HIGH);
+            stateManager.AddState(new FighterStateBlockLow(), (ushort)FighterStates.BLOCK_LOW);
+            stateManager.AddState(new FighterStateBlockAir(), (ushort)FighterStates.BLOCK_AIR);
 
             stateManager.AddState(new FighterStateFlinchGround(), (ushort)FighterStates.FLINCH_GROUND);
             stateManager.AddState(new FighterStateFlinchAir(), (ushort)FighterStates.FLINCH_AIR);
@@ -364,6 +368,16 @@ namespace Mahou.Content.Fighters
         public virtual void ResetGroundOptions()
         {
             currentJump = 0;
+        }
+
+        public virtual bool TryBlock()
+        {
+            if (inputManager.GetButton((int)PlayerInputType.BLOCK).isDown == true)
+            {
+                StateManager.ChangeState((int)FighterStates.BLOCK_HIGH);
+                return true;
+            }
+            return false;
         }
 
         public virtual bool TryAttack()

@@ -124,7 +124,7 @@ namespace Mahou.Debugging
 
         private object FindParser(ParameterInfo parameterInfo, string input)
         {
-            foreach(var parser in parsers)
+            foreach (var parser in parsers)
             {
                 if (parser.CanParse(parameterInfo.ParameterType))
                 {

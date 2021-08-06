@@ -65,7 +65,7 @@ namespace Mahou.Simulation
 
             accumulator += deltaTime;
             var adjustedTickInterval = simulationTickInterval * simulationAdjuster.AdjustedInterval;
-            gameManager.GameMode.Update();
+            gameManager.GameMode.GMUpdate();
             while (accumulator >= adjustedTickInterval)
             {
                 // Although we can run the simulation at different speeds, the actual tick processing is

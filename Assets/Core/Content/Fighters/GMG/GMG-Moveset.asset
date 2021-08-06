@@ -275,58 +275,6 @@ MonoBehaviour:
   attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 1
---- !u!114 &-101673471821062487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
-  m_Name: Parry (Ground)
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 744, y: 520}
-  ports:
-    keys:
-    - lastNode
-    - nextNode
-    values:
-    - _fieldName: lastNode
-      _node: {fileID: -101673471821062487}
-      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections: []
-      _direction: 0
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: nextNode
-      _node: {fileID: -101673471821062487}
-      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
-        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
-        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      connections: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-  Identifier: 6
-  lastNode: {fileID: 0}
-  inputSequence:
-    executeWindow: 3
-    executeInputs:
-    - inputType: 0
-      buttonID: 6
-      stickDirection: {x: 0, y: 0}
-      directionDeviation: 0
-    sequenceWindow: 8
-    sequenceInputs: []
-  attackDefinition: {fileID: 0}
-  nextNode: []
-  lockonRequired: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,8 +293,6 @@ MonoBehaviour:
   - {fileID: 3510077099750719752}
   - {fileID: -5044094681593864790}
   - {fileID: -1183580482968015825}
-  - {fileID: -101673471821062487}
-  - {fileID: 3543517496119984828}
   - {fileID: 6912031284526880874}
   - {fileID: 3134167402410135773}
   - {fileID: 1503390650950357487}
@@ -363,7 +309,6 @@ MonoBehaviour:
   groundIdleCancelListID: 0
   groundAttackStartNodes:
   - {fileID: 326980900410186874}
-  - {fileID: -101673471821062487}
   - {fileID: 3625158533729177270}
   - {fileID: -7894274434849859049}
   airIdleCancelListID: -1
@@ -604,54 +549,6 @@ MonoBehaviour:
     sequenceWindow: 8
     sequenceInputs: []
   attackDefinition: {fileID: 11400000, guid: d9548f240c7d04d4c99d320553255d48, type: 2}
-  nextNode: []
-  lockonRequired: 0
---- !u!114 &3543517496119984828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbd89139e86654b43a578a4f4a1f44bb, type: 3}
-  m_Name: Parry Success (Ground)
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 984, y: 520}
-  ports:
-    keys:
-    - lastNode
-    - nextNode
-    values:
-    - _fieldName: lastNode
-      _node: {fileID: 3543517496119984828}
-      _typeQualifiedName: HnSF.Combat.MovesetAttackNode, HnSF, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections: []
-      _direction: 0
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: nextNode
-      _node: {fileID: 3543517496119984828}
-      _typeQualifiedName: System.Collections.Generic.List`1[[HnSF.Combat.MovesetAttackNode+nextNodeDefinition,
-        HnSF, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib,
-        Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      connections: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-  Identifier: 7
-  lastNode: {fileID: 0}
-  inputSequence:
-    executeWindow: 3
-    executeInputs: []
-    sequenceWindow: 8
-    sequenceInputs: []
-  attackDefinition: {fileID: 0}
   nextNode: []
   lockonRequired: 0
 --- !u!114 &3625158533729177270

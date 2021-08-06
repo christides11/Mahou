@@ -63,7 +63,6 @@ namespace Mahou.Menus
                 GameObject pObj = GameObject.Instantiate(playerInfoPrefab, playerInfoContentHolder, false);
             }
         }
-
         private async UniTask ClearSelectables()
         {
             foreach (Transform child in selectableContentHolder)
@@ -89,7 +88,8 @@ namespace Mahou.Menus
                 return;
             }
 
-            gamemodeSelect.GetComponentInChildren<TextMeshProUGUI>().text = gm.Name;
+            TextMeshProUGUI gmSelectText = gamemodeSelect.GetComponentInChildren<TextMeshProUGUI>();
+            gmSelectText.text = gm.Name;
 
             for(int i = 0; i < gm.ContentRequirements.Length; i++)
             {

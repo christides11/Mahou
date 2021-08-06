@@ -11,7 +11,7 @@ namespace Mahou.Core
         public override void OnUpdate()
         {
             FighterManager.PushboxManager.CreatePushboxes(
-                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("idle"),
+                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetPushbox("idle"),
                 StateManager.CurrentStateFrame);
 
             base.OnUpdate();

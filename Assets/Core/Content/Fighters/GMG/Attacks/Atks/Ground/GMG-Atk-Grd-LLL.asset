@@ -302,6 +302,7 @@ MonoBehaviour:
         opponentFriction: 0
         opponentGravity: 0
         hitSound: {fileID: 8300000, guid: ca209790b88a99f40998a8921758a7e9, type: 3}
+        hangTime: 5
     0000000B:
       type: {class: SoftLockOn, ns: Mahou.Combat.AttackEvents, asm: Mahou_CSharp}
       data:

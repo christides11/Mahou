@@ -29,6 +29,10 @@ namespace Mahou.Content.Fighters
 
         public override bool CheckInterrupt()
         {
+            if (FighterManager.TryBlock())
+            {
+                return true;
+            }
             if (FighterManager.TryAttack())
             {
                 return true;

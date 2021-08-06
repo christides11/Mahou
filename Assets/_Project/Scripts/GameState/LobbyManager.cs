@@ -112,9 +112,9 @@ namespace Mahou.Managers
             NetworkServer.SendToAll(msg);
         }
 
-        public void SetLobbySettings(LobbySettings settings)
+        public void SetLobbySettings(LobbySettings requestedSettings)
         {
-            this.settings = settings;
+            this.settings = requestedSettings;
 
             LobbyInfoMessage msg = new LobbyInfoMessage(settings, clientLobbyInfo);
             NetworkServer.SendToAll(msg);
@@ -133,6 +133,7 @@ namespace Mahou.Managers
         #region Match Initialization
         public async UniTask InitializeMatch()
         {
+            await UniTask.WaitForEndOfFrame();
             if(NetworkServer.active == false)
             {
                 return;

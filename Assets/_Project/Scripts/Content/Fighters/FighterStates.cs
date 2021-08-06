@@ -15,6 +15,9 @@ namespace Mahou
         FLINCH_GROUND = 10,
         FLINCH_AIR = 11,
         TUMBLE = 12,
-        GROUND_BOUNCE = 13
+        GROUND_BOUNCE = 13,
+        BLOCK_LOW = 14,
+        BLOCK_HIGH = 15,
+        BLOCK_AIR = 16
     }
 }

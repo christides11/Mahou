@@ -13,6 +13,8 @@ namespace Mahou.Core
     {
         public ModObjectReference testReference;
 
+        public NetworkIdentity trainingDummy;
+
         public override async UniTask<bool> SetupGamemode(ModObjectReference[] componentReferences, List<ModObjectReference> content)
         {
             bool baseResult = await base.SetupGamemode(componentReferences, content);
@@ -57,15 +59,15 @@ namespace Mahou.Core
             SetGameModeState(GameModeState.MATCH_IN_PROGRESS);
         }
 
-        public override void Update()
+        public override void GMUpdate()
         {
             if (UnityEngine.Input.GetKeyDown(KeyCode.F8))
             {
-                SpawnTrainingRoomFighter();
+                SpawnTrainingDummy();
             }
         }
 
-        public async void SpawnTrainingRoomFighter()
+        public async void SpawnTrainingDummy()
         {
             // Server only.
             if(NetworkServer.active == false)
@@ -74,24 +76,26 @@ namespace Mahou.Core
             }
 
             bool requestResult = await NetworkFighterSpawnManager.ServerRequestFighterLoad(testReference, 5.0f);
-
-            if (requestResult)
+            if (requestResult == false)
             {
-                IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, testReference);
-                if (fighterDefinition == null)
-                {
-                    return;
-                }
-                var fighterGO = fighterDefinition.GetFighter();
-                if (fighterGO == null)
-                {
-                    return;
-                }
-                GameObject fighter = GameObject.Instantiate(fighterGO, new Vector3(0, 1, 0), Quaternion.identity);
-                NetworkServer.Spawn(fighter);
-                Mahou.Simulation.SimulationManagerBase.instance.RegisterSimulationObject(fighter.GetComponent<NetworkIdentity>());
-                Debug.Log("Spawning");
+                return;
             }
+
+            IFighterDefinition fighterDefinition = (IFighterDefinition)ContentManager.instance.GetContentDefinition(ContentType.Fighter, testReference);
+            if (fighterDefinition == null)
+            {
+                return;
+            }
+            var fighterGO = fighterDefinition.GetFighter();
+            if (fighterGO == null)
+            {
+                return;
+            }
+            GameObject fighter = GameObject.Instantiate(fighterGO, new Vector3(0, 1, 0), Quaternion.identity);
+            NetworkServer.Spawn(fighter);
+            Mahou.Simulation.SimulationManagerBase.instance.RegisterSimulationObject(fighter.GetComponent<NetworkIdentity>());
+            Debug.Log("Spawning training dummy.");
+            trainingDummy = fighter.GetComponent<NetworkIdentity>();
         }
     }
 }

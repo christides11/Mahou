@@ -324,15 +324,21 @@ namespace Mahou.Content
             // Content already loaded.
             if (definitions.ContainsKey(contentIdentifier) == true)
             {
-                return true;
+                if (definitions[contentIdentifier].Succeeded == true)
+                {
+                    return true;
+                }
+                return false;
             }
+            definitions.Add(contentIdentifier, new OperationResult<T>());
             OperationResult<T> result = await AddressablesManager.LoadAssetAsync<T>(references[contentIdentifier]);
             if (result.Succeeded)
             {
                 result.Value.Identifier = contentIdentifier;
-                definitions.Add(contentIdentifier, result);
+                definitions[contentIdentifier] = result;
                 return true;
             }
+            definitions.Remove(contentIdentifier);
             return false;
         }
 

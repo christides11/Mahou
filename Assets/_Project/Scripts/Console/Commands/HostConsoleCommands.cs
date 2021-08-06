@@ -1,4 +1,5 @@
 using Mahou.Managers;
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,22 +9,25 @@ namespace Mahou.Debugging
 {
     public class HostConsoleCommands
     {
-        [Command("host", "Host a room with the given parameters.")]
-        public static void HostRoom(string gamemode, string map, string battle)
+        [Command("hostroom", "Host a room with the given parameters.")]
+        public static void HostRoom()
         {
-            /*
-            GameManager.current.LobbyManager.HostGame(
-                new LobbySettings(
-                    new Content.ModObjectReference(gamemode), 
-                    new Content.ModObjectReference(map),
-                    new Content.ModObjectReference(battle))
-                );*/
+            NetworkManager.singleton.StartHost();
         }
 
-        [Command("host", "Host a room with the given parameters.")]
-        public static void HostRoom(string gamemode, string battle)
+        [Command("quickhost", "Host a room with the given parameters.")]
+        public static void QuickHost(string character, string gamemode, string[] content)
         {
+            List<Content.ModObjectReference> requiredContent = new List<Content.ModObjectReference>();
+            for (int i = 0; i < content.Length; i++)
+            {
+                requiredContent.Add(new Content.ModObjectReference(content[i]));
+            }
+            LobbyManager.current.SetLobbySettings(new LobbySettings() { selectedGamemode = new Content.ModObjectReference(gamemode), requiredContent = requiredContent });
 
+            NetworkManager.singleton.StartHost();
+
+            _ = LobbyManager.current.InitializeMatch();
         }
 
         [Command("closeroom", "Closes the current room.")]

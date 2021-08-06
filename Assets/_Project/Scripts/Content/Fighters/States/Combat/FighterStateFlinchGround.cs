@@ -25,6 +25,10 @@ namespace Mahou.Content.Fighters
                 (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetHurtbox("flinch"),
                 StateManager.CurrentStateFrame);
 
+            FighterManager.PushboxManager.CreatePushboxes(
+                (FighterManager.CombatManager.CurrentMoveset as MovesetDefinition).hurtboxCollection.GetPushbox("idle"),
+                StateManager.CurrentStateFrame);
+
             if (e.StateManager.CurrentStateFrame > cm.holdVelocityTime)
             {
                 PhysicsManager.ApplyMovementFriction((e.CombatManager as FighterCombatManager).hitstunFriction);
